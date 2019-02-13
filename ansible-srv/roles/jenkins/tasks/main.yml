@@ -1,0 +1,2 @@
+---
+- include: installing-jenkins.yml
