@@ -1,0 +1,19 @@
+---
+  - name: Install Pip
+    apt:
+      name: python3-pip
+      state: latest
+
+  - name: Install Jenkins Job Builder
+    pip: name=jenkins-job-builder
+
+  - name: ansible create directory 
+    file:
+      path: /etc/jenkins_jobs
+      state: directory
+
+  - name: Copy jenkins_jobs.ini file
+    template:
+      src: templates/jenkins_jobs.ini.j2
+      dest: /etc/jenkins_jobs/jenkins_jobs.ini
+  
