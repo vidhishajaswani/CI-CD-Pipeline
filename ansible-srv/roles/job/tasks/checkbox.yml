@@ -1,0 +1,38 @@
+---
+- name: Install Pip, node, npm and build-essential
+  apt:
+    name: ['python3-pip','python-pip','nodejs','npm']
+    state: latest
+
+- name: Install Jenkins Job Builder
+  pip: name=jenkins-job-builder
+
+- name: Copy jenkins_jobs.ini file
+  template:
+    src: templates/jenkins_jobs.ini.j2
+    dest: jenkins_jobs.ini
+
+- name: ansible jobs directory 
+  file:
+    path: jobs
+    state: directory
+
+  
+- name: Copy checkbox_job.yml file
+  copy:
+    src: files/checkbox_job.yml
+    dest: jobs/checkbox_job.yml
+
+- name: Getting Jenkins CLI Jar
+  get_url:
+    url: "http://localhost:8080/jnlpJars/jenkins-cli.jar"
+    dest: "."
+    mode: 0755
+
+- name: Run shell
+  command: 'jenkins-jobs --conf ~/jenkins_jobs.ini update jobs/test.yml'
+
+- name: build checkbox job
+  shell: 'java -jar jenkins-cli.jar -s http://localhost:8080/ build checkbox.io --username {{ jenkins_username }} --password {{ jenkins_password }}'
+
+
