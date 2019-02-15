@@ -1,5 +1,5 @@
 ---
-- name: Install Pip, node, npm and build-essential
+- name: Install Pip, node, npm 
   apt:
     name: ['python3-pip','python-pip','nodejs','npm']
     state: latest
