@@ -1,5 +1,4 @@
 ---
-  tasks:
   - name: install jre8
     apt:
      name: openjdk-8-jre

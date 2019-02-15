@@ -17,3 +17,18 @@
       src: templates/jenkins_jobs.ini.j2
       dest: /etc/jenkins_jobs/jenkins_jobs.ini
   
+  - name: create jobs directory 
+    file:
+      path: /home/vagrant/jobs
+      state: directory
+  
+  - name: Copy test job yaml
+    template:
+      src: templates/test_job.yml.j2
+      dest: /home/vagrant/jobs/test_job.yml
+  
+  - name: run jenkins job
+    shell: jenkins-jobs update jobs
+    args:
+      chdir: /home/vagrant/
+  
