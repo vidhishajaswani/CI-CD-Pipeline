@@ -22,7 +22,7 @@
 3.2.1 Run ```ansible-playbook -i inventory site.yml``` by uncommenting the ```jenkins``` role. The ```jenkins``` role installs Jenkins and configures it.
 
 NOTE: 
-Jenkins login: Username and Password are ```jenkins```. Admin User Credentials: Username: ```admin```, Password: ```admin123```
+Jenkins login: Username and Password are ```jenkins```. Admin User Credentials: Username: ```admin```, Password: ```admin```
 
 4. baker ssh into the jenkins-srv
 

@@ -7,6 +7,11 @@
 - name: Install Jenkins Job Builder
   pip: name=jenkins-job-builder
 
+- name: Get admin password
+  command: cat /var/lib/jenkins/secrets/initialAdminPassword
+  register: adminpwd
+  become: yes
+
 - name: Copy jenkins_jobs.ini file
   template:
     src: templates/jenkins_jobs.ini.j2
@@ -41,9 +46,9 @@
   when: checkbox_exists.stat.exists
 
 - name: Run shell
-  command: 'jenkins-jobs --conf ~/jenkins_jobs.ini update jobs/test.yml'
+  command: 'jenkins-jobs --conf ~/jenkins_jobs.ini update ~/jobs/checkbox_job.yml'
 
 - name: build checkbox job
-  shell: 'java -jar jenkins-cli.jar -s http://localhost:8080/ build checkbox.io --username {{ jenkins_username }} --password {{ jenkins_password }}'
+  shell: 'java -jar jenkins-cli.jar -s http://localhost:8080/ build checkbox.io --username {{ jenkins_username }} --password {{ adminpwd.stdout }}'
 
 
