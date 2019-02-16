@@ -1,4 +1,4 @@
-[web]
-192.168.33.100 ansible_ssh_user=vagrant ansible_ssh_private_key_file=/keys/mm-server_id_rsa
-[web:vars]
+[jenkins]
+192.168.33.100 ansible_ssh_user=vagrant ansible_ssh_private_key_file=/keys/jenkins-srv_id_rsa
+[jenkins:vars]
 ansible_python_interpreter=/usr/bin/python3

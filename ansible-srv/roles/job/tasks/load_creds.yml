@@ -1,0 +1,5 @@
+---
+- name: Get admin password
+  command: cat /var/lib/jenkins/secrets/initialAdminPassword
+  register: adminpwd
+  become: yes

@@ -1,2 +1,6 @@
 ---
-- include: installing_jenkins.yml
+- name: Installing Jenkins
+  include: installing_jenkins.yml
+  
+- name: Configuring Jenkins
+  include: configuring_jenkins.yml
