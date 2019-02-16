@@ -12,9 +12,20 @@
   apt_key:
     keyserver: keyserver.ubuntu.com
     id: 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
+    state: present
 
-- name: Add repo key to Ubuntu
-  shell: 'echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list'
+- name: Add MongoDB repository
+  apt_repository: repo='deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' state=present
+- name: Install Mongo
+  apt:
+    name: mongodb-org
+    state: latest
+    update_cache: yes
+
+- name: Install pymongo
+  pip:
+    name: pymongo
+    state: latest
 
 
 - name: Install Nginx
