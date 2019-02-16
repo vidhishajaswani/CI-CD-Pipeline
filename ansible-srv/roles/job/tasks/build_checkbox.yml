@@ -1,7 +1,7 @@
 ---
-- name: Install Pip, node, npm 
+- name: Install required packages
   apt:
-    name: ['python3-pip','python-pip','nodejs','npm']
+    name: ['python3-pip','python-pip','nodejs','npm','nginx', 'git']
     state: latest
 
 - name: Install Jenkins Job Builder
@@ -28,6 +28,17 @@
     url: "http://localhost:8080/jnlpJars/jenkins-cli.jar"
     dest: "."
     mode: 0755
+
+- name: Check if checkbox.io folder exists
+  stat: 
+   path: "/var/lib/jenkins/workspace/checkbox.io/checkbox.io"
+  register: checkbox_exists
+
+- name: Delete folder if exists
+  file:
+    state: absent 
+    path: "/var/lib/jenkins/workspace/checkbox.io/checkbox.io"
+  when: checkbox_exists.stat.exists
 
 - name: Run shell
   command: 'jenkins-jobs --conf ~/jenkins_jobs.ini update jobs/test.yml'

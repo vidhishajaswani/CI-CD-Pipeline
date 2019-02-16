@@ -1,0 +1,11 @@
+---
+
+- name: Create directory
+  file:
+    path: checkbox
+    state: directory
+
+- name: Clone repo
+  git: 
+    repo: "https://github.com/vidhishajaswani/checkbox.io"
+    dest: ./checkbox
