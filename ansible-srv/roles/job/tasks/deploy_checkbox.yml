@@ -12,9 +12,21 @@
   apt_key:
     keyserver: keyserver.ubuntu.com
     id: 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
+    state: present
 
-- name: Add repo key to Ubuntu
-  shell: 'echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list'
+- name: Add MongoDB repository
+  apt_repository: repo='deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' state=present
+
+- name: Install Mongo
+  apt:
+    name: mongodb
+    state: latest
+    update_cache: yes
+
+- name: Install pymongo
+  pip:
+    name: pymongo
+    state: latest
 
 
 - name: Install Nginx
@@ -25,3 +37,41 @@
 - name: Install dependencies
   npm:
     path: checkbox/server-side/site
+
+- name: Copy conf file 
+  copy:
+    src: checkbox/local-conf/nginx.conf
+    dest: /etc/nginx/nginx.conf
+    remote_src: yes
+    mode: 0644
+
+- name: Copy default file 
+  copy:
+    src: checkbox/local-conf/default
+    dest: /etc/nginx/sites-available/default
+    remote_src: yes
+    mode: 0644
+
+- name: executable
+  file: 
+    dest: checkbox/server-side/site/server.js
+    mode: a+x
+  
+- name: Restart nginx
+  service:
+    name: nginx
+    state: restarted
+  environment:
+    MONGO_PORT: 27017
+    MONGO_IP: http://192.168.20.40
+    MONGO_USER: mongo
+    MONGO_PASSWORD: mongo
+    MAIL_USER: mail
+    MAIL_PASSWORD: mail
+    MAIL_SMTP: mail
+
+
+  
+
+
+  
