@@ -1,11 +1,27 @@
 ---
-
-- name: Create directory
+- name: create directory 
   file:
-    path: checkbox
+    path: ./checkbox
     state: directory
-
 - name: Clone repo
   git: 
-    repo: "https://github.com/vidhishajaswani/checkbox.io"
-    dest: ./checkbox
+    repo: "https://github.com/chrisparnin/checkbox.io"
+    dest: checkbox
+
+- name: Add an apt key by id from a keyserver
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
+
+- name: Add repo key to Ubuntu
+  shell: 'echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list'
+
+
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: latest
+
+- name: Install dependencies
+  npm:
+    path: checkbox/server-side/site
