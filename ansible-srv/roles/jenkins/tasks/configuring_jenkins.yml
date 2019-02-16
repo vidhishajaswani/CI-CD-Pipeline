@@ -39,5 +39,38 @@
      state: latest
      url_username: admin
      url_password: "{{ adminpwd.stdout }}"
-    with_items: 
+     with_dependencies: yes
+     validate_certs: no
+    with_items:
+      - conditional-buildstep
+      - apache-httpcomponents-client-4-api
+      - jsch
+      - display-url-api
+      - junit
+      - script-security
+      - parameterized-trigger
+      - jquery
+      - git-client
+      - scm-api
+      - credentials
+      - workflow-scm-step
+      - matrix-project
+      - structs
+      - workflow-api
+      - workflow-step-api
+      - mailer
+      - ssh-credentials
+      - plain-credentials 
       - build-pipeline-plugin
+      - ansible
+      - git
+      - maven-plugin
+      - javadoc
+      - token-macro
+      - run-condition
+
+  - name: restart service jenkins
+    systemd:
+      state: restarted
+      daemon_reload: yes
+      name: jenkins
