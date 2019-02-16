@@ -3,4 +3,4 @@
   become: yes
   roles:
     - jenkins
-    # - job
+    - job
