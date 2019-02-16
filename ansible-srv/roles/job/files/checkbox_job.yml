@@ -1,5 +1,5 @@
 - job:
-    name: checkbox.io
+    name: checkbox.io 23
     description: 'configure checkbox.io job'
     project-type: freestyle
     builders:

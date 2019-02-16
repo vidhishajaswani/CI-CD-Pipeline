@@ -16,9 +16,10 @@
 
 - name: Add MongoDB repository
   apt_repository: repo='deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' state=present
+
 - name: Install Mongo
   apt:
-    name: mongodb-org
+    name: mongodb
     state: latest
     update_cache: yes
 
@@ -56,8 +57,6 @@
     dest: checkbox/server-side/site/server.js
     mode: a+x
   
-    
-
 - name: Restart nginx
   service:
     name: nginx
