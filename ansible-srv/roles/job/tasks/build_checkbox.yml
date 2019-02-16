@@ -7,11 +7,6 @@
 - name: Install Jenkins Job Builder
   pip: name=jenkins-job-builder
 
-- name: Get admin password
-  command: cat /var/lib/jenkins/secrets/initialAdminPassword
-  register: adminpwd
-  become: yes
-
 - name: Copy jenkins_jobs.ini file
   template:
     src: templates/jenkins_jobs.ini.j2
