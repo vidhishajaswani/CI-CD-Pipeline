@@ -10,8 +10,11 @@
 3.1 Manual: 
 
 3.1.1 [Setup jenkins](https://linuxize.com/post/how-to-install-jenkins-on-ubuntu-18-04/)
+
 3.1.2 Setup your admin account on jenkins
+
 3.1.3 Go to http://192.168.33.100:8080/me/configure and generate a token
+
 3.1.4 Add that token to roles/templates/jenkins_jobs.ini.j2
 
 3.2 Automatic installation:
