@@ -1,0 +1,17 @@
+
+
+- name: Check if checkbox.io folder exists
+  stat: 
+   path: "/var/lib/jenkins/workspace/checkbox.io/checkbox.io"
+  register: checkbox_exists
+
+- name: Delete folder if exists
+  file:
+    state: absent 
+    path: "/var/lib/jenkins/workspace/checkbox.io/checkbox.io"
+  when: checkbox_exists.stat.exists
+
+- name: build checkbox job
+  shell: 'java -jar jenkins-cli.jar -s http://localhost:8080/ build checkbox.io --username {{ jenkins_username }} --password {{ jenkins_password }}'
+
+
