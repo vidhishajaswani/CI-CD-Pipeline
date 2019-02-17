@@ -1,0 +1,17 @@
+---
+- name: Add ansible repo
+  apt_repository:
+    repo: 'ppa:ansible/ansible'
+
+- name: Install Ansible
+  apt:
+    name: ansible
+    state: latest
+    update_cache: yes
+    force: yes
+
+- name: Permissions
+  replace:
+    dest: /etc/ansible/ansible.cfg
+    regexp: '#host_key_checking'
+    replace: 'host_key_checking'
