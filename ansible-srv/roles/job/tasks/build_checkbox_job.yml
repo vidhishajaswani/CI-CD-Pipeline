@@ -1,5 +1,5 @@
 
-
+---
 - name: Check if checkbox.io folder exists
   stat: 
    path: "/var/lib/jenkins/workspace/checkbox.io/checkbox.io"
