@@ -1,0 +1,8 @@
+---
+- name: Copy checkbox_job.yml file
+  copy:
+    src: files/itrust_job.yml
+    dest: jobs/itrust_job.yml
+
+- name: Run shell
+  command: 'jenkins-jobs --conf jenkins_jobs.ini update jobs'

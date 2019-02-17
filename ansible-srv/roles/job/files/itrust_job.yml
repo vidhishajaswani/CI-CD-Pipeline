@@ -1,0 +1,6 @@
+- job:
+    name: iTrust
+    description: 'configure iTrustjob'
+    project-type: freestyle
+    builders:
+      - shell: 'sudo git clone https://github.ncsu.edu/engr-csc326-staff/iTrust2-v4.git'
