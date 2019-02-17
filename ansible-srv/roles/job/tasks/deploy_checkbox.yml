@@ -1,11 +1,41 @@
 ---
+- name: Update and upgrade apt packages
+  apt:
+    update_cache: yes
+    cache_valid_time: 86400
+
+- name: Add repository for node 
+  shell: apt-add-repository "deb https://deb.nodesource.com/node_10.x $(lsb_release -sc) main"
+
+- name: Install latest package 
+  apt:
+    name: ['nodejs','nginx','git','mongodb','python-pip','python3-setuptools','build-essential']
+    state: latest
+    update_cache: yes
+    force: yes
+
+- name: Install awscli
+  pip: name=awscli
+
 - name: create directory 
   file:
     path: ./checkbox
     state: directory
+    
+- name: Check if checkbox folder exists
+  stat: 
+   path: checkbox
+  register: checkbox_exists
+
+- name: Delete folder if exists
+  file:
+    state: absent 
+    path: checkbox
+  when: checkbox_exists.stat.exists
+
 - name: Clone repo
   git: 
-    repo: "https://github.com/chrisparnin/checkbox.io"
+    repo: {{ repo }}
     dest: checkbox
 
 - name: Add an apt key by id from a keyserver
@@ -16,11 +46,7 @@
 
 - name: Add MongoDB repository
   apt_repository: repo='deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' state=present
-- name: Install Mongo
-  apt:
-    name: mongodb
-    state: latest
-    update_cache: yes
+
 
 - name: Install pymongo
   pip:
@@ -28,21 +54,29 @@
     state: latest
 
 
-- name: Install Nginx
-  apt:
-    name: nginx
-    state: latest
+- name: create super user
+  mongodb_user:
+    name: admin
+    password: hello
+    database: admin
+    roles: root
+    state: present
 
 - name: Install dependencies
-  npm:
-    path: checkbox/server-side/site
-
+  npm: name=npm global=true state=latest
+  
 - name: Copy conf file 
   copy:
     src: checkbox/local-conf/nginx.conf
     dest: /etc/nginx/nginx.conf
     remote_src: yes
     mode: 0644
+
+- name: Replace the server root in the "default" file
+  replace:
+    dest: checkbox/local-conf/default
+    regexp: "root (.)+;"
+    replace: "root {{ lookup('env','HOME') }}/checkbox/public_html/;"
 
 - name: Copy default file 
   copy:
@@ -51,28 +85,32 @@
     remote_src: yes
     mode: 0644
 
-- name: executable
-  file: 
-    dest: checkbox/server-side/site/server.js
-    mode: a+x
-  
-    
+- name: Install forever package using npm
+  become: yes
+  npm:
+    global: yes
+    name: forever
 
-- name: Restart nginx
+- name: Restart Nginx
+  become: yes
   service:
     name: nginx
-    state: restarted
+    state: restarted   
+
+- name: Start again
+  shell: forever stopall; forever start server.js
+  args:
+    chdir: checkbox/server-side/site/
   environment:
+    APP_PORT: 3001
     MONGO_PORT: 27017
     MONGO_IP: http://192.168.33.100
-    MONGO_USER: mongo
-    MONGO_PASSWORD: mongo
-    MAIL_USER: mail
-    MAIL_PASSWORD: mail
-    MAIL_SMTP: mail
+    MONGO_USER: admin
+    MONGO_PASSWORD: hello
+    MAIL_USER: csc519team5
+    MAIL_PASSWORD: qwerty@123
+    MAIL_SMTP: 'smtp.gmail.com'
 
-
-  
 
 
   
