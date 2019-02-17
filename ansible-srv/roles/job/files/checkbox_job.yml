@@ -1,7 +1,8 @@
 - job:
-    name: checkbox.io 23
+    name: checkbox.io 2
     description: 'configure checkbox.io job'
     project-type: freestyle
     builders:
-      - shell: 'sudo git clone https://github.com/chrisparnin/checkbox.io'
+      - shell: 'sudo git clone https://github.com/ShivamChamoli/checkbox.io'
       - shell: 'cd /var/lib/jenkins/workspace/checkbox.io/checkbox.io/server-side/site && sudo npm install'
+    

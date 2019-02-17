@@ -1,11 +1,25 @@
 ---
-- name: Install required packages
+
+- name: Install latest package 
   apt:
-    name: ['python3-pip','python-pip','nodejs','npm','nginx', 'git']
+    name: ['python3-pip','python-pip', 'git']
     state: latest
+    update_cache: yes
+    force: yes
 
 - name: Install Jenkins Job Builder
-  pip: name=jenkins-job-builder
+  pip: name=jenkins-job-builder 
+
+
+- name: enabling access to mvn without password 
+  lineinfile:
+    path: /etc/sudoers
+    line: "jenkins ALL=(ALL) NOPASSWD: ALL"
+
+- name: Create directory for jenkins.ini
+  file:
+    path: /etc/jenkins_jobs
+    state: directory
 
 - name: Copy jenkins_jobs.ini file
   template:
@@ -16,7 +30,6 @@
   file:
     path: jobs
     state: directory
-
   
 - name: Copy checkbox_job.yml file
   copy:
