@@ -1,0 +1,19 @@
+---
+
+- name: Copy all roles
+  synchronize:
+    src: roles
+    dest: /var/lib/jenkins/roles
+    rsync_opts:
+      - "--exclude=node_modules"
+
+- name: Copy provision.yml
+  copy:
+    src: provision.yml
+    dest: /var/lib/jenkins/provision.yml
+    
+- name: Copy additional files
+  copy:
+    src: credentials.txt
+    dest: /var/lib/jenkins/.aws/credentials.txt
+    remote_src: yes
