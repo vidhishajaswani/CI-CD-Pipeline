@@ -1,0 +1,25 @@
+---
+- name: Copy private SSH Key for GitHub
+  copy:
+    src: ~/.ssh/id_rsa
+    dest: /root/.ssh/id_rsa
+    mode: 0400
+  
+- name: Add the identity file in configuration
+  shell: 'sudo su && cd /root/.ssh && eval "$(ssh-agent -s)" && ssh-add -k /root/.ssh/id_rsa'
+
+- name: Add config file for ssh for github ncsu host
+  copy:
+    src: "roles/job/templates/config.j2"
+    dest: /root/.ssh/config
+
+- name: CREATE iTrust directory
+  file: 
+    path: iTrust2
+    state: directory
+    mode: 0775
+
+- name: Git Clone
+  git:
+    repo: 'git@github.ncsu.edu:schamol/iTrust2-v4.git'
+    dest: iTrust2
