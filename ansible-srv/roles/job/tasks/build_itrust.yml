@@ -30,8 +30,8 @@
     hash_host: no
     state: present
 
-- name: Git clone Ensure that private key /.ssh/id_rsa is present
+- name: Git clone Ensure that private key ~/.ssh/id_rsa is present
   git:
     repo: 'git@github.ncsu.edu:engr-csc326-staff/iTrust2-v4.git'
     dest: iTrust2
-    key_file: /.ssh/id_rsa        # Ensure that private key /.ssh/id_rsa is present
+    key_file: ~/.ssh/id_rsa        # Ensure that private key ~/.ssh/id_rsa is present

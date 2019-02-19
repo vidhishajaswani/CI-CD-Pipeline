@@ -38,7 +38,7 @@
 
 - name: Getting Jenkins CLI Jar
   get_url:
-    url: "http://localhost:8080/jnlpJars/jenkins-cli.jar"
+    url: "http://localhost:{{jenkins_port}}/jnlpJars/jenkins-cli.jar"
     dest: "."
     mode: 0755
 

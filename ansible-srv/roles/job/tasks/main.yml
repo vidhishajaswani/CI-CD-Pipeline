@@ -1,3 +1,4 @@
 ---
-- include: build_checkbox.yml
-- include: deploy_checkbox.yml
+- include: create_checkbox_job.yml
+# - include: build_checkbox_job.yml
+# - include: deploy_checkbox.yml
