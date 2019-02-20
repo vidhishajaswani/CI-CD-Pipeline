@@ -1,8 +1,15 @@
 ---
+- name: updating apt pm's repository caches
+  apt:
+    update_cache: yes
+
+- name: Upgrade installed packages
+  apt:
+    upgrade: dist
 
 - name: Install latest package 
   apt:
-    name: ['python3-pip','python-pip', 'git']
+    name: ['python3-pip','python-pip', 'git', python3-requests]
     state: latest
     update_cache: yes
     force: yes
@@ -20,6 +27,10 @@
   file:
     path: /etc/jenkins_jobs
     state: directory
+
+- name: read admin pwd
+  command: cat /var/lib/jenkins/secrets/initialAdminPassword
+  register: adminpwd
 
 - name: Copy jenkins_jobs.ini file
   template:
@@ -43,4 +54,4 @@
     mode: 0755
 
 - name: Run shell
-  command: 'jenkins-jobs --conf ~/jenkins_jobs.ini update jobs'
+  command: 'jenkins-jobs --conf jenkins_jobs.ini update jobs'

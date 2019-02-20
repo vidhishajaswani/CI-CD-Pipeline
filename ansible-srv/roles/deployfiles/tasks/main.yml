@@ -2,4 +2,4 @@
 - name: Copy files for deployment
   copy: 
     src: deploy_checkbox.yml
-    dest: deploy_checkbox.yml
+    dest: /var/lib/jenkins/deploy_checkbox.yml
