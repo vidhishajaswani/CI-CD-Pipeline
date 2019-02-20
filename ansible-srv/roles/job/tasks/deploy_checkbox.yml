@@ -14,8 +14,6 @@
     update_cache: yes
     force: yes
 
-- name: Install awscli
-  pip: name=awscli
 
 - name: create directory 
   file:
@@ -35,7 +33,7 @@
 
 - name: Clone repo
   git: 
-    repo: {{ repo }}
+    repo: https://github.com/ShivamChamoli/checkbox.io.git
     dest: checkbox
 
 - name: Add an apt key by id from a keyserver
