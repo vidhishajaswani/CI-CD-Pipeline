@@ -35,13 +35,8 @@
 1. Run site.yml with build_checkbox.yml
 2. Check 192.168.33.100:8080
 
-##### To configure automatic execution of build job after a commit, a post-recieve hook can be used with following content!
+##### To configure automatic execution of build job after a commit, a post-commit hook can be used with following content!
 ```
 #!/bin/bash
-/usr/bin/curl --user USERNAME:PASS http://jenkinsci/job/PROJECTNAME/build?token=buildtoken
-
-#USERNAME is the username of jenkins server
-#Password or authentication token of jenkins user, can be found in jenkins profile
-#url for jenkins build job
-#build job authentication token for remote execution, need to configured!
+curl http://<Jenkins server>/git/notifyCommit?url=<URL of github repository>
 ```
