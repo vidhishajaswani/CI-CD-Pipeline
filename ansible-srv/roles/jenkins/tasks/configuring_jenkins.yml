@@ -2,7 +2,6 @@
   - name: read admin pwd
     command: cat /var/lib/jenkins/secrets/initialAdminPassword
     register: adminpwd
-    become: yes
 
   - name: unlock and add admin user
     jenkins_script:
@@ -13,14 +12,14 @@
       def hudsonRealm = new HudsonPrivateSecurityRealm(false)
       hudsonRealm.createAccount('${user_name}', '${user_pwd}')
       instance.setSecurityRealm(hudsonRealm)
-      def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
-      strategy.setAllowAnonymousRead(false)
+      def strategy = new AuthorizationStrategy.Unsecured()
       instance.setAuthorizationStrategy(strategy)
       instance.save()
      args:
       user_name: "{{ admin_user_name }}"
       user_pwd: "{{ admin_user_pass }}"
      user: admin
+     url: "http://localhost:{{jenkins_port}}"
      password: "{{ adminpwd.stdout }}"
 
   - name: complete setup wizard
@@ -32,6 +31,7 @@
         InstallState.INITIAL_SETUP_COMPLETED.initializeState()
       }
      user: admin
+     url: "http://localhost:{{jenkins_port}}"
      password: "{{ adminpwd.stdout }}"
 
   - name: install plugin
@@ -40,6 +40,7 @@
      state: latest
      url_username: admin
      url_password: "{{ adminpwd.stdout }}"
+     url: "http://localhost:{{jenkins_port}}"
      with_dependencies: yes
      validate_certs: no
     with_items:
@@ -69,6 +70,11 @@
       - javadoc
       - token-macro
       - run-condition
+
+  - name: Change the Jenkins port
+    template:
+      src: templates/jenkins.j2
+      dest: /etc/default/jenkins
 
   - name: restart service jenkins
     systemd:

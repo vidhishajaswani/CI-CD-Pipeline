@@ -1,8 +1,0 @@
----
-- name: Install dependencies
-  shell: 'pip install -r requirements.txt --user'
-
-- name: Create Instance
-  shell: 'python main.py'
-  args:
-    chdir: /var/lib/jenkins/roles/AWS
