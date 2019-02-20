@@ -33,10 +33,12 @@
 ## Running build job for checkbox.io
 
 1. Run site.yml with build_checkbox.yml
-2. Check 192.168.33.100:8080
+2. Check 192.168.33.100:9999
 
 ##### To configure automatic execution of build job after a commit, a post-commit hook can be used with following content!
 ```
 #!/bin/bash
-curl http://<Jenkins server>/git/notifyCommit?url=<URL of github repository>
+curl http://192.168.33.100:9999/git/notifyCommit?url=https://github.com/ShivamChamoli/checkbox.io.git
+# 192.168.33.100:9999 is the jenkins server address
+# https://github.com/ShivamChamoli/checkbox.io.git is the forked repository
 ```
