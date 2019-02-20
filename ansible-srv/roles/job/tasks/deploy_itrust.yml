@@ -6,7 +6,7 @@
 
 - name: Copy the key
   copy: 
-    src: files/id_rsa
+    src: files/id_rsa   # Put your private key here
     dest: /.ssh/id_rsa
     mode: 0400
 
