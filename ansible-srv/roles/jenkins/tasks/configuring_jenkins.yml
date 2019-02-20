@@ -1,4 +1,7 @@
 ---
+  - name: sleep 5s
+    shell: 'sleep 5s'
+
   - name: read admin pwd
     command: cat /var/lib/jenkins/secrets/initialAdminPassword
     register: adminpwd
