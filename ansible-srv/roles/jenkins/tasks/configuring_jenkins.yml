@@ -1,7 +1,11 @@
 ---
   - name: sleep 5s
     shell: 'sleep 5s'
+  
 
+  - name: Change timezone
+    shell: timedatectl set-timezone America/New_York
+    
   - name: read admin pwd
     command: cat /var/lib/jenkins/secrets/initialAdminPassword
     register: adminpwd
