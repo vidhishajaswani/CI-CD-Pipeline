@@ -101,6 +101,7 @@
       - javadoc
       - token-macro
       - run-condition
+      - github
 
   - name: restart service jenkins
     systemd:
