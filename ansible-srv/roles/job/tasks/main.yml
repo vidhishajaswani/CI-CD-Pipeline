@@ -1,5 +1,7 @@
 ---
+# - include: create_checbox.yml
 #- include: build_checkbox.yml
 #- include: deploy_checkbox.yml
 # - include: build_itrust.yml
 - include: create_checkbox_job.yml
+#- include: build_itrust.yml
