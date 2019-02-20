@@ -3,17 +3,35 @@
     command: cat /var/lib/jenkins/secrets/initialAdminPassword
     register: adminpwd
 
+  - name: Ensure Jenkins is up and running
+    uri:
+      url: "http://localhost:{{jenkins_port}}/"
+      user: admin
+      password: "{{ adminpwd.stdout }}"
+      force_basic_auth: yes
+      status_code: 200
+      timeout: 5
+    register: jenkins_service_status
+    # Keep trying for 5 mins in 5 sec intervals
+    retries: 6
+    delay: 5
+    until: >
+      'status' in jenkins_service_status and
+      jenkins_service_status['status'] == 200
+
   - name: unlock and add admin user
     jenkins_script:
      script: |
       import jenkins.model.*
       import hudson.security.*
+      import hudson.security.csrf.DefaultCrumbIssuer
       def instance = Jenkins.getInstance()
       def hudsonRealm = new HudsonPrivateSecurityRealm(false)
       hudsonRealm.createAccount('${user_name}', '${user_pwd}')
       instance.setSecurityRealm(hudsonRealm)
       def strategy = new AuthorizationStrategy.Unsecured()
       instance.setAuthorizationStrategy(strategy)
+      instance.setCrumbIssuer(new DefaultCrumbIssuer(false))
       instance.save()
      args:
       user_name: "{{ admin_user_name }}"
@@ -70,11 +88,6 @@
       - javadoc
       - token-macro
       - run-condition
-
-  - name: Change the Jenkins port
-    template:
-      src: templates/jenkins.j2
-      dest: /etc/default/jenkins
 
   - name: restart service jenkins
     systemd:
