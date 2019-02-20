@@ -1,37 +1,6 @@
 ---
-# - name: Copy private SSH Key for GitHub
-#   copy:
-#     src: /.ssh/id_rsa
-#     dest: /root/.ssh/id_rsa
-#     mode: 0400
-  
-# - name: Add the identity file in configuration
-#   shell: 'sudo su && cd /root/.ssh && eval "$(ssh-agent -s)" && ssh-add -k /root/.ssh/id_rsa'
 
-# - name: Add config file for ssh for github ncsu host
-#   copy:
-#     src: "roles/job/templates/config.j2"
-#     dest: /root/.ssh/config
+- name: build iTrust job
+  shell: 'java -jar jenkins-cli.jar -s http://localhost:{{jenkins_port}}/ build iTrust'
 
-# - name: CREATE iTrust directory
-#   file: 
-#     path: iTrust2
-#     state: directory
-#     mode: 0775
 
-- name: Scan public key of github.ncsu.edu
-  command: ssh-keyscan github.ncsu.edu
-  register: github_key
-
-- name: Add public key of github.ncsu.edu to known_hosts file
-  known_hosts:
-    name: github.ncsu.edu
-    key: '{{github_key.stdout}}'
-    hash_host: no
-    state: present
-
-- name: Git clone Ensure that private key ~/.ssh/id_rsa is present
-  git:
-    repo: 'git@github.ncsu.edu:engr-csc326-staff/iTrust2-v4.git'
-    dest: iTrust2
-    key_file: ~/.ssh/id_rsa        # Ensure that private key ~/.ssh/id_rsa is present
