@@ -22,4 +22,15 @@
     apt:
      name: git
      state: present
+
+  - name: Change the Jenkins port
+    template:
+      src: templates/jenkins.j2
+      dest: /etc/default/jenkins
+
+  - name: restart service jenkins
+    systemd:
+      state: restarted
+      daemon_reload: yes
+      name: jenkins
     
