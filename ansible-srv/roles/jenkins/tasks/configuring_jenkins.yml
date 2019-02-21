@@ -1,8 +1,4 @@
 ---
-  - name: sleep 5s
-    shell: 'sleep 5s'
-  
-
   - name: Change timezone
     shell: timedatectl set-timezone America/New_York
     
@@ -39,19 +35,17 @@
       def hudsonRealm = new HudsonPrivateSecurityRealm(false)
       hudsonRealm.createAccount('${user_name}', '${user_pwd}')
       instance.setSecurityRealm(hudsonRealm)
-      def strategy = new AuthorizationStrategy.Unsecured()
+      def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
+      strategy.setAllowAnonymousRead(false)
       instance.setAuthorizationStrategy(strategy)
       instance.setCrumbIssuer(new DefaultCrumbIssuer(false))
       instance.save()
      args:
-      user_name: "{{ admin_user_name }}"
-      user_pwd: "{{ admin_user_pass }}"
+      user_name: "{{ jenkins_username }}"
+      user_pwd: "{{ jenkins_pwd }}"
      user: admin
-     url: "http://localhost:{{jenkins_port}}"
+     url: "http://localhost:{{jenkins_port}}/"
      password: "{{ adminpwd.stdout }}"
-
-  # def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
-  # strategy.setAllowAnonymousRead(false)
 
   - name: complete setup wizard
     jenkins_script:
@@ -101,7 +95,6 @@
       - javadoc
       - token-macro
       - run-condition
-      - github
 
   - name: restart service jenkins
     systemd:

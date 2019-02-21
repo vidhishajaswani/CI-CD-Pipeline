@@ -1,5 +1,1 @@
-jenkins_username: jenkins
-jenkins_password: jenkins
 jenkins_port: 9999
-admin_username: admin
-admin_password: admin
