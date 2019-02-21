@@ -12,7 +12,11 @@ This is the submission by Team 5 of CSC 519 - DevOps class of Spring 2019 for th
 
 ## Automatic installation of Jenkins
 
-1. Execute the ```java``` and ```jenkins``` roles. The ```jenkins_port``` may be set in vars/main.yml. However this is discouraged. Do NOT set to 8080 as this port is used by iTrust.  
+1. Execute the ```java``` and ```jenkins``` roles. 
+   NOTE:
+   The ```jenkins_port``` may be set in vars/main.yml. However this is discouraged. Do NOT set to 8080 as this port is used by  iTrust. 
+   
+   A new user with the credentials as follows is created. username: ```jenkins``` password: ```jenkins```. You may change these credentials in vars/main.yml for this role.
 
 2. Check the installation by logging into ```http://<ip_address_of_jenkins_srv>:<jenkins_port>/```. You must be able to see the log in page of Jenkins. 
 
