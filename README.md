@@ -1,34 +1,20 @@
-# DevOps-Project
+# DevOps-Project-Milestone 1
+This is the submission by Team 5 of CSC 519 - DevOps class of Spring 2019 for the Milestone 1 of DevOps Project.
 
-## To run a basic jenkins jobs
-1. Download the mileston-1 branch
+## Introduction
+
+## Initial Steps
+1. Git clone the mileston-1 branch
 
 2. Run baker bake through both ansible-srv and jenkins-srv
 
-3. Set-up Jenkins. There are two options:
+3. Set-up Jenkins. 
 
-## Manual: 
+## Automatic installation of Jenkins
 
-1. [Setup jenkins](https://linuxize.com/post/how-to-install-jenkins-on-ubuntu-18-04/)
+1. Execute the ```java``` and ```jenkins``` roles. The ```jenkins_port``` may be set in vars/main.yml. However this is discouraged. Do NOT set to 8080 as this port is used by iTrust.  
 
-2. Setup your admin account on jenkins
-
-3. Go to http://192.168.33.100:8080/me/configure and generate a token
-
-4. Add the post to roles/templates/jenkins_jobs.ini.j2
-
-5. Change the 
-
-## Automatic installation:
-
-1. Run ```ansible-playbook -i inventory site.yml``` by uncommenting the ```jenkins``` role. The ```jenkins``` role installs Jenkins and configures it. A new user is created.
-
-  NOTE: 
-  User Credentials: Username: ```jenkins```, Password: ```jenkins```
-
-2. baker ssh into the jenkins-srv
-
-3. jenkins-jobs update jobs
+2. Check the installation by logging into ```http://<ip_address_of_jenkins_srv>:<jenkins_port>/```. You must be able to see the log in page of Jenkins. 
 
 ## Running build job for checkbox.io
 
