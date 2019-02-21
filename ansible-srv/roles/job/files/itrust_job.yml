@@ -1,7 +1,23 @@
+- scm:
+    name: checkbox
+    scm:
+      - git:
+         url: https://github.ncsu.edu/schamol/iTrust2-v4.git
+         branches:
+          - origin/master
 - job:
     name: iTrust
     description: 'configure iTrustjob'
     project-type: freestyle
+    properties:
+      - github:
+          url: https://github.ncsu.edu/schamol/iTrust2-v4.git
     builders:
       #- shell: 'sudo git clone https://github.ncsu.edu/engr-csc326-staff/iTrust2-v4.git'
       - shell: 'ansible-playbook /var/lib/jenkins/deploy_itrust.yml'
+    scm:
+      - checkbox
+    triggers:
+      - pollscm:
+          cron: ""
+          ignore-post-commit-hooks: False
