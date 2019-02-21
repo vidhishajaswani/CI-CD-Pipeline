@@ -1,7 +1,25 @@
 # DevOps-Project-Milestone 1
-This is the submission by Team 5 of CSC 519 - DevOps class of Spring 2019 for the Milestone 1 of DevOps Project.
+This is the submission by Team 5 of CSC 519 - DevOps class of Spring 2019 for the Milestone 1 of DevOps Project. The contributors in alphabetic order are:
+
+Karthik Medidisiva  -   kmedidi
+Kshittiz Kumar      -   kkumar4
+Shivam Chamoli      -   schamoli
+Vidhisha Jaswani    -   vjaswan
 
 ## Introduction
+In this milestone the following objectives were tackled.
+
+1. Automatic installation of Jenkins on a remote VM
+2. Automatic creation of jobs for the following applications on Jenkins:
+    - checkbox.io
+    - iTrust
+3. Automatic triggering on builds for the jobs upon commit to the respective application's repository. These builds run tests and deploy the applications on the aforementioned remote VM
+
+## Roles & their Description
+
+
+
+## Instructions for execution
 
 ## Initial Steps
 1. Git clone the mileston-1 branch
