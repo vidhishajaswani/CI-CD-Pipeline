@@ -25,41 +25,26 @@
       'status' in jenkins_service_status and
       jenkins_service_status['status'] == 200
   
-  # - name: unlock and add admin user
-  #   jenkins_script:
-  #    script: |
-  #     import jenkins.model.*
-  #     import hudson.security.*
-  #     import hudson.security.csrf.DefaultCrumbIssuer
-  #     def instance = Jenkins.getInstance()
-  #     def hudsonRealm = new HudsonPrivateSecurityRealm(false)
-  #     hudsonRealm.createAccount('${user_name}', '${user_pwd}')
-  #     instance.setSecurityRealm(hudsonRealm)
-  #     def strategy = new AuthorizationStrategy.Unsecured()
-  #     instance.setAuthorizationStrategy(strategy)
-  #     instance.setCrumbIssuer(new DefaultCrumbIssuer(false))
-  #     instance.save()
-  #    args:
-  #     user_name: "{{ admin_user_name }}"
-  #     user_pwd: "{{ admin_user_pass }}"
-  #    user: admin
-  #    url: "http://localhost:{{jenkins_port}}"
-  #    password: "{{ adminpwd.stdout }}"
-
-  # def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
-  # strategy.setAllowAnonymousRead(false)
-
-  - name: Security setup for configuration
+  - name: unlock and add admin user
     jenkins_script:
      script: |
       import jenkins.model.*
       import hudson.security.*
       import hudson.security.csrf.DefaultCrumbIssuer
       def instance = Jenkins.getInstance()
-      instance.disableSecurity()
+      def hudsonRealm = new HudsonPrivateSecurityRealm(false)
+      hudsonRealm.createAccount('${user_name}', '${user_pwd}')
+      instance.setSecurityRealm(hudsonRealm)
+      def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
+      strategy.setAllowAnonymousRead(false)
+      instance.setAuthorizationStrategy(strategy)
+      instance.setCrumbIssuer(new DefaultCrumbIssuer(false))
       instance.save()
+     args:
+      user_name: "{{ jenkins_username }}"
+      user_pwd: "{{ jenkins_pwd }}"
      user: admin
-     url: "http://localhost:{{jenkins_port}}"
+     url: "http://localhost:{{jenkins_port}}/"
      password: "{{ adminpwd.stdout }}"
 
   - name: complete setup wizard
