@@ -1,4 +1,8 @@
 ---
+- name: read admin pwd
+  command: cat /var/lib/jenkins/secrets/initialAdminPassword
+  register: adminpwd
+
 - name: Security setup for configuration
   jenkins_script:
     script: |
