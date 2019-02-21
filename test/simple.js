@@ -3,7 +3,7 @@ const expect = require('chai').expect;
 const main = require('../main')
 const got   = require('got');
 var http = require('http');
-var checkbox_server_url = 'http://192.168.33.100'
+var checkbox_server_url = 'http://192.168.33.20'
  
 describe('Array', function() {
   describe('#indexOf()', function() {

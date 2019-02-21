@@ -1,5 +1,5 @@
 - scm:
-    name: checkbox
+    name: iTrust
     scm:
       - git:
          url: https://github.ncsu.edu/schamol/iTrust2-v4.git
