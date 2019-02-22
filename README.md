@@ -92,6 +92,9 @@ curl http://192.168.33.100:9999/git/notifyCommit?url=https://github.com/ShivamCh
 
 7. To run ```mvn clean test verify checkstyle:checkstyle``` navigate to /var/lib/jenkins/iTrust2/iTrust2
 
+![checkstyle](results/checkstyle.png)  
+
+
 ##### To configure automatic execution of build job after a commit, a post-commit hook can be used with following content!
 ```
 #!/bin/bash
@@ -100,7 +103,6 @@ curl http://192.168.33.100:9999/git/notifyCommit?url=https://github.ncsu.edu/sch
 # https://github.ncsu.edu/schamol/iTrust2-v4.git is the forked repository
 ```
 
-![checkstyle](results/checkstyle.png)  
 
 ## Contributions
 
