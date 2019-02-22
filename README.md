@@ -76,7 +76,7 @@ curl http://192.168.33.100:9999/git/notifyCommit?url=https://github.com/ShivamCh
 2. Inside roles/job/tasks/main.yml use only the create_itrust_job.yml and build_itrust.yml.
 3. Create global credentials on Jenkins as on the below screenshot and copy the ID value and add it to roles/job/vars/main.yml
 
-![credentials](images/credentials.png)  
+![credentials](results/credentials.png)  
 
 4. Run site.yml using the command ```ansible-playbook -i inventory site.yml```
 5. Check 192.168.33.100:9999 to see checkbox.io up and running.
