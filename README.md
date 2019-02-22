@@ -18,7 +18,7 @@ In this milestone the following objectives were tackled.
     - checkbox.io
     - iTrust
 3. Automatic triggering on builds for the jobs upon commit to the respective application's repository. These builds run tests and deploy the applications on the aforementioned remote VM
-4. Using a combination of mocha/pm2, created a test script that will start and stop the express server and hit an endpoint of checkbox.io service on the server to check its status. 
+4. Using a combination of mocha/pm2, created a test script that will start and stop the express server and hit an endpoint of checkbox.io service to check its status. 
 
 ## Roles & their Description
 
