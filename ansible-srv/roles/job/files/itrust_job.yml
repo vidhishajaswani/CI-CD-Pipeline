@@ -2,7 +2,8 @@
     name: iTrust
     scm:
       - git:
-         url: git@github.ncsu.edu:schamol/iTrust2-v4/
+         url: https://github.ncsu.edu/schamol/iTrust2-v4.git
+         credentials: {{ credentials }}
          branches:
           - origin/master
 - job:
@@ -11,7 +12,7 @@
     project-type: freestyle
     properties:
       - github:
-          url: git@github.ncsu.edu:schamol/iTrust2-v4.git
+          url: https://github.ncsu.edu/schamol/iTrust2-v4/
     builders:
       #- shell: 'sudo git clone https://github.ncsu.edu/engr-csc326-staff/iTrust2-v4.git'
       - shell: 'ansible-playbook /var/lib/jenkins/deploy_itrust.yml'

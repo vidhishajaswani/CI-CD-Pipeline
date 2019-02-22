@@ -1,5 +1,5 @@
 - scm:
-    name: checkbox
+    name: checkbox.io
     scm:
       - git:
          url: https://github.com/ShivamChamoli/checkbox.io.git
@@ -7,7 +7,7 @@
           - origin/master
 
 - job:
-    name: checkbox.io 24
+    name: checkbox.io
     description: 'configure checkbox.io job'
     project-type: freestyle
     properties:
@@ -18,7 +18,7 @@
       #- shell: 'cd /var/lib/jenkins/workspace/checkbox.io/checkbox.io/server-side/site && sudo npm install'
       - shell: 'ansible-playbook /var/lib/jenkins/deploy_checkbox.yml'
     scm:
-      - checkbox
+      - checkbox.io
     triggers:
       - pollscm:
           cron: ""

@@ -4,8 +4,8 @@
   roles:
     #- java
     #- jenkins
-    - ansible
-    - maven
-    - mysql
-    - deployfiles
+    #- ansible
+    #- maven
+    #- mysql
+    #- deployfiles
     - job

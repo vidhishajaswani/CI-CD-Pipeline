@@ -54,7 +54,13 @@ In this milestone the following objectives were tackled.
 2. Create a public-private key pair on your computer using ssh-keygen and add the public SSH key to GitHub and keep in the private key under ansible-srv/roles/deployfiles/files and name it id_rsa. This is important since we need to git clone from github.ncsu.edu.
 3. Inside roles/job/tasks/main.yml use only the create_checkbox_job.yml and build_checkbox_job.yml.
 4. Run site.yml using the command ```ansible-playbook -i inventory site.yml```
-2. Check 192.168.33.100:9999
+5. Check 192.168.33.100:9999 to see checkbox.io up and running.
+
+##### npm test for checkbox.io
+
+1. After checkbox.io is up and running, navigate to our cloned repo DevOps-Project on your local computer and run ```./build.sh```
+
+2. This will run ```npm install``` and ```npm test``` which installs all dependencies, runs the express server, checks for the endpoint of checkbox.io application and returns true if the application is up and running.
 
 ##### To configure automatic execution of build job after a commit, a post-commit hook can be used with following content!
 ```
@@ -63,3 +69,19 @@ curl http://192.168.33.100:9999/git/notifyCommit?url=https://github.com/ShivamCh
 # 192.168.33.100:9999 is the jenkins server address
 # https://github.com/ShivamChamoli/checkbox.io.git is the forked repository
 ```
+## Running build job for iTrust
+
+1. Comment the java, jenkins, ansible, maven, and mysql roles in site.yml and uncomment deployfiles,  job roles in site.yml.
+2. Inside roles/job/tasks/main.yml use only the create_itrust_job.yml and build_itrust.yml.
+3. Create global credentials on Jenkins as on the below screenshot and copy the ID value and add it to roles/job/vars/main.yml
+
+![credentials](images/credentials.png)  
+
+4. Run site.yml using the command ```ansible-playbook -i inventory site.yml```
+5. Check 192.168.33.100:9999 to see checkbox.io up and running.
+
+
+## Screencast
+[Screencast Link]()
+
+**Thank you!**
