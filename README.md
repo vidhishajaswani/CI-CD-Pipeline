@@ -67,6 +67,8 @@ In this milestone the following objectives were tackled.
 
 2. This will run ```npm install``` and ```npm test``` which installs all dependencies, runs the express server, checks for the endpoint of checkbox.io application and returns true if the application is up and running.
 
+
+![npm test](results/npmtest.png)  
 ##### To configure automatic execution of build job after a commit, a post-commit hook can be used with following content!
 ```
 #!/bin/bash
@@ -85,6 +87,9 @@ curl http://192.168.33.100:9999/git/notifyCommit?url=https://github.com/ShivamCh
 4. Add your credentials for in deployfiles/templates/email.properties.j2 for the email account.
 5. Run site.yml using the command ```ansible-playbook -i inventory site.yml```
 6. Check 192.168.33.100:8080/iTrust2 to see iTrust up and running.
+
+![iTrust](results/iTrust.png)  
+
 7. To run ```mvn clean test verify checkstyle:checkstyle``` navigate to /var/lib/jenkins/iTrust2/iTrust2
 
 ##### To configure automatic execution of build job after a commit, a post-commit hook can be used with following content!
@@ -94,6 +99,8 @@ curl http://192.168.33.100:9999/git/notifyCommit?url=https://github.ncsu.edu/sch
 # 192.168.33.100:9999 is the jenkins server address
 # https://github.ncsu.edu/schamol/iTrust2-v4.git is the forked repository
 ```
+
+![checkstyle](results/checkstyle.png)  
 ## Screencast
 [Screencast Link]()
 
