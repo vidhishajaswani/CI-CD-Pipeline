@@ -22,13 +22,5 @@
       src: templates/root.cnf.j2
       dest: ~/.my.cnf
 
-  # Create Mattermost Database and grant priviliges
-  - name: Create MySQL database for mattermost
-    mysql_db: name={{ mysql_database }} state=present
-
-  - name: Create MySQL user and Grant Priviliges
-    mysql_user: name={{ mysql_user }} password={{ mysql_user_password }} priv='{{ mysql_database }}.*:ALL'
-
   
-    
       
