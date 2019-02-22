@@ -74,7 +74,7 @@ curl http://192.168.33.100:9999/git/notifyCommit?url=https://github.com/ShivamCh
 
 1. Comment the java, jenkins, ansible, maven, and mysql roles in site.yml and uncomment deployfiles,  job roles in site.yml.
 2. Inside roles/job/tasks/main.yml use only the create_itrust_job.yml and build_itrust.yml.
-3. Create global credentials on Jenkins as on the below screenshot and copy the ID value and add it to roles/job/vars/main.yml
+3. Create global credentials on Jenkins as on the below screenshot and copy the ID value and add it to roles/job/tasks/itrust_job.yml
 
 ![credentials](results/credentials.png)  
 

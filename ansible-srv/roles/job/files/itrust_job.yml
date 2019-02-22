@@ -3,7 +3,7 @@
     scm:
       - git:
          url: https://github.ncsu.edu/schamol/iTrust2-v4.git
-         credentials: {{ credentials }}
+         credentials: 
          branches:
           - origin/master
 - job:
