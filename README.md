@@ -99,6 +99,9 @@ curl http://192.168.33.100:9999/git/notifyCommit?url=https://github.ncsu.edu/sch
 # 192.168.33.100:9999 is the jenkins server address
 # https://github.ncsu.edu/schamol/iTrust2-v4.git is the forked repository
 ```
+
+![checkstyle](results/checkstyle.png)  
+
 ## Contributions
 
 1. Karthik Medidisiva
@@ -111,7 +114,6 @@ curl http://192.168.33.100:9999/git/notifyCommit?url=https://github.ncsu.edu/sch
 
 Setting up build jobs for checkbox.io and iTrust and automated build/deploying of checkbox.io and iTrust (along with deploying all dependencies like java, ansible, mysql, maven). Made the screencast and made contributions to ReadMe file.
 
-![checkstyle](results/checkstyle.png)  
 ## Screencast
 [Screencast Link]()
 
