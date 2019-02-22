@@ -1,29 +1,53 @@
 ---
 - name: Copy checkbox files for deployment
-  copy: 
-    src: files/deploy_checkbox.yml
+  template: 
+    src: templates/deploy_checkbox.yml.j2
     dest: /var/lib/jenkins/deploy_checkbox.yml
 
 - name: Copy iTrust files for deployment
-  copy: 
-    src: files/deploy_itrust.yml
+  template: 
+    src: templates/deploy_itrust.yml.j2
     dest: /var/lib/jenkins/deploy_itrust.yml
 
-- name: Create folder
-  file: 
-    path: /.ssh
-    state: directory
+# - name: Create folder
+#   file: 
+#     path: /.ssh
+#     state: directory
 
     
-- name: Copy the key
-  copy: 
-    src: files/id_rsa   # Put your private key here
-    dest: /.ssh/id_rsa
-    mode: 0400
+# - name: Copy the key
+#   copy: 
+#     src: files/id_rsa   # Put your private key here
+#     dest: /.ssh/id_rsa
+#     mode: 0400
 
 - name: email.properties
   copy:                                     
     src: templates/email.properties.j2
     dest: /var/lib/jenkins/email.properties
         
+- name: Create rebuild directory
+  file:
+    name: job_rebuilds
+    state: directory
+
+- name: Copy Rebuild file for checkbox_job
+  template:
+    src: templates/rebuild_checkbox_job.yml.j2
+    dest: "{{ vagrant_home }}/job_rebuilds/rebuild_checkbox_job.yml"
+
+- name: Copy Rebuild file for itrust_job
+  template:
+    src: templates/rebuild_itrust_job.yml.j2
+    dest: "{{ vagrant_home }}/job_rebuilds/rebuild_itrust_job.yml"
+
+- name: Copy Build file for checkbox_job
+  template:
+    src: templates/build_checkbox_job.yml
+    dest: "{{ vagrant_home }}/job_rebuilds/build_checkbox_job.yml"
+
+- name: Copy Build file for itrust_job
+  template:
+    src: templates/build_itrust.yml
+    dest: "{{ vagrant_home }}/job_rebuilds/build_itrust.yml"
 

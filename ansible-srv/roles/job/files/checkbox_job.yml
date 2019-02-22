@@ -7,7 +7,7 @@
           - origin/master
 
 - job:
-    name: checkbox.io 24
+    name: checkbox.io
     description: 'configure checkbox.io job'
     project-type: freestyle
     properties:
