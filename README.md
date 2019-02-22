@@ -2,8 +2,11 @@
 This is the submission by Team 5 of CSC 519 - DevOps class of Spring 2019 for the Milestone 1 of DevOps Project. The contributors in alphabetic order are:
 
 Karthik Medidisiva  -   kmedidi
+
 Kshittiz Kumar      -   kkumar4
+
 Shivam Chamoli      -   schamoli
+
 Vidhisha Jaswani    -   vjaswan
 
 ## Introduction
