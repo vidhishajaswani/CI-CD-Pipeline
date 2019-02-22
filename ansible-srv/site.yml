@@ -7,5 +7,5 @@
     #- ansible
     #- maven
     #- mysql
-    #- deployfiles
-    - job
+    - deployfiles
+    #- job

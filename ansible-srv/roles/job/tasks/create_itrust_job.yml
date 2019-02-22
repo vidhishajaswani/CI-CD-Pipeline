@@ -21,6 +21,7 @@
     url: "http://localhost:{{jenkins_port}}"
     password: "{{ adminpwd.stdout }}"
 
+
 - name: Run shell to update jobs
   command: 'jenkins-jobs --conf jenkins_jobs.ini update jobs'
 
