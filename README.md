@@ -101,15 +101,15 @@ curl http://192.168.33.100:9999/git/notifyCommit?url=https://github.ncsu.edu/sch
 ```
 ## Contributions
 
-Karthik Medidisiva
+1. Karthik Medidisiva
 
-Kshittiz Kumar   
+2. Kshittiz Kumar   
 
-Shivam Chamoli 
+3. Shivam Chamoli 
 
-Vidhisha Jaswani
+4. Vidhisha Jaswani
 
-Setting up build jobs for checkbox.io and iTrust along with deploying all dependencies like java, ansible, mysql, maven along with these applications. Made the screencast and made contributions to ReadMe file.
+Setting up build jobs for checkbox.io and iTrust and automated build/deploying of checkbox.io and iTrust (along with deploying all dependencies like java, ansible, mysql, maven). Made the screencast and made contributions to ReadMe file.
 
 ![checkstyle](results/checkstyle.png)  
 ## Screencast
