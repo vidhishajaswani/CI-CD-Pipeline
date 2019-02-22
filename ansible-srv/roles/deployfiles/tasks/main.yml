@@ -1,12 +1,12 @@
 ---
 - name: Copy checkbox files for deployment
   copy: 
-    src: deploy_checkbox.yml
+    src: files/deploy_checkbox.yml
     dest: /var/lib/jenkins/deploy_checkbox.yml
 
 - name: Copy iTrust files for deployment
   copy: 
-    src: deploy_itrust.yml
+    src: files/deploy_itrust.yml
     dest: /var/lib/jenkins/deploy_itrust.yml
 
 - name: Create folder
