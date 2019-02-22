@@ -49,6 +49,8 @@ In this milestone the following objectives were tackled.
 
 2. Check the installation by logging into ```http://<ip_address_of_jenkins_srv>:<jenkins_port>/```, in our case 192.168.33.100:9999. You must be able to see the log in page of Jenkins.
 
+![jenkins](results/jenkins.png)  
+
 ## Running build job for checkbox.io
 
 1. Comment the java and jenkins roles in site.yml and uncomment ansible, maven, mysql, deployfiles, and job roles in site.yml.
@@ -56,6 +58,8 @@ In this milestone the following objectives were tackled.
 3. Inside roles/job/tasks/main.yml use only the create_checkbox_job.yml and build_checkbox_job.yml.
 4. Run site.yml using the command ```ansible-playbook -i inventory site.yml```
 5. Check 192.168.33.100:9999 to see checkbox.io up and running.
+
+![checkbox.io](results/checkbox.io.png)  
 
 ##### npm test for checkbox.io
 
