@@ -36,7 +36,7 @@ Follow the below instructions.
 
 ## Initial Steps
 
-1. Git clone the milestone_1.2 branch and set up the ansible-srv and jenkins-srv using baker bake.
+1. Git clone the master branch and set up the ansible-srv and jenkins-srv using baker bake.
 
 2. The inventory file has the details for jenkins-srv VM. You may edit the IP address if necessary. It is assumed that the jenkins-srv runs as the host for source repository that tracks the changes made to the Enterprise applications ```checkbox.io``` and ```iTrust2```.
 
@@ -101,15 +101,15 @@ To run ```mvn clean test verify checkstyle:checkstyle``` navigate to /var/lib/je
 
 ![checkstyle](results/checkstyle.png)  
 ## Contribution
-1. Karthik Medidisiva 
+1. **Karthik Medidisiva** : Automatic Installation of Jenkins on a remote host using Ansible. Handling authentication issues with Jenkins during job creation and building. Assistance with setup of Remote repository and Git-hooks.
 
-2. Kshittiz Kumar: My contribution to projects was to figure out ways to trigger automatic build on jenkins using web-hooks/git hooks and handle our git repository. I analysed the usage of post-commit hook & post-receive hook to trigger automatic build on jenkins. I realized that post-commit hook did trigger build using 'curl' command but as obvious it was not running the build on latest changes as not being triggered after the push. Thus after a team discussion, we moved with the exploration of better approach of post-receive hook, but for future reference we decided to make a new branch milestone_1.1 to keep post-commit version. I also worked on creating test script for chechbox.io using mocha/pm2. Finally I contributed to Readme.md. I learnt lot of new things regarding ansible, git & majorly jenkins builds execution mechanism.
+2. **Kshittiz Kumar**: My contribution to projects was to figure out ways to trigger automatic build on jenkins using web-hooks/git hooks and handle our git repository. I analysed the usage of post-commit hook & post-receive hook to trigger automatic build on jenkins. I realized that post-commit hook did trigger build using 'curl' command but as obvious it was not running the build on latest changes as not being triggered after the push. Thus after a team discussion, we moved with the exploration of better approach of post-receive hook, but for future reference we decided to make a new branch *milestone_1.1* to keep post-commit version. I also worked on creating test script for chechbox.io using mocha/pm2. Finally I contributed to Readme.md. I learnt lot of new things regarding ansible, git & majorly jenkins builds execution mechanism.
 
-3. Shivam Chamoli
+3. **Shivam Chamoli**: Responsible for research and development of jenkins job builder yaml files. Contributed in creating ansible playbooks. Contributed to testing and architectural decisions.
 
-4. Vidhisha Jaswani: Automatically setup build jobs for nodejs and iTrust along with building/deploying the two applications ( along with dependencies like java, ansible, mysql, and maven). Also created screencast and contributed in readme.
+4. **Vidhisha Jaswani**: Automatically setup build jobs for nodejs and iTrust along with building/deploying the two applications ( along with dependencies like java, ansible, mysql, and maven). Also created screencast and contributed in readme.
  
 ## Screencast
-[Screencast Link]()
+[Screencast Link](https://youtu.be/zO1nPxVK7wI)
 
 **Thank you!**
