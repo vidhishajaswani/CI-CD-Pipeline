@@ -32,12 +32,34 @@ In this milestone the following objectives were tackled.
 
 
 ## Instructions for execution
+Follow the below instructions.
 
 ## Initial Steps
 
-1. Git clone the mileston-1 branch and set up the ansible-srv and jenkins-srv using baker bake.
+1. Git clone the milestone_1.2 branch and set up the ansible-srv and jenkins-srv using baker bake.
 
-2. SSH into both the machines and navigate to the shared folder /ansible-srv on the ansible-srv VM.
+2. The inventory file has the details for jenkins-srv VM. You may edit the IP address if necessary. It is assumed that the jenkins-srv runs as the host for source repository that tracks the changes made to the Enterprise applications ```checkbox.io``` and ```iTrust2```.
+
+3. Set up the interactions between local repo and this source repo. The following instructions achieve the same. You may diverge from this set up at your own risk.
+
+### Instructions for creating the interactions between Git repositories
+3.1. On the jenkins-srv VM, create the production git repositories ```checkbox.git``` and ```itrust.git```.
+
+3.2. Inside the ```*.git``` directories, run the following command to initialize as a bare repository.
+<br>```$ git init --bare```
+
+3.3. At the host machine (which is able to SSH into the jenkins-srv without the need to specify identity file), clone the checkbox.io and iTrust applications from the online github repositories ([checkbox.io](https://github.com/ShivamChamoli/checkbox.io) and [iTrust](https://github.ncsu.edu/engr-csc326-staff/iTrust2-v4)).
+
+3.4. Now navigate inside this repo and add the bare repositories created inside jenkins-srv as a remote repo called ```prod```.
+<br>```$ git remote add prod vagrant@<IP of jenkins-srv>:/~/<bare_repo>```
+
+For example,
+<br>```$ git remote add prod vagrant@192.168.33.100:/~/checkbox.git```
+
+3.5. Create an initial push into this bare repo from the local repo
+<br>```$ git push prod master```
+
+3.6. Inside the jenkins-srv VM's remote repo, create a post-receive hook. This post-receive hook will trigger the re-build of the jobs and deployment from this fresh code push. Example hook files have be provided [here](hooks/)
 
 ## Automatic installation of Jenkins
 
