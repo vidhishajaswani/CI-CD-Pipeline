@@ -77,8 +77,8 @@ NOTE: You may edit this [file](ansible-srv/roles/deployfiles/vars/main.yml) if y
 
 ## Running build job for checkbox.io
 
-Run the following command from the ansible-srv to build checkbox.io on the jenkins-srv itself (which acts as the prod-srv).
-<br>```$ ansible-playbook -i inventory site_build_checkbox.yml```
+Run the following command from the ansible-srv to build checkbox.io on the jenkins-srv itself (which acts as the prod-srv) after changing this [file](/ansible-srv/roles/job/tasks/main.yml). (You must comment the iTrust job)
+<br>```$ ansible-playbook -i inventory site_build_jobs.yml```
 
 ![checkbox.io](results/checkbox.io.png)  
 
@@ -92,8 +92,8 @@ Run the following command from the ansible-srv to build checkbox.io on the jenki
 
 ## Running build job for iTrust
 
-Run the following command from the ansible-srv to build iTrust on the jenkins-srv itself.
-<br>```$ ansible-playbook -i inventory site_build_itrust.yml```
+Run the following command from the ansible-srv to build iTrust on the jenkins-srv itself after changing this [file](/ansible-srv/roles/job/tasks/main.yml). (You must comment the checkbox job)
+<br>```$ ansible-playbook -i inventory site_build_jobs.yml```
 
 ![iTrust](results/iTrust.png)  
 
