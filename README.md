@@ -88,6 +88,8 @@ Run the following command from the ansible-srv to build checkbox.io on the jenki
 
 2. This will run ```npm install``` and ```npm test``` which installs all dependencies, runs the express server, checks for the endpoint of checkbox.io application and returns true if the application is up and running.
 
+NOTE: If the checkbox has been deployed on a host with a different IP, please edit the same in ```simple.js```.
+
 ![npm test](results/npmtest.png)  
 
 ## Running build job for iTrust
