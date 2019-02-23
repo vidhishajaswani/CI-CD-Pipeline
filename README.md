@@ -95,6 +95,8 @@ Run the following command from the ansible-srv to build checkbox.io on the jenki
 Run the following command from the ansible-srv to build iTrust on the jenkins-srv itself after changing this [file](/ansible-srv/roles/job/tasks/main.yml). (You must comment the checkbox job)
 <br>```$ ansible-playbook -i inventory site_build_jobs.yml```
 
+NOTE: You must add username and password for your email in this [file](ansible-srv/roles/deployfiles/vars/main.yml)
+
 ![iTrust](results/iTrust.png)  
 
 To run ```mvn clean test verify checkstyle:checkstyle``` navigate to /var/lib/jenkins/iTrust2/iTrust2
