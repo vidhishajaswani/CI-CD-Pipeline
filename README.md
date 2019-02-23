@@ -55,9 +55,10 @@ In this milestone the following objectives were tackled.
 
 1. Comment the java and jenkins roles in site.yml and uncomment ansible, maven, mysql, deployfiles, and job roles in site.yml.
 2. Create a public-private key pair on your computer using ssh-keygen and add the public SSH key to GitHub and keep in the private key under ansible-srv/roles/deployfiles/files and name it id_rsa. This is important since we need to git clone from github.ncsu.edu.
-3. Inside roles/job/tasks/main.yml use only the create_checkbox_job.yml and build_checkbox_job.yml.
-4. Run site.yml using the command ```ansible-playbook -i inventory site.yml```
-5. Check 192.168.33.100:9999 to see checkbox.io up and running.
+3. Add your credentials for in deployfiles/templates/email.properties.j2 for the email account.
+4. Inside roles/job/tasks/main.yml use only the create_checkbox_job.yml and build_checkbox_job.yml.
+5. Run site.yml using the command ```ansible-playbook -i inventory site.yml```
+6. Check 192.168.33.100:9999 to see checkbox.io up and running.
 
 ![checkbox.io](results/checkbox.io.png)  
 

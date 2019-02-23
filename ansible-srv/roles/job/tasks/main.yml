@@ -1,5 +1,5 @@
 ---
-#- include: create_checkbox_job.yml
+- include: create_checkbox_job.yml
 #- include: build_checkbox_job.yml
 - include: create_itrust_job.yml
-- include: build_itrust.yml
+#- include: build_itrust.yml
