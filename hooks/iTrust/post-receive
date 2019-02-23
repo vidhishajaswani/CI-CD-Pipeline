@@ -1,0 +1,1 @@
+ansible-playbook /home/vagrant/job_rebuilds/rebuild_itrust_job.yml
