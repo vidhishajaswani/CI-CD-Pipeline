@@ -61,7 +61,7 @@ For example,
 
 3.6. Inside the jenkins-srv VM's remote repo, create a post-receive hook. This post-receive hook will trigger the re-build of the jobs and deployment from this fresh code push. Example hook files have be provided [here](hooks/)
 
-NOTE: You may edit this [file](roles/deployfiles/vars/main.yml) if you have the remote repo at a different location.
+NOTE: You may edit this [file](ansible-srv/roles/deployfiles/vars/main.yml) if you have the remote repo at a different location.
 
 ## Automatic installation of Jenkins
 
