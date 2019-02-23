@@ -80,6 +80,8 @@ NOTE: You may edit this [file](ansible-srv/roles/deployfiles/vars/main.yml) if y
 Run the following command from the ansible-srv to build checkbox.io on the jenkins-srv itself (which acts as the prod-srv) after changing this [file](/ansible-srv/roles/job/tasks/main.yml). (You must comment the iTrust job)
 <br>```$ ansible-playbook -i inventory site_build_jobs.yml```
 
+NOTE: You must add username and password for your email in this [file](ansible-srv/roles/deployfiles/vars/main.yml)
+
 ![checkbox.io](results/checkbox.io.png)  
 
 ##### npm test for checkbox.io
@@ -94,8 +96,6 @@ Run the following command from the ansible-srv to build checkbox.io on the jenki
 
 Run the following command from the ansible-srv to build iTrust on the jenkins-srv itself after changing this [file](/ansible-srv/roles/job/tasks/main.yml). (You must comment the checkbox job)
 <br>```$ ansible-playbook -i inventory site_build_jobs.yml```
-
-NOTE: You must add username and password for your email in this [file](ansible-srv/roles/deployfiles/vars/main.yml)
 
 ![iTrust](results/iTrust.png)  
 
