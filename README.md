@@ -32,12 +32,36 @@ In this milestone the following objectives were tackled.
 
 
 ## Instructions for execution
+Follow the below instructions.
 
 ## Initial Steps
 
-1. Git clone the mileston-1 branch and set up the ansible-srv and jenkins-srv using baker bake.
+1. Git clone the milestone_1.2 branch and set up the ansible-srv and jenkins-srv using baker bake.
 
-2. SSH into both the machines and navigate to the shared folder /ansible-srv on the ansible-srv VM.
+2. The inventory file has the details for jenkins-srv VM. You may edit the IP address if necessary. It is assumed that the jenkins-srv runs as the host for source repository that tracks the changes made to the Enterprise applications ```checkbox.io``` and ```iTrust2```.
+
+3. Set up the interactions between local repo and this source repo. The following instructions achieve the same. You may diverge from this set up at your own risk.
+
+### Instructions for creating the interactions between Git repositories
+3.1. On the jenkins-srv VM, create the production git repositories ```checkbox.git``` and ```itrust.git```.
+
+3.2. Inside the ```*.git``` directories, run the following command to initialize as a bare repository.
+<br>```$ git init --bare```
+
+3.3. At the host machine (which is able to SSH into the jenkins-srv without the need to specify identity file), clone the checkbox.io and iTrust applications from the online github repositories ([checkbox.io](https://github.com/ShivamChamoli/checkbox.io) and [iTrust](https://github.ncsu.edu/engr-csc326-staff/iTrust2-v4)).
+
+3.4. Now navigate inside this repo and add the bare repositories created inside jenkins-srv as a remote repo called ```prod```.
+<br>```$ git remote add prod vagrant@<IP of jenkins-srv>:/~/<bare_repo>```
+
+For example,
+<br>```$ git remote add prod vagrant@192.168.33.100:/~/checkbox.git```
+
+3.5. Create an initial push into this bare repo from the local repo
+<br>```$ git push prod master```
+
+3.6. Inside the jenkins-srv VM's remote repo, create a post-receive hook. This post-receive hook will trigger the re-build of the jobs and deployment from this fresh code push. Example hook files have be provided [here](hooks/)
+
+NOTE: You may edit this [file](ansible-srv/roles/deployfiles/vars/main.yml) if you have the remote repo at a different location.
 
 ## Automatic installation of Jenkins
 
@@ -53,11 +77,8 @@ In this milestone the following objectives were tackled.
 
 ## Running build job for checkbox.io
 
-1. Comment the java and jenkins roles in site.yml and uncomment ansible, maven, mysql, deployfiles, and job roles in site.yml.
-2. Create a public-private key pair on your computer using ssh-keygen and add the public SSH key to GitHub and keep in the private key under ansible-srv/roles/deployfiles/files and name it id_rsa. This is important since we need to git clone from github.ncsu.edu.
-3. Inside roles/job/tasks/main.yml use only the create_checkbox_job.yml and build_checkbox_job.yml.
-4. Run site.yml using the command ```ansible-playbook -i inventory site.yml```
-5. Check 192.168.33.100:9999 to see checkbox.io up and running.
+Run the following command from the ansible-srv to build checkbox.io on the jenkins-srv itself (which acts as the prod-srv) after changing this [file](/ansible-srv/roles/job/tasks/main.yml). (You must comment the iTrust job)
+<br>```$ ansible-playbook -i inventory site_build_jobs.yml```
 
 ![checkbox.io](results/checkbox.io.png)  
 
@@ -67,40 +88,19 @@ In this milestone the following objectives were tackled.
 
 2. This will run ```npm install``` and ```npm test``` which installs all dependencies, runs the express server, checks for the endpoint of checkbox.io application and returns true if the application is up and running.
 
-
 ![npm test](results/npmtest.png)  
-##### To configure automatic execution of build job after a commit, a post-commit hook can be used with following content!
-```
-#!/bin/bash
-curl http://192.168.33.100:9999/git/notifyCommit?url=https://github.com/ShivamChamoli/checkbox.io.git
-# 192.168.33.100:9999 is the jenkins server address
-# https://github.com/ShivamChamoli/checkbox.io.git is the forked repository
-```
+
 ## Running build job for iTrust
 
-1. Comment the java, jenkins, ansible, maven, and mysql roles in site.yml and uncomment deployfiles,  job roles in site.yml.
-2. Inside roles/job/tasks/main.yml use only the create_itrust_job.yml and build_itrust.yml.
-3. Create global credentials on Jenkins as on the below screenshot and copy the ID value and add it to roles/job/tasks/itrust_job.yml
-
-![credentials](results/credentials.png)  
-
-4. Add your credentials for in deployfiles/templates/email.properties.j2 for the email account.
-5. Run site.yml using the command ```ansible-playbook -i inventory site.yml```
-6. Check 192.168.33.100:8080/iTrust2 to see iTrust up and running.
+Run the following command from the ansible-srv to build iTrust on the jenkins-srv itself after changing this [file](/ansible-srv/roles/job/tasks/main.yml). (You must comment the checkbox job)
+<br>```$ ansible-playbook -i inventory site_build_jobs.yml```
 
 ![iTrust](results/iTrust.png)  
 
-7. To run ```mvn clean test verify checkstyle:checkstyle``` navigate to /var/lib/jenkins/iTrust2/iTrust2
-
-##### To configure automatic execution of build job after a commit, a post-commit hook can be used with following content!
-```
-#!/bin/bash
-curl http://192.168.33.100:9999/git/notifyCommit?url=https://github.ncsu.edu/schamol/iTrust2-v4.git
-# 192.168.33.100:9999 is the jenkins server address
-# https://github.ncsu.edu/schamol/iTrust2-v4.git is the forked repository
-```
+To run ```mvn clean test verify checkstyle:checkstyle``` navigate to /var/lib/jenkins/iTrust2/iTrust2
 
 ![checkstyle](results/checkstyle.png)  
+
 ## Screencast
 [Screencast Link]()
 
