@@ -100,7 +100,15 @@ Run the following command from the ansible-srv to build iTrust on the jenkins-sr
 To run ```mvn clean test verify checkstyle:checkstyle``` navigate to /var/lib/jenkins/iTrust2/iTrust2
 
 ![checkstyle](results/checkstyle.png)  
+## Contribution
+1. Karthik Medidisiva 
 
+2. Kshittiz Kumar: My contribution to projects was to figure out ways to trigger automatic build on jenkins using web-hooks/git hooks and handle our git repository. I analysed the usage of post-commit hook & post-receive hook to trigger automatic build on jenkins. I realized that post-commit hook did trigger build using 'curl' command but as obvious it was not running the build on latest changes as not being triggered after the push. Thus after a team discussion, we moved with the exploration of better approach of post-receive hook, but for future reference we decided to make a new branch milestone_1.1 to keep post-commit version. I also worked on creating test script for chechbox.io using mocha/pm2. Finally I contributed to Readme.md. I learnt lot of new things regarding ansible, git & majorly jenkins builds execution mechanism.
+
+3. Shivam Chamoli
+
+4. Vidhisha Jaswani: Automatically setup build jobs for nodejs and iTrust along with building/deploying the two applications ( along with dependencies like java, ansible, mysql, and maven). Also created screencast and contributed in readme.
+ 
 ## Screencast
 [Screencast Link]()
 
