@@ -1,0 +1,3 @@
+checkbox_repo: /home/vagrant/checkbox.git
+itrust_repo: /home/vagrant/itrust.git
+vagrant_home: /home/vagrant

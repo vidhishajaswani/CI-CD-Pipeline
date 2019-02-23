@@ -2,24 +2,10 @@
 - hosts: localhost
   become: yes
   tasks:
-    
-    - name: Scan public key of github.ncsu.edu
-      command: ssh-keyscan github.ncsu.edu
-      register: github_key
-
-    - name: Add public key of github.ncsu.edu to known_hosts file
-      known_hosts:
-        name: github.ncsu.edu
-        key: '{{github_key.stdout}}'
-        hash_host: no
-        state: present
-
-    - name: Git clone Ensure that private key /.ssh/id_rsa is present
+    - name: Git clone 
       git:
-        repo: 'git@github.ncsu.edu:engr-csc326-staff/iTrust2-v4.git'
+        repo: "{{ itrust_repo }}"
         dest: iTrust2
-        key_file: /.ssh/id_rsa        # Ensure that private key /.ssh/id_rsa is present
-
 
     - name: db.properties
       copy:

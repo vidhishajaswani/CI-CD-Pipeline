@@ -1,0 +1,7 @@
+---
+- hosts: localhost
+  become: yes
+  vars:
+    - jenkins_port: {{jenkins_port}}
+  tasks:
+    - include_tasks: build_itrust.yml

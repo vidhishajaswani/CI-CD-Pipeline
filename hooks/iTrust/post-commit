@@ -1,2 +1,0 @@
-#!/bin/bash
-curl http://192.168.33.100:9999/git/notifyCommit?url=https://github.ncsu.edu/schamol/iTrust2-v4.git

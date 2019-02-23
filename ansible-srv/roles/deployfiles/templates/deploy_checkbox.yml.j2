@@ -33,9 +33,10 @@
       file:
         path: ./checkbox
         state: directory
+    
     - name: Clone repo
       git: 
-        repo: https://github.com/ShivamChamoli/checkbox.io
+        repo: "{{checkbox_repo}}"
         dest: checkbox
 
     - name: Add an apt key by id from a keyserver
