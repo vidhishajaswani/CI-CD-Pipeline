@@ -61,6 +61,8 @@ For example,
 
 3.6. Inside the jenkins-srv VM's remote repo, create a post-receive hook. This post-receive hook will trigger the re-build of the jobs and deployment from this fresh code push. Example hook files have be provided [here](hooks/)
 
+NOTE: You may edit this [file](roles/deployfiles/vars/main.yml) if you have the remote repo at a different location.
+
 ## Automatic installation of Jenkins
 
 1. Execute the ```java``` and ```jenkins``` roles in site.yml using the command ```ansible-playbook -i inventory site.yml```
@@ -75,11 +77,8 @@ For example,
 
 ## Running build job for checkbox.io
 
-1. Comment the java and jenkins roles in site.yml and uncomment ansible, maven, mysql, deployfiles, and job roles in site.yml.
-2. Create a public-private key pair on your computer using ssh-keygen and add the public SSH key to GitHub and keep in the private key under ansible-srv/roles/deployfiles/files and name it id_rsa. This is important since we need to git clone from github.ncsu.edu.
-3. Inside roles/job/tasks/main.yml use only the create_checkbox_job.yml and build_checkbox_job.yml.
-4. Run site.yml using the command ```ansible-playbook -i inventory site.yml```
-5. Check 192.168.33.100:9999 to see checkbox.io up and running.
+Run the following command from the ansible-srv to build checkbox.io on the jenkins-srv itself (which acts as the prod-srv).
+<br>```$ ansible-playbook -i inventory site_build_checkbox.yml```
 
 ![checkbox.io](results/checkbox.io.png)  
 
@@ -89,26 +88,19 @@ For example,
 
 2. This will run ```npm install``` and ```npm test``` which installs all dependencies, runs the express server, checks for the endpoint of checkbox.io application and returns true if the application is up and running.
 
-
 ![npm test](results/npmtest.png)  
 
 ## Running build job for iTrust
 
-1. Comment the java, jenkins, ansible, maven, and mysql roles in site.yml and uncomment deployfiles,  job roles in site.yml.
-2. Inside roles/job/tasks/main.yml use only the create_itrust_job.yml and build_itrust.yml.
-3. Create global credentials on Jenkins as on the below screenshot and copy the ID value and add it to roles/job/tasks/itrust_job.yml
-
-![credentials](results/credentials.png)  
-
-4. Add your credentials for in deployfiles/templates/email.properties.j2 for the email account.
-5. Run site.yml using the command ```ansible-playbook -i inventory site.yml```
-6. Check 192.168.33.100:8080/iTrust2 to see iTrust up and running.
+Run the following command from the ansible-srv to build iTrust on the jenkins-srv itself.
+<br>```$ ansible-playbook -i inventory site_build_itrust.yml```
 
 ![iTrust](results/iTrust.png)  
 
-7. To run ```mvn clean test verify checkstyle:checkstyle``` navigate to /var/lib/jenkins/iTrust2/iTrust2
+To run ```mvn clean test verify checkstyle:checkstyle``` navigate to /var/lib/jenkins/iTrust2/iTrust2
 
 ![checkstyle](results/checkstyle.png)  
+
 ## Screencast
 [Screencast Link]()
 
