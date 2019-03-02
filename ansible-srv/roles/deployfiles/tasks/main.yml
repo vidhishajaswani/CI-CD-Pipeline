@@ -1,6 +1,16 @@
 ---
+- name: Create vars directory
+  file:
+    name: /var/lib/jenkins/vars
+    state: directory
+
+- name: Copy vars
+  copy: 
+    src: group_vars/all.yml
+    dest: /var/lib/jenkins/vars/main.yml
+
 - name: Copy checkbox files for deployment
-  template: 
+  copy: 
     src: templates/deploy_checkbox.yml.j2
     dest: /var/lib/jenkins/deploy_checkbox.yml
 
@@ -10,7 +20,7 @@
     dest: /var/lib/jenkins/deploy_itrust.yml
 
 - name: email.properties
-  copy:                                     
+  template:                                     
     src: templates/email.properties.j2
     dest: /var/lib/jenkins/email.properties
         
@@ -24,6 +34,7 @@
     src: templates/rebuild_checkbox_job.yml.j2
     dest: "{{ vagrant_home }}/job_rebuilds/rebuild_checkbox_job.yml"
 
+
 - name: Copy Rebuild file for itrust_job
   template:
     src: templates/rebuild_itrust_job.yml.j2
@@ -31,11 +42,11 @@
 
 - name: Copy Build file for checkbox_job
   template:
-    src: templates/build_checkbox_job.yml
+    src: templates/build_checkbox_job.yml.j2
     dest: "{{ vagrant_home }}/job_rebuilds/build_checkbox_job.yml"
 
 - name: Copy Build file for itrust_job
   template:
-    src: templates/build_itrust.yml
+    src: templates/build_itrust.yml.j2
     dest: "{{ vagrant_home }}/job_rebuilds/build_itrust.yml"
 
