@@ -1,0 +1,15 @@
+jenkins_user: jenkins
+jenkins_password: jenkins
+jenkins_port: 9999
+mysql_root_password: root
+mysql_database: itrust
+mysql_user: myuser  
+mysql_password: myuser
+checkbox_repo: /home/vagrant/checkbox.git
+itrust_repo: /home/vagrant/itrust.git
+vagrant_home: /home/vagrant
+mongo_admin_password: admin
+mongo_checkbox_user: admin
+email_password: qwerty@123
+email_username: csc519team5
+

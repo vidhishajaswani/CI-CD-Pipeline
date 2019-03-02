@@ -1,4 +1,3 @@
-
 ---
 - name: read admin pwd
   command: cat /var/lib/jenkins/secrets/initialAdminPassword
@@ -15,10 +14,10 @@
         instance.save()
     user: admin
     url: "http://localhost:{{jenkins_port}}"
-    password: "{{ adminpwd.stdout }}"
+    password: {% raw %}{{ adminpwd.stdout }}{% endraw %}
 
-- name: build checkbox job
-  shell: 'java -jar {{vagrant_home}}/jenkins-cli.jar -s http://localhost:{{jenkins_port}}/ build checkbox.io'
+- name: build iTrust job
+  shell: 'java -jar {{vagrant_home}}/jenkins-cli.jar -s http://localhost:{{jenkins_port}}/ build iTrust'
 
 - name: Increase security
   jenkins_script:
@@ -34,4 +33,4 @@
     instance.save()
    user: admin
    url: "http://localhost:{{jenkins_port}}"
-   password: "{{adminpwd.stdout}}"
+   password: {% raw %}{{ adminpwd.stdout }}{% endraw %}
