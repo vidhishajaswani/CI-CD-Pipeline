@@ -1,0 +1,29 @@
+---
+- name: Create analysis directory
+  file:
+    name: analysis
+    state: directory
+  
+- name: Copy the analysis code-1 onto the deployment server
+  template:
+    src: templates/package.json
+    dest: /home/vagrant/analysis/package.json
+
+- name: Copy the analysis code-2 onto the deployment server
+  template:
+    src: templates/analysis.js
+    dest: /home/vagrant/analysis/analysis.js
+
+# Navigate to /var/lib/jenkins - TO DO
+- name: Ensure that checkbox is present
+  file:
+    name: checkbox
+    state: directory
+
+# chdir - TO DO
+- name: Start the analysis part-1
+  command: npm install 
+
+# chdir - TO DO
+- name: Start the analysis part-2
+  command: node /home/vagrant/analysis/analysis.js
