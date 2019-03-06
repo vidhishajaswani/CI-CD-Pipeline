@@ -1,0 +1,11 @@
+---
+- hosts: all
+  become: yes
+  roles:
+    #- ansible
+    #- maven
+    #- mysql
+    #- java
+    #- jenkins
+    - deployfiles
+    #- job
