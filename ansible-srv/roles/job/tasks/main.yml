@@ -3,3 +3,4 @@
 - include: build_checkbox_job.yml
 - include: create_itrust_job.yml
 - include: build_itrust.yml
+- include: create_itrust_fuzzer_job.yml
