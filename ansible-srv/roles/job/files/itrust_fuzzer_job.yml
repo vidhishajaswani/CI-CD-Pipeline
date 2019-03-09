@@ -1,7 +1,7 @@
 - job:
-    name: iTrust fuzzer
+    name: iTrust_fuzzer
     description: 'configure iTrustjob'
     project-type: freestyle
     builders:
-      - shell: 'cd /home/vagrant/itrust.git && git symbolic-ref HEAD refs/heads/fuzzer'
+      #- shell: 'cd /home/vagrant/itrust.git && git symbolic-ref HEAD refs/heads/fuzzer'
       - shell: 'ansible-playbook /var/lib/jenkins/deploy_itrust_fuzzer.yml'

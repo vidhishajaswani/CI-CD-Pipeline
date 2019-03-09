@@ -37,7 +37,7 @@
         line: "jenkins ALL=(ALL) NOPASSWD: ALL"
     
     - name: mvn clean
-      command: mvn clean 
+      command: mvn clean test checkstyle:checkstyle
       args:
         chdir: /var/lib/jenkins/iTrust2/iTrust2
 

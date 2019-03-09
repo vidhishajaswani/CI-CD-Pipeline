@@ -22,7 +22,7 @@
         password: {% raw %}"{{ adminpwd.stdout }}"{% endraw %}
 
     - name: build iTrust job
-      shell: 'java -jar {{vagrant_home}}/jenkins-cli.jar -s http://localhost:{{jenkins_port}}/ build iTrust fuzzer'
+      shell: 'java -jar {{vagrant_home}}/jenkins-cli.jar -s http://localhost:{{jenkins_port}}/ build iTrust_fuzzer'
 
     - name: Increase security
       jenkins_script:
