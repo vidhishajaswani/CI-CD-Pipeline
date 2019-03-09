@@ -1,13 +1,9 @@
 ---
-- name: Create vars directory
-  file:
-    name: /var/lib/jenkins/vars
-    state: directory
 
 - name: Copy vars
   copy: 
-    src: group_vars/all.yml
-    dest: /var/lib/jenkins/vars/main.yml
+    src: variables.yml
+    dest: /var/lib/jenkins/variables.yml
 
 - name: Copy checkbox files for deployment
   copy: 
