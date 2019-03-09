@@ -2,7 +2,7 @@
 - hosts: localhost
   become: yes
   vars_files:
-    - variables.yml
+    - /var/lib/jenkins/variables.yml
   vars:
     - jenkins_port: {{jenkins_port}}
   tasks:
@@ -28,16 +28,16 @@
 
     - name: Increase security
       jenkins_script:
-      script: |
-        import jenkins.model.*
-        import hudson.security.*
-        def instance = Jenkins.getInstance()
-        def hudsonRealm = new HudsonPrivateSecurityRealm(false)
-        instance.setSecurityRealm(hudsonRealm)
-        def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
-        strategy.setAllowAnonymousRead(false)
-        instance.setAuthorizationStrategy(strategy)
-        instance.save()
-      user: admin
-      url: "http://localhost:{{jenkins_port}}"
-      password: {% raw %}"{{ adminpwd.stdout }}"{% endraw %}
+        script: |
+          import jenkins.model.*
+          import hudson.security.*
+          def instance = Jenkins.getInstance()
+          def hudsonRealm = new HudsonPrivateSecurityRealm(false)
+          instance.setSecurityRealm(hudsonRealm)
+          def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
+          strategy.setAllowAnonymousRead(false)
+          instance.setAuthorizationStrategy(strategy)
+          instance.save()
+        user: admin
+        url: "http://localhost:{{jenkins_port}}"
+        password: {% raw %}"{{ adminpwd.stdout }}"{% endraw %}
