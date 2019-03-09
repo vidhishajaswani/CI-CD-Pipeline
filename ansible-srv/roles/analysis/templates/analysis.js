@@ -1,6 +1,7 @@
 var esprima = require("esprima");
 var options = {tokens:true, tolerant: true, loc: true, range: true };
 var fs = require("fs");
+var findInFiles = require("find-in-files");
 
 function main()
 {
@@ -8,10 +9,11 @@ function main()
 
 	if( args.length == 0 )
 	{
-		args = ["analysis.js"];
+		args = ["analysis.js", "/var/lib/jenkins/checkbox"];		
 	}
 	var filePath = args[0];
-	
+	var searchPath = args[1];
+
 	complexity(filePath);
 
 	// Report
@@ -20,6 +22,20 @@ function main()
 		var builder = builders[node];
 		builder.report();
 	}
+
+	console.log(filePath);
+
+	// 3. Check for security tokens in the code 
+	findInFiles.find("token", searchPath)
+    .then(function(results) {
+        for (var result in results) {
+            var res = results[result];
+            console.log(
+                '!WARNING! Found "' + res.matches[0] + '" ' + res.count
+                + ' times in "' + result + '"'
+            );
+        }
+    });
 
 }
 
@@ -42,22 +58,19 @@ function FunctionBuilder()
 	this.MaxNestingDepth    = 0;
 	// The max number of conditions if one decision statement.
 	this.MaxConditions      = 0;
-
+	this.childrenLength = 0;
 	this.report = function()
 	{
 		console.log(
 		   (
 		   	"{0}(): {1}\n" +
 			   "============\n" +
-			   "Lines: {6}\t" +
-			   "SimpleCyclomaticComplexity: {2}\t" +
-				"MaxNestingDepth: {3}\t" +
-				"MaxConditions: {4}\t" +
-				"Parameters: {5}\n\n"
+			   "Lines: {2}\t" +
+				"MaxConditions: {3}\t" +
+				"Children: {4}\t"
 			)
 			.format(this.FunctionName, this.StartLine,
-				     this.SimpleCyclomaticComplexity, this.MaxNestingDepth,
-			        this.MaxConditions, this.ParameterCount, this.Lines)
+			        this.Lines, this.MaxConditions, this.childrenLength)
 		);
 	}
 };
@@ -125,6 +138,8 @@ function complexity(filePath)
 			builder.FunctionName = functionName(node);
 			builder.StartLine    = node.loc.start.line;
 			builder.EndLine 	 = node.loc.end.line;
+
+			// 2. Number of lines in a method
 			builder.Lines = builder.EndLine - builder.StartLine;
 
 			if (node.params.length > 0)
@@ -132,31 +147,18 @@ function complexity(filePath)
 				builder.ParameterCount = node.params.length;
 			}
 
-
+			// 1. Max Conditions in a statement
 			traverseWithParents(node, function(child)
 			{
-				let conditions = 0;
 				if (isDecision(child))
 				{
 					builder.MaxConditions = countConditions(child);
 				}
-				// if (conditions > builder.MaxConditions)
-				// {
-				// 	builder.MaxConditions = conditions;
-				// }
+				builder.childrenLength = childrenLength(node);
+
 			});
 			builders[builder.FunctionName] = builder;
 		}
-
-		// if (node.type === 'Literal' && typeof(node.value) == 'string')
-		// {
-		// 	fileBuilder.Strings++;
-		// }
-
-		// if (node.type === 'CallExpression' && node.callee.name == 'require')
-		// {
-		// 	fileBuilder.ImportCount++;
-		// }
 	});
 
 }
@@ -178,7 +180,7 @@ function countConditions(node)
 	return count+1;
 }
 
-// Helper function to determine node similarity
+// 4. Helper function to determine node similarity
 function isSameNode(node_a, node_b)
 {
 	// if (node_a == null && node_b == null)

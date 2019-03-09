@@ -19,6 +19,7 @@
   "devDependencies": {
     "escodegen": "^1.4.1",
     "esprima": "^1.2.2",
+    "find-in-files": "^0.5.0",
     "jsinspect": "^0.12.7"
   }
 }
