@@ -1,11 +1,1 @@
-#!/bin/sh
-export BRANCHNAME=$(git rev-parse --abbrev-ref HEAD)
-export MASTER_SHA1=$(git rev-parse master)
-export SHA1=$(git rev-parse fuzzer)
-export GITHUB_URL=$(git config --get remote.origin.url | sed 's/.git$//')
-export JENKINS_IP=192.168.33.100
-echo "\n -------------- In post commit hook"
-if [ $BRANCHNAME = 'master' ]; then
-    echo "CURRENT CHECKED OUT BRANCH IS: master"
-    node fuzzer.js
-fi
+ansible-playbook /home/vagrant/job_rebuilds/rebuild_itrust_fuzzer_job.yml && git reset HEAD~
