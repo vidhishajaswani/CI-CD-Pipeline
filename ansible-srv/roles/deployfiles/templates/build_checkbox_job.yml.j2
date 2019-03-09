@@ -15,7 +15,7 @@
         instance.save()
     user: admin
     url: "http://localhost:{{jenkins_port}}"
-    password: {% raw %}{{ adminpwd.stdout }}{% endraw %}
+    password: {% raw %}"{{ adminpwd.stdout }}"{% endraw %}
 
 - name: build checkbox job
   shell: 'java -jar {{vagrant_home}}/jenkins-cli.jar -s http://localhost:{{jenkins_port}}/ build checkbox.io'
@@ -34,4 +34,4 @@
     instance.save()
    user: admin
    url: "http://localhost:{{jenkins_port}}"
-   password: {% raw %}{{ adminpwd.stdout }}{% endraw %}
+   password: {% raw %}"{{ adminpwd.stdout }}"{% endraw %}

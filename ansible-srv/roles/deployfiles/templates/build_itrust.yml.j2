@@ -14,7 +14,7 @@
         instance.save()
     user: admin
     url: "http://localhost:{{jenkins_port}}"
-    password: {% raw %}{{ adminpwd.stdout }}{% endraw %}
+    password: {% raw %}"{{ adminpwd.stdout }}"{% endraw %}
 
 - name: build iTrust job
   shell: 'java -jar {{vagrant_home}}/jenkins-cli.jar -s http://localhost:{{jenkins_port}}/ build iTrust'
@@ -33,4 +33,4 @@
     instance.save()
    user: admin
    url: "http://localhost:{{jenkins_port}}"
-   password: {% raw %}{{ adminpwd.stdout }}{% endraw %}
+   password: {% raw %}"{{ adminpwd.stdout }}"{% endraw %}

@@ -19,6 +19,11 @@
     src: templates/deploy_itrust.yml.j2
     dest: /var/lib/jenkins/deploy_itrust.yml
 
+- name: Copy iTrust files for fuzzing
+  template: 
+    src: templates/deploy_itrust_fuzzer.yml.j2
+    dest: /var/lib/jenkins/deploy_itrust_fuzzer.yml
+
 - name: email.properties
   template:                                     
     src: templates/email.properties.j2
@@ -49,4 +54,9 @@
   template:
     src: templates/build_itrust.yml.j2
     dest: "{{ vagrant_home }}/job_rebuilds/build_itrust.yml"
+
+- name: Copy Rebuild file for itrust_fuzzer_job
+  template:
+    src: templates/rebuild_itrust_fuzzer_job.yml.j2
+    dest: "{{ vagrant_home }}/job_rebuilds/rebuild_itrust_fuzzer_job.yml"
 
