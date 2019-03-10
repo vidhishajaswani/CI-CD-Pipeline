@@ -11,10 +11,12 @@ function main()
 
 	if( args.length == 0 )
 	{
-		args = ["{{checkbox_repo}}", "analysis.js"];		
+		args = ["{{checkbox_repo}}", "analysis.js", 100, 70];		
 	}
-	var filePath = args[1];
 	var searchPath = args[0];
+	var filePath = args[1];
+	var MaxLines = args[2];
+	var MaxConditions = args[3];
 
 	complexity(filePath);
 
@@ -26,30 +28,41 @@ function main()
 	{
 		var builder = builders[node];
 		builder.report();
+		builder.Analyze(MaxLines, MaxConditions);
 	}
 
 	// 3. Detect Duplicate code
 	console.log("------------------------------------------------------------");
 	console.log("Custom Analysis - Detection of Duplicate or Structurally similar code");
-	detectDuplicates('.', 30);
+	var matches = detectDuplicates('.', 30);
+	if(matches > 0)
+	{
+		console.log("Analysis Error: Duplicate or Structurally similar detected - Modify code and resubmit");
+		process.exit(1);
+	}
 
 	// 4. Check for security tokens in the code 
 	console.log("------------------------------------------------------------");
 	console.log("Custom Analysis - Detection of Security Tokens")
 	findInFiles.find("token", searchPath, ".js$")
     .then(function(results) {
+		var count = 0;
         for (var result in results) {
             var res = results[result];
             console.log(
                 '!WARNING! Found "' + res.matches[0] + '" ' + res.count
                 + ' times in "' + result + '"'
 			);
-			if (res.count == 0)
-				console.log("No matches found");
-		}		
+			count += res.count;
+		}
+		if (count == 0)
+			console.log("No matches found");
+		else
+		{
+			console.log("Analysis Error: Security Token detected - Modify code and resubmit");
+			process.exit(1);
+		}
 	});
-
-	// 5. Trigger Build Failure if threshold isn't met - TO DO
 }
 
 var builders = {};
@@ -70,6 +83,21 @@ function FunctionBuilder()
 	// The max number of conditions if one decision statement.
 	this.MaxConditions      = 0;
 	this.childrenLength = 0;
+	this.Analyze = function(MaxLines, MaxConditions)
+	{
+		if(this.MaxConditions > MaxConditions) 
+		{
+			console.log("Analysis Error: MaxCondition limit exceeded - Modify code and resubmit");
+			console.log(this.FunctionName);
+			process.exit(1);
+		}
+		if(this.Lines > MaxLines)
+		{
+			console.log("Analysis Error: MaxLines limit exceeded - Modify code and resubmit");
+			console.log(this.FunctionName);
+			process.exit(1);
+		}
+	}
 	this.report = function()
 	{
 		console.log(
@@ -117,6 +145,7 @@ function FileBuilder()
 			// ).format( this.FileName, this.ImportCount, this.Strings));
 		// this.CheckDuplicates();
 	}
+	this.Analyze = function(){}
 }
 
 // A function following the Visitor pattern.
@@ -411,8 +440,8 @@ mints.toString().split(".")[0] + " " + szmin;
 	  new reporterType(inspector);
   
 	  // Track the number of matches
-	  // var matches = 0;
-	  // inspector.on('match', () => matches++);
+	  matches = 0;
+	  inspector.on('match', function() {matches++});
   
 	  try {
 		  inspector.run();
@@ -421,6 +450,8 @@ mints.toString().split(".")[0] + " " + szmin;
 		  console.log("Error");
 		  process.exit(1);
 	  }
+
+	  return matches;
   }
   
  exports.main = main;
