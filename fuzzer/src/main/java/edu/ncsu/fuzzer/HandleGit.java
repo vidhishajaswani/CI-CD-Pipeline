@@ -93,7 +93,6 @@ public class HandleGit {
 
 	public void revert() {
 		RevertCommand revertCommand = repository.revert();
-		// revert to revision 2
 		try {
 			revertCommand.include(commitQ.poll());
 			commitQ.clear();

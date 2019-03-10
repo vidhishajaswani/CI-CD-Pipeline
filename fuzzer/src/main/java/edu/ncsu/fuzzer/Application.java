@@ -15,9 +15,10 @@ public class Application {
 			String repoURL = currentRelativePath.toString() + "/iTrust2-v4";
 			// System.out.println("Current relative path is: " + repoURL);
 			HandleGit git = new HandleGit(repoURL);
-			git.addFileToIndex();
-			git.commitChanges("new test commit 2");
-			git.revert();
+			ItrustFuzzing fuzzing = new ItrustFuzzing(repoURL, git);
+			//git.addFileToIndex();
+			//git.commitChanges("new test commit 3");
+			//git.revert();
 		} catch (IOException | GitAPIException e) {
 			e.printStackTrace();
 		}
