@@ -4,26 +4,24 @@
     name: analysis
     state: directory
   
-- name: Copy the analysis code-1 onto the deployment server
+- name: Copy the package.json onto the deployment server
   template:
     src: templates/package.json
-    dest: /home/vagrant/analysis/package.json
+    dest: {{vagrant_home}}/analysis/package.json
 
 - name: Copy the analysis code-2 onto the deployment server
   template:
-    src: templates/analysis.js
-    dest: /home/vagrant/analysis/analysis.js
+    src: templates/analysis.js.j2
+    dest: {{vagrant_home}}/analysis/analysis.js
 
-# Navigate to /var/lib/jenkins - TO DO
-- name: Ensure that checkbox is present
-  file:
-    name: checkbox
-    state: directory
+- name: npm install the required packages
+  command: npm install
+  args:
+    chdir: {{vagrant_home}}/analysis/ 
+  become: true
 
-# chdir - TO DO
-- name: Start the analysis part-1
-  command: npm install 
-
-# chdir - TO DO
-- name: Start the analysis part-2
-  command: node /home/vagrant/analysis/analysis.js
+# This task must be called in some playbook that relates to checkbox job build - TO DO
+- name: Start the analysis
+  command: node analysis.js > checkboxCA.log
+  args:
+    chdir: {{vagrant_home}}/analysis/

@@ -11,7 +11,7 @@ function main()
 
 	if( args.length == 0 )
 	{
-		args = ["/var/lib/jenkins/checkbox", "analysis.js"];		
+		args = ["{{checkbox_repo}}", "analysis.js"];		
 	}
 	var filePath = args[1];
 	var searchPath = args[0];
@@ -19,6 +19,9 @@ function main()
 	complexity(filePath);
 
 	// Report
+	// 1. & 2. Check for Max Conditions and Number of Lines
+	console.log("------------------------------------------------------------");
+	console.log("Custom Analysis - Method Analysis");
 	for( var node in builders )
 	{
 		var builder = builders[node];
@@ -28,7 +31,7 @@ function main()
 	// 3. Detect Duplicate code
 	console.log("------------------------------------------------------------");
 	console.log("Custom Analysis - Detection of Duplicate or Structurally similar code");
-	detectDuplicates(searchPath, 30);
+	detectDuplicates('.', 30);
 
 	// 4. Check for security tokens in the code 
 	console.log("------------------------------------------------------------");
@@ -45,6 +48,8 @@ function main()
 				console.log("No matches found");
 		}		
 	});
+
+	// 5. Trigger Build Failure if threshold isn't met - TO DO
 }
 
 var builders = {};
