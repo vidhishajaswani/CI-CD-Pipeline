@@ -2,6 +2,8 @@ var esprima = require("esprima");
 var options = {tokens:true, tolerant: true, loc: true, range: true };
 var fs = require("fs");
 var findInFiles = require("find-in-files");
+var jsinspect = require('jsinspect');
+var filepaths = require('filepaths');
 
 function main()
 {
@@ -9,10 +11,10 @@ function main()
 
 	if( args.length == 0 )
 	{
-		args = ["analysis.js", "/var/lib/jenkins/checkbox"];		
+		args = ["/var/lib/jenkins/checkbox", "analysis.js"];		
 	}
-	var filePath = args[0];
-	var searchPath = args[1];
+	var filePath = args[1];
+	var searchPath = args[0];
 
 	complexity(filePath);
 
@@ -23,23 +25,27 @@ function main()
 		builder.report();
 	}
 
-	console.log(filePath);
+	// 3. Detect Duplicate code
+	console.log("------------------------------------------------------------");
+	console.log("Custom Analysis - Detection of Duplicate or Structurally similar code");
+	detectDuplicates(searchPath, 30);
 
-	// 3. Check for security tokens in the code 
-	findInFiles.find("token", searchPath)
+	// 4. Check for security tokens in the code 
+	console.log("------------------------------------------------------------");
+	console.log("Custom Analysis - Detection of Security Tokens")
+	findInFiles.find("token", searchPath, ".js$")
     .then(function(results) {
         for (var result in results) {
             var res = results[result];
             console.log(
                 '!WARNING! Found "' + res.matches[0] + '" ' + res.count
                 + ' times in "' + result + '"'
-            );
-        }
-    });
-
+			);
+			if (res.count == 0)
+				console.log("No matches found");
+		}		
+	});
 }
-
-
 
 var builders = {};
 
@@ -67,7 +73,7 @@ function FunctionBuilder()
 			   "============\n" +
 			   "Lines: {2}\t" +
 				"MaxConditions: {3}\t" +
-				"Children: {4}\t"
+				"Children: {4}\n"
 			)
 			.format(this.FunctionName, this.StartLine,
 			        this.Lines, this.MaxConditions, this.childrenLength)
@@ -83,15 +89,28 @@ function FileBuilder()
 	this.Strings = 0;
 	// Number of imports in a file.
 	this.ImportCount = 0;
-
+	this.Functions = [];
+	this.CheckDuplicates = function()
+	{
+		for (node_a in this.Functions)
+			for (node_b in this.Functions)
+			{
+				var result = isSameNode(node_a, node_b);
+				if (result)
+				{
+					console.log("Duplication detected");
+				}
+			}
+	}
 	this.report = function()
 	{
-		console.log (
-			( "{0}\n" +
-			  "~~~~~~~~~~~~\n"+
-			  "ImportCount {1}\t" +
-			  "Strings {2}\n"
-			).format( this.FileName, this.ImportCount, this.Strings ));
+		// console.log (
+			// ( "{0}\n" +
+			//   "~~~~~~~~~~~~\n"+
+			//   "ImportCount {1}\t" +
+			//   "Strings {2}\n"
+			// ).format( this.FileName, this.ImportCount, this.Strings));
+		// this.CheckDuplicates();
 	}
 }
 
@@ -142,11 +161,11 @@ function complexity(filePath)
 			// 2. Number of lines in a method
 			builder.Lines = builder.EndLine - builder.StartLine;
 
-			if (node.params.length > 0)
-			{
-				builder.ParameterCount = node.params.length;
-			}
-
+			// if (node.params.length > 0)
+			// {
+			// 	builder.ParameterCount = node.params.length;
+			// }
+			builder.childrenLength = childrenLength(node);
 			// 1. Max Conditions in a statement
 			traverseWithParents(node, function(child)
 			{
@@ -154,11 +173,11 @@ function complexity(filePath)
 				{
 					builder.MaxConditions = countConditions(child);
 				}
-				builder.childrenLength = childrenLength(node);
-
 			});
 			builders[builder.FunctionName] = builder;
+			fileBuilder.Functions.push(node);
 		}
+		builders[filePath] = fileBuilder;
 	});
 
 }
@@ -181,18 +200,35 @@ function countConditions(node)
 }
 
 // 4. Helper function to determine node similarity
-function isSameNode(node_a, node_b)
-{
+// function isSameNode(node_a, node_b)
+// {
 	// if (node_a == null && node_b == null)
 	// 	return true;
 	// if (node_a == null || node_b == null)
 	// 	return false;
 	// else
 	// {
-	// 	let result = true;
-	// 	for (child_a in node_a)
+	// 	let result = true && (node_a.type == node_b.type) && (Object.keys(node_a).length == Object.keys(node_b).length);
+	// 	// Count is same, then call isSameNode(child_a, child_b)
+	// 	// return the final result
+	// 	var key_a, child_a, child_b;
+	// 	if (result)
+	// 		for (key_a in node_a) 
+	// 		{
+	// 			if (node_a.hasOwnProperty(key_a) && node_b.hasOwnProperty(key_a)) 
+	// 			{
+	// 				child_a = node_a[key_a];
+	// 				child_b = node_b[key_a];
+	// 				if (typeof child_a === 'object' && typeof child_b === 'object' && child_a !== null && child_b !== null && key_a != 'parent') 
+	// 				{
+	// 					result = result && isSameNode(child_a, child_b);
+	// 				}
+	// 			}
+	// 		}
+	// 	return result;
 	// }
-}
+	// return Object.is(node_a, node_b);
+// }
 
 // Helper function for counting children of node.
 function childrenLength(node)
@@ -209,7 +245,7 @@ function childrenLength(node)
 				count++;
 			}
 		}
-	}	
+	}
 	return count;
 }
 
@@ -340,4 +376,46 @@ remainder.toString() + " seconds";
 mints.toString().split(".")[0] + " " + szmin;
       }
   }
+
+  function detectDuplicates(suppliedPaths, thresh)
+  {
+	  // By default, ignore deps and tests
+	  var ignorePatterns = ['node_modules', 'bower_components', 'test', 'spec'];
+	  var extensions = ['.js', '.jsx'];
+	  try {
+		  paths = filepaths.getSync(suppliedPaths, {
+		  ext: extensions,
+		  ignore: ignorePatterns
+		  });
+	  } catch(e) {
+		  console.log(e.message);
+		  process.exit(4);
+	  }
+  
+	  if (!paths.length) {
+		  console.log('No files found in the list of paths');
+		  process.exit(0);
+	  }
+  
+	  var inspector = new jsinspect.Inspector(paths, {
+		  threshold:    thresh
+		});
+  
+	  // Retrieve the requested reporter
+	  var reporterType = jsinspect.reporters['default'];
+	  new reporterType(inspector);
+  
+	  // Track the number of matches
+	  // var matches = 0;
+	  // inspector.on('match', () => matches++);
+  
+	  try {
+		  inspector.run();
+		//   process.exit(5);
+	  } catch(err) {
+		  console.log("Error");
+		  process.exit(1);
+	  }
+  }
+  
  exports.main = main;
