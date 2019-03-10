@@ -16,9 +16,7 @@ public class Application {
 			// System.out.println("Current relative path is: " + repoURL);
 			HandleGit git = new HandleGit(repoURL);
 			ItrustFuzzing fuzzing = new ItrustFuzzing(repoURL, git);
-			//git.addFileToIndex();
-			//git.commitChanges("new test commit 3");
-			//git.revert();
+			fuzzing.doFuzzing();
 		} catch (IOException | GitAPIException e) {
 			e.printStackTrace();
 		}

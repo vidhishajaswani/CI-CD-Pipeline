@@ -85,10 +85,9 @@ public class HandleGit {
 	}
 
 	public void commitChanges(String commitMessage) throws GitAPIException, EmtpyCommitException {
-		CommitCommand commit = repository.commit().setAuthor(authorName, authorEmail).setAllowEmpty(false);
+		CommitCommand commit = repository.commit().setAuthor(authorName, authorEmail).setAllowEmpty(true);
 		RevCommit rev = commit.setMessage(commitMessage).call();
 		commitQ.add(rev);// Added to commitQ;
-		System.out.println(commitQ);
 	}
 
 	public void revert() {
