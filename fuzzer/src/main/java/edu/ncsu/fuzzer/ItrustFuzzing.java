@@ -1,7 +1,6 @@
 package edu.ncsu.fuzzer;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,7 +11,6 @@ import java.util.Scanner;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.expr.AssignExpr;
-import com.github.javaparser.ast.expr.AssignExpr.Operator;
 import com.github.javaparser.ast.expr.BinaryExpr;
 import com.github.javaparser.ast.expr.BooleanLiteralExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
@@ -50,15 +48,20 @@ public class ItrustFuzzing {
 				if (file.isFile()) {
 					// System.out.println(file.getAbsolutePath());
 					CompilationUnit compilationUnit = StaticJavaParser.parse(file);
-					System.out.println(compilationUnit.toString());
-					changeStringConstants(compilationUnit);
-					swap0_1(compilationUnit);
-					swapRelatationOperator(compilationUnit);
-					swapAssignmentOperator(compilationUnit);
-					swapEqualsOperator(compilationUnit);
-					System.out.println(compilationUnit.toString());
-					System.out.println(
-							"-----------------------------------------------------------------------------------------------------");
+					// System.out.println(compilationUnit.toString());
+					int rand = random.nextInt(10);
+					// introducing randomness
+					if (rand <= 4) // probability 50%
+						changeStringConstants(compilationUnit);
+					if (rand >= 2 && rand <= 6) // probability 50%
+						swap0_1(compilationUnit);
+					if (rand >= 3 && rand <= 9) // probability 70%
+						swapRelatationOperator(compilationUnit);
+					if (rand >= 5 && rand <= 7) // probability 30%
+						swapAssignmentOperator(compilationUnit);
+					if (rand >= 7 && rand < 10) // probability 30%
+						swapEqualsOperator(compilationUnit);
+
 					FileWriter wr = new FileWriter(file);
 					wr.write(compilationUnit.toString());
 					wr.close();
@@ -66,6 +69,7 @@ public class ItrustFuzzing {
 			}
 
 		}
+		System.out.println("Fuzzing Completed!");
 	}
 
 	// This function changes string constant
@@ -80,24 +84,39 @@ public class ItrustFuzzing {
 
 	// This function swap <= & >=
 	public void swapRelatationOperator(CompilationUnit compilationUnit) {
-		compilationUnit
-				.walk(BinaryExpr.class,
-						e -> e.setOperator((e.getOperator() == BinaryExpr.Operator.GREATER_EQUALS)
-								? BinaryExpr.Operator.LESS_EQUALS
-								: BinaryExpr.Operator.GREATER_EQUALS));
+		compilationUnit.walk(BinaryExpr.class, e -> e.setOperator(getCorrect(e)));
 	}
 
 	// This function swap = & +=
 	public void swapAssignmentOperator(CompilationUnit compilationUnit) {
-		compilationUnit.walk(AssignExpr.class,
-				e -> e.setOperator((e.getOperator() == Operator.ASSIGN) ? Operator.PLUS : Operator.ASSIGN));
+		compilationUnit.walk(AssignExpr.class, e -> e.setOperator(getCorrect(e)));
 	}
 
 	// This function swap == & !=
 	public void swapEqualsOperator(CompilationUnit compilationUnit) {
-		compilationUnit.walk(BinaryExpr.class,
-				e -> e.setOperator((e.getOperator() == BinaryExpr.Operator.EQUALS) ? BinaryExpr.Operator.NOT_EQUALS
-						: BinaryExpr.Operator.EQUALS));
+		compilationUnit.walk(BinaryExpr.class, e -> e.setOperator(getCorrect(e)));
+	}
+
+	private BinaryExpr.Operator getCorrect(BinaryExpr e) {
+		if (e.getOperator() == BinaryExpr.Operator.EQUALS)
+			return BinaryExpr.Operator.NOT_EQUALS;
+		if (e.getOperator() == BinaryExpr.Operator.NOT_EQUALS)
+			return BinaryExpr.Operator.EQUALS;
+		if (e.getOperator() == BinaryExpr.Operator.GREATER_EQUALS)
+			return BinaryExpr.Operator.LESS_EQUALS;
+		if (e.getOperator() == BinaryExpr.Operator.LESS_EQUALS)
+			return BinaryExpr.Operator.GREATER_EQUALS;
+
+		return e.getOperator();
+	}
+
+	private AssignExpr.Operator getCorrect(AssignExpr e) {
+		if (e.getOperator() == AssignExpr.Operator.ASSIGN)
+			return AssignExpr.Operator.PLUS;
+		if (e.getOperator() == AssignExpr.Operator.PLUS)
+			return AssignExpr.Operator.ASSIGN;
+
+		return e.getOperator();
 	}
 
 }

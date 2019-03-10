@@ -9,7 +9,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 public class Application {
 
 	public static void main(String[] args) {
-		System.out.println("Hello fuzzer");
+		System.out.println("Fuzzing Started!");
 		try {
 			Path currentRelativePath = Paths.get("").toAbsolutePath().getParent();
 			String repoURL = currentRelativePath.toString() + "/iTrust2-v4";
