@@ -8,6 +8,7 @@ import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand.ListMode;
 import org.eclipse.jgit.api.ResetCommand;
+import org.eclipse.jgit.api.ResetCommand.ResetType;
 import org.eclipse.jgit.api.RevertCommand;
 import org.eclipse.jgit.api.errors.EmtpyCommitException;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -99,6 +100,7 @@ public class HandleGit {
 			command.setRef(head.getName());
 			command.call();
 			head = null;
+			repository.reset().setMode(ResetType.HARD).call();
 		} catch (GitAPIException e) {
 			e.printStackTrace();
 		}
