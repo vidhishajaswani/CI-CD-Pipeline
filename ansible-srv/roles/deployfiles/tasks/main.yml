@@ -56,11 +56,24 @@
     src: templates/rebuild_itrust_fuzzer_job.yml.j2
     dest: "{{ vagrant_home }}/job_rebuilds/rebuild_itrust_fuzzer_job.yml"
 
-# - name: Add Post commit hook
-#   template:
-#     src: templates/post_commit_hook.j2"
-#     dest: "{{itrust_repo}}/iTrust2/.git/hooks/post-commit"
-#     mode: 0767
+#- name: Git Clone
+#  git:
+#    repo: "{{ itrust_repo }}"
+#    dest: "{{ itrust_repo }}/iTrust2-v4"
+
+- name: Copy jFuzzer
+  copy:
+    src: roles/jFuzzer
+    dest: "{{ itrust_repo }}/" 
+
+- name: Add Post commit hook
+  copy:
+    src: templates/post_commit_hook.j2
+    dest: "{{itrust_repo}}/iTrust2/.git/hooks/post-commit"
+    mode: 0767
+    
+
+    
 
 # - name: Add Fuzzer.js file
 #   copy:
