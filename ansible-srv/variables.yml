@@ -1,6 +1,8 @@
+jenkins_home: /var/lib/jenkins/
 jenkins_user: jenkins
 jenkins_password: jenkins
 jenkins_port: 9999
+jenkins_IP: 192.168.33.100
 mysql_root_password: root
 mysql_database: itrust
 mysql_user: myuser  
@@ -12,4 +14,5 @@ mongo_admin_password: admin
 mongo_checkbox_user: admin
 email_password: qwerty@123
 email_username: csc519team5
+
 

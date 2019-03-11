@@ -2,7 +2,7 @@
 - hosts: localhost
   become: yes
   vars_files:
-    - variables.yml
+    - "{{ jenkins_home }}/variables.yml"
   vars:
     - jenkins_port: {{jenkins_port}}
   tasks:
@@ -24,20 +24,20 @@
         password: {% raw %}"{{ adminpwd.stdout }}"{% endraw %}
 
     - name: build iTrust job
-      shell: 'java -jar {{vagrant_home}}/jenkins-cli.jar -s http://localhost:{{jenkins_port}}/ build iTrust fuzzer'
+      shell: 'java -jar {{vagrant_home}}/jenkins-cli.jar -s http://localhost:{{jenkins_port}}/ build iTrust_fuzzer'
 
-    - name: Increase security
+    - name: Security up
       jenkins_script:
-      script: |
-        import jenkins.model.*
-        import hudson.security.*
-        def instance = Jenkins.getInstance()
-        def hudsonRealm = new HudsonPrivateSecurityRealm(false)
-        instance.setSecurityRealm(hudsonRealm)
-        def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
-        strategy.setAllowAnonymousRead(false)
-        instance.setAuthorizationStrategy(strategy)
-        instance.save()
-      user: admin
-      url: "http://localhost:{{jenkins_port}}"
-      password: {% raw %}"{{ adminpwd.stdout }}"{% endraw %}
+        script: |
+            import jenkins.model.*
+            import hudson.security.*
+            def instance = Jenkins.getInstance()
+            def hudsonRealm = new HudsonPrivateSecurityRealm(false)
+            instance.setSecurityRealm(hudsonRealm)
+            def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
+            strategy.setAllowAnonymousRead(false)
+            instance.setAuthorizationStrategy(strategy)
+            instance.save()
+        user: admin
+        url: "http://localhost:{{jenkins_port}}"
+        password: {% raw %}"{{ adminpwd.stdout }}"{% endraw %}
