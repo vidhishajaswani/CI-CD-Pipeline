@@ -5,5 +5,5 @@
     builders:
       #- shell: 'cd /home/vagrant/itrust.git && git symbolic-ref HEAD refs/heads/fuzzer'
       - shell: 'cd /home/vagrant/itrust.git/iTrust2 && npm install'
-      - shell: 'cd /home/vagrant/itrust.git/iTrust2 &&  node fuzzer.js'
+      - shell: 'cd /home/vagrant/itrust.git/iTrust2 &&  sudo node fuzzer.js'
       - shell: 'sleep 30s && ansible-playbook /var/lib/jenkins/deploy_itrust_fuzzer.yml'

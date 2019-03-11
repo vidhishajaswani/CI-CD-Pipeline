@@ -69,7 +69,7 @@ recursive("iTrust2/src/main/java/edu/ncsu/csc/itrust2", function (err, files) {
                     //console.log('found < >');
                     if(line.match('<'))
                         line=line.replace('<','>');
-                    else if(line.match('>'))
+                    else if(line.match('>') && !line.match('->'))
                         line=line.replace('>','<');
 
                     if(line.match(/\+\+/))
