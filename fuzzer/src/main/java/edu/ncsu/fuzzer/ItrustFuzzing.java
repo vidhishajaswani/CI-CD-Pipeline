@@ -71,7 +71,8 @@ public class ItrustFuzzing {
 			git.addFileToIndex();
 			git.commitChanges("Fuzzing commit " + i);
 		}
-		git.revert(); // reverting back to original commit
+		git.reset(); // reset back to original commit
+		// git.revert(); // reverting back to original commit
 		System.out.println("Fuzzing Completed!");
 	}
 
