@@ -4,11 +4,7 @@
   vars_files:
     - /var/lib/jenkins/variables.yml
   tasks:
-    - name: Git clone 
-      git:
-        repo: "{{ itrust_repo }}"
-        dest: iTrust2
-
+    
     - name: db.properties
       copy:
         src: /var/lib/jenkins/iTrust2/iTrust2/src/main/java/db.properties.template
