@@ -69,7 +69,7 @@
 - name: Add Post commit hook
   copy:
     src: templates/post_commit_hook.j2
-    dest: "{{itrust_repo}}/iTrust2/.git/hooks/post-commit"
+    dest: "{{itrust_repo}}/iTrust2-v4/.git/hooks/post-commit"
     mode: 0767
     
 
