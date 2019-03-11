@@ -44,7 +44,7 @@ public class ItrustFuzzing {
 				File folder = new File(path);
 				File[] listOfFiles = folder.listFiles();
 				for (File file : listOfFiles) {
-					if (file.isFile()) {
+					if (file != null && file.isFile()) {
 						// System.out.println(file.getAbsolutePath());
 						CompilationUnit compilationUnit = StaticJavaParser.parse(file);
 						// System.out.println(compilationUnit.toString());
