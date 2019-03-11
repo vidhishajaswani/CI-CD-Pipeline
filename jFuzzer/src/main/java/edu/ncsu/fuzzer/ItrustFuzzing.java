@@ -16,6 +16,7 @@ import com.github.javaparser.ast.expr.AssignExpr;
 import com.github.javaparser.ast.expr.BinaryExpr;
 import com.github.javaparser.ast.expr.BooleanLiteralExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
+import com.github.javaparser.printer.PrettyPrinterConfiguration;
 
 public class ItrustFuzzing {
 	private HandleGit git;
@@ -39,20 +40,14 @@ public class ItrustFuzzing {
 	}
 
 	public void doFuzzing() throws IOException, GitAPIException {
+		PrettyPrinterConfiguration conf = new PrettyPrinterConfiguration();
 		for (int i = 1; i <= 5; i++) {
 			for (String path : paths) {
 				File folder = new File(path);
 				File[] listOfFiles = folder.listFiles();
 				for (File file : listOfFiles) {
 					if (file != null && file.isFile()) {
-						// System.out.println(file.getAbsolutePath());
 						CompilationUnit compilationUnit = StaticJavaParser.parse(file);
-						/*
-						System.out.println(compilationUnit.toString());
-						System.out.println(
-								"------------------------------before changed-------------------------------------------------------");
-						*/
-
 						int rand = random.nextInt(10);
 						// introducing randomness
 						if (rand <= 4) {// probability 50%
@@ -69,14 +64,10 @@ public class ItrustFuzzing {
 							swapAssignmentOperator(compilationUnit);
 						if (rand >= 7 && rand < 10) // probability 30%
 							swapEqualsOperator(compilationUnit);
-
-						/*
-						System.out.println(compilationUnit.toString());
-						System.out.println(
-								"-------------------------------------------------------------------------------------");
-						*/
+						
+						conf.setEndOfLineCharacter(conf.getEndOfLineCharacter());
 						FileWriter wr = new FileWriter(file);
-						wr.write(compilationUnit.toString());
+						wr.write(compilationUnit.toString(conf));
 						wr.close();
 					}
 				}
