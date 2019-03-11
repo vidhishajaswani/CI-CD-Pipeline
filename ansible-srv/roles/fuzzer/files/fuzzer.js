@@ -4,7 +4,7 @@ const Random = require('random-js');
 const child_process = require('child_process');
 var recursive = require("recursive-readdir");
 var random = new Random(Random.engines.mt19937().seed(0));
-child_process.execSync(`git checkout -B fuzzer`);
+child_process.execSync(`sudo git checkout -B fuzzer`);
 recursive("iTrust2/src/main/java/edu/ncsu/csc/itrust2", function (err, files) {
     
     
@@ -129,5 +129,5 @@ recursive("iTrust2/src/main/java/edu/ncsu/csc/itrust2", function (err, files) {
     });
     
   });
-  child_process.execSync(`git add . `);
-  child_process.execSync(`git commit -m "fuzzer"`);
+  child_process.execSync(`sudo git add . `);
+  child_process.execSync(`sudo git commit -m "fuzzer"`);
