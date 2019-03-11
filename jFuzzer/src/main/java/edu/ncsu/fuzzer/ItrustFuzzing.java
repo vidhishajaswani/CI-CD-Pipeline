@@ -39,7 +39,7 @@ public class ItrustFuzzing {
 	}
 
 	public void doFuzzing() throws IOException, GitAPIException {
-		for (int i = 1; i <= 100; i++) {
+		for (int i = 1; i <= 5; i++) {
 			for (String path : paths) {
 				File folder = new File(path);
 				File[] listOfFiles = folder.listFiles();
@@ -47,11 +47,20 @@ public class ItrustFuzzing {
 					if (file != null && file.isFile()) {
 						// System.out.println(file.getAbsolutePath());
 						CompilationUnit compilationUnit = StaticJavaParser.parse(file);
-						// System.out.println(compilationUnit.toString());
+						/*
+						System.out.println(compilationUnit.toString());
+						System.out.println(
+								"------------------------------before changed-------------------------------------------------------");
+						*/
+
 						int rand = random.nextInt(10);
 						// introducing randomness
-						if (rand <= 4) // probability 50%
-							changeStringConstants(compilationUnit);
+						if (rand <= 4) {// probability 50%
+							if (rand < 2)
+								changeStringConstants(compilationUnit);
+							else
+								changeStringConstants2(compilationUnit);
+						}
 						if (rand >= 2 && rand <= 6) // probability 50%
 							swap0_1(compilationUnit);
 						if (rand >= 3 && rand <= 9) // probability 70%
@@ -61,6 +70,11 @@ public class ItrustFuzzing {
 						if (rand >= 7 && rand < 10) // probability 30%
 							swapEqualsOperator(compilationUnit);
 
+						/*
+						System.out.println(compilationUnit.toString());
+						System.out.println(
+								"-------------------------------------------------------------------------------------");
+						*/
 						FileWriter wr = new FileWriter(file);
 						wr.write(compilationUnit.toString());
 						wr.close();
@@ -79,6 +93,11 @@ public class ItrustFuzzing {
 	// This function changes string constant
 	public void changeStringConstants(CompilationUnit compilationUnit) {
 		compilationUnit.walk(StringLiteralExpr.class, e -> e.setString("FUZZY"));
+	}
+
+	// This function changes string constant
+	public void changeStringConstants2(CompilationUnit compilationUnit) {
+		compilationUnit.walk(StringLiteralExpr.class, e -> e.setString("MORE_FUZZY"));
 	}
 
 	// This function swap true & false
@@ -106,10 +125,8 @@ public class ItrustFuzzing {
 			return BinaryExpr.Operator.NOT_EQUALS;
 		if (e.getOperator() == BinaryExpr.Operator.NOT_EQUALS)
 			return BinaryExpr.Operator.EQUALS;
-		if (e.getOperator() == BinaryExpr.Operator.GREATER_EQUALS)
-			return BinaryExpr.Operator.LESS_EQUALS;
-		if (e.getOperator() == BinaryExpr.Operator.LESS_EQUALS)
-			return BinaryExpr.Operator.GREATER_EQUALS;
+		if (e.getOperator() == BinaryExpr.Operator.LESS)
+			return BinaryExpr.Operator.GREATER;
 
 		return e.getOperator();
 	}
