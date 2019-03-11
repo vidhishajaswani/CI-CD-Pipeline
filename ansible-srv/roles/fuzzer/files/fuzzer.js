@@ -10,7 +10,7 @@ recursive("iTrust2/src/main/java/edu/ncsu/csc/itrust2", function (err, files) {
     
     files.forEach(function(fileName)
     {
-        console.log(fileName);
+        //console.log(fileName);
         var data = fs.readFileSync(fileName, 'utf-8');
         fs.writeFileSync(fileName,'','utf8');
         var lines = data.split("\n");
@@ -28,7 +28,7 @@ recursive("iTrust2/src/main/java/edu/ncsu/csc/itrust2", function (err, files) {
                     var match = word.match(/\"[\w|\d]*\"/i);
                     if(match!=null)
                     {
-                        console.log(match[0]);
+                        //console.log(match[0]);
                         var old = match[0].substring(1, match[0].length - 1);
                         var newWord = old;
                         //random = new Random(Random.engines.mt19937().seed(0));
@@ -36,7 +36,7 @@ recursive("iTrust2/src/main/java/edu/ncsu/csc/itrust2", function (err, files) {
                         if(random.bool(0.10))
                         {
                             newWord=newWord.split('').reverse().join('');
-                            console.log(newWord);
+                            //console.log(newWord);
                         }
                         //random = new Random(Random.engines.mt19937().seed(0));
                         //delete random characters
@@ -47,10 +47,10 @@ recursive("iTrust2/src/main/java/edu/ncsu/csc/itrust2", function (err, files) {
                             var len=random.integer(0,array.length);
                             array.splice(rand,len);
                             newWord=array.join('');
-                            console.log(newWord);
+                            //console.log(newWord);
                         }
                         words[index] = words[index].replace(match, "\""+newWord+"\"");
-                        console.log(words[index]);
+                        //console.log(words[index]);
 
                     }
 
@@ -66,7 +66,7 @@ recursive("iTrust2/src/main/java/edu/ncsu/csc/itrust2", function (err, files) {
             {
                 if(line.match('for') || line.match('while') || line.match('if'))
                 {
-                    console.log('found < >');
+                    //console.log('found < >');
                     if(line.match('<'))
                         line=line.replace('<','>');
                     else if(line.match('>'))
@@ -83,7 +83,7 @@ recursive("iTrust2/src/main/java/edu/ncsu/csc/itrust2", function (err, files) {
             //random = new Random(Random.engines.mt19937().seed(0));
             if(random.bool(0.15))
             {
-                console.log('found == !=');
+                //console.log('found == !=');
                 if(line.match('=='))
                 {
                     line=line.replace(/==/g,'!=');
@@ -96,7 +96,7 @@ recursive("iTrust2/src/main/java/edu/ncsu/csc/itrust2", function (err, files) {
             //random = new Random(Random.engines.mt19937().seed(0));
             if(random.bool(0.20))
             {
-                console.log('found 0 1');
+                //console.log('found 0 1');
                 if(line.match('0'))
                 {
                     line=line.replace(/0/g,'1');
@@ -109,7 +109,7 @@ recursive("iTrust2/src/main/java/edu/ncsu/csc/itrust2", function (err, files) {
             //random = new Random(Random.engines.mt19937().seed(0));
             if(random.bool(0.40))
             {
-                console.log('found 0 1');
+                //console.log('found 0 1');
                 if(line.match('true'))
                 {
                     line=line.replace('true','false');
@@ -129,4 +129,5 @@ recursive("iTrust2/src/main/java/edu/ncsu/csc/itrust2", function (err, files) {
     });
     
   });
+  child_process.execSync(`git add . `);
   child_process.execSync(`git commit -m "fuzzer"`);

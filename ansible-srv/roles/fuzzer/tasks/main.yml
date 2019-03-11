@@ -13,22 +13,22 @@
   - name: Copy fuzzer files
     copy: 
       src: files/package.json
-      dest: "{{ jenkins_home }}/iTrust2"
+      dest: "{{ itrust_repo }}/iTrust2"
 
   - name: Copy fuzzer files
     copy: 
       src: files/fuzzer.js
-      dest: "{{ jenkins_home }}/iTrust2"
+      dest: "{{ itrust_repo }}/iTrust2"
   
-  - name: npm install
-    command: npm install
-    args:
-      chdir: "{{ jenkins_home }}/iTrust2"
+  #- name: npm install
+  #  command: npm install
+  #  args:
+  #    chdir: "{{ itrust_repo }}/iTrust2"
   
-  - name: run fuzzer.js
-    command: node fuzzer.js
-    args:
-      chdir: "{{ jenkins_home }}/iTrust2"
+  #- name: run fuzzer.js
+  #  command: node fuzzer.js
+  #  args:
+  #    chdir: "{{ itrust_repo }}/iTrust2"
   
   
     
