@@ -1,7 +1,6 @@
 package edu.ncsu.fuzzer;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,7 @@ import com.github.javaparser.ast.expr.AssignExpr;
 import com.github.javaparser.ast.expr.BinaryExpr;
 import com.github.javaparser.ast.expr.BooleanLiteralExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
-import com.github.javaparser.printer.PrettyPrinterConfiguration;
+import com.github.javaparser.utils.SourceRoot;
 
 public class ItrustFuzzing {
 	private HandleGit git;
@@ -40,10 +39,10 @@ public class ItrustFuzzing {
 	}
 
 	public void doFuzzing() throws IOException, GitAPIException {
-		PrettyPrinterConfiguration conf = new PrettyPrinterConfiguration();
 		for (int i = 1; i <= 5; i++) {
 			for (String path : paths) {
 				File folder = new File(path);
+				SourceRoot root = new SourceRoot(folder.toPath());
 				File[] listOfFiles = folder.listFiles();
 				for (File file : listOfFiles) {
 					if (file != null && file.isFile()) {
@@ -64,13 +63,11 @@ public class ItrustFuzzing {
 							swapAssignmentOperator(compilationUnit);
 						if (rand >= 7 && rand < 10) // probability 30%
 							swapEqualsOperator(compilationUnit);
-						
-						conf.setEndOfLineCharacter(conf.getEndOfLineCharacter());
-						FileWriter wr = new FileWriter(file);
-						wr.write(compilationUnit.toString(conf));
-						wr.close();
+
+						root.add(compilationUnit);
 					}
 				}
+				root.saveAll();
 			}
 			// commit all changes!
 			git.addFileToIndex();
@@ -118,6 +115,12 @@ public class ItrustFuzzing {
 			return BinaryExpr.Operator.EQUALS;
 		if (e.getOperator() == BinaryExpr.Operator.LESS)
 			return BinaryExpr.Operator.GREATER;
+		if (e.getOperator() == BinaryExpr.Operator.BINARY_AND)
+			return BinaryExpr.Operator.BINARY_OR;
+		if (e.getOperator() == BinaryExpr.Operator.BINARY_OR)
+			return BinaryExpr.Operator.BINARY_AND;
+		if (e.getOperator() == BinaryExpr.Operator.MULTIPLY)
+			return BinaryExpr.Operator.DIVIDE;
 
 		return e.getOperator();
 	}
