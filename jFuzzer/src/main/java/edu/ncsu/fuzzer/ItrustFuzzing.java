@@ -21,6 +21,7 @@ public class ItrustFuzzing {
 	private HandleGit git;
 	private List<String> paths = new ArrayList<>();
 	private Random random = new Random();
+	private static int COMMITS = 5;
 
 	public ItrustFuzzing(String repoURL, HandleGit git) throws GitAPIException {
 		this.git = git;
@@ -39,7 +40,7 @@ public class ItrustFuzzing {
 	}
 
 	public void doFuzzing() throws IOException, GitAPIException {
-		for (int i = 1; i <= 5; i++) {
+		for (int i = 1; i <= COMMITS; i++) {
 			for (String path : paths) {
 				File folder = new File(path);
 				SourceRoot root = new SourceRoot(folder.toPath());
@@ -72,9 +73,9 @@ public class ItrustFuzzing {
 			// commit all changes!
 			git.addFileToIndex();
 			git.commitChanges("Fuzzing commit " + i);
+			// git.lapse(6000);
+			git.reset();
 		}
-		git.reset(); // reset back to original commit
-		// git.revert(); // reverting back to original commit
 		System.out.println("Fuzzing Completed!");
 	}
 
@@ -126,12 +127,9 @@ public class ItrustFuzzing {
 	}
 
 	private AssignExpr.Operator getCorrect(AssignExpr e) {
-		if (e.getOperator() == AssignExpr.Operator.ASSIGN)
-			return AssignExpr.Operator.PLUS;
 		if (e.getOperator() == AssignExpr.Operator.PLUS)
 			return AssignExpr.Operator.ASSIGN;
 
 		return e.getOperator();
 	}
-
 }
