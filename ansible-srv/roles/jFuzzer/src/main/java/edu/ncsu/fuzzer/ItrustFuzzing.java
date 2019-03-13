@@ -59,8 +59,8 @@ public class ItrustFuzzing {
 							swap0_1(compilationUnit);
 						if (rand >= 3 && rand <= 9) // probability 70%
 							swapRelatationOperator(compilationUnit);
-						if (rand >= 5 && rand <= 7) // probability 30%
-							swapAssignmentOperator(compilationUnit);
+						//if (rand >= 5 && rand <= 7) // probability 30%
+						//	swapAssignmentOperator(compilationUnit);
 						if (rand >= 7 && rand < 10) // probability 30%
 							swapEqualsOperator(compilationUnit);
 
@@ -73,7 +73,7 @@ public class ItrustFuzzing {
 			git.addFileToIndex();
 			git.commitChanges("Fuzzing commit " + i);
 		}
-		git.reset(); // reset back to original commit
+		//git.reset(); // reset back to original commit
 		// git.revert(); // reverting back to original commit
 		System.out.println("Fuzzing Completed!");
 	}

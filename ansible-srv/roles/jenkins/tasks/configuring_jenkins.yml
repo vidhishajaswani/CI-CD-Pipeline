@@ -96,6 +96,7 @@
       - token-macro
       - run-condition
       - github
+      - jacoco
 
   - name: restart service jenkins
     systemd:

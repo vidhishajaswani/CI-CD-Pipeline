@@ -3,7 +3,7 @@
   command: cat /var/lib/jenkins/secrets/initialAdminPassword
   register: adminpwd
 
-- name: Copy checkbox_job.yml file
+- name: Copy itrust_job.yml file
   copy:
     src: files/itrust_job.yml
     dest: jobs/itrust_job.yml

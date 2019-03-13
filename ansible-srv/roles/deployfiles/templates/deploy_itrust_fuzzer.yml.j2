@@ -42,12 +42,12 @@
     - name: Update apt
       apt: update_cache=yes
 
-    - name: mv clean install
+    - name: mvn clean install
       command: mvn clean install 
       args:
         chdir: "{{ vagrant_home }}/iTrust2-v4/iTrust2"
 
-    - name: mvn clean
+    - name: mvn clean test checkstyle:checkstyle
       command: mvn clean test checkstyle:checkstyle
       args:
         chdir: "{{ vagrant_home }}/iTrust2-v4/iTrust2"
