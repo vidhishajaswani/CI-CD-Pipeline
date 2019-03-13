@@ -39,7 +39,7 @@ public class ItrustFuzzing {
 	}
 
 	public void doFuzzing() throws IOException, GitAPIException {
-		for (int i = 1; i <= 5; i++) {
+		for (int i = 1; i <= 7; i++) {
 			for (String path : paths) {
 				File folder = new File(path);
 				SourceRoot root = new SourceRoot(folder.toPath());
@@ -126,10 +126,10 @@ public class ItrustFuzzing {
 	}
 
 	private AssignExpr.Operator getCorrect(AssignExpr e) {
-		if (e.getOperator() == AssignExpr.Operator.ASSIGN)
-			return AssignExpr.Operator.PLUS;
-		if (e.getOperator() == AssignExpr.Operator.PLUS)
-			return AssignExpr.Operator.ASSIGN;
+		//if (e.getOperator() == AssignExpr.Operator.MINUS)
+		//	return AssignExpr.Operator.PLUS;
+		//if (e.getOperator() == AssignExpr.Operator.PLUS)
+		//	return AssignExpr.Operator.MINUS;
 
 		return e.getOperator();
 	}

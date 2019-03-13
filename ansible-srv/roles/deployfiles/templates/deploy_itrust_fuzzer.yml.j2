@@ -7,14 +7,14 @@
     
     - name: db.properties
       copy:
-        src: "{{ itrust_repo }}/iTrust2/iTrust2/src/main/java/db.properties.template"
-        dest: "{{ itrust_repo }}/iTrust2/iTrust2/src/main/java/db.properties"
+        src: "{{ vagrant_home }}/iTrust2-v4/iTrust2/src/main/java/db.properties.template"
+        dest: "{{ vagrant_home }}/iTrust2-v4/iTrust2/src/main/java/db.properties"
         remote_src: yes
 
     - name: email.properties
       copy:                                     
         src: /var/lib/jenkins/email.properties
-        dest: "{{ itrust_repo }}/iTrust2/iTrust2/src/main/java/email.properties"
+        dest: "{{ vagrant_home }}/iTrust2-v4/iTrust2/src/main/java/email.properties"
         remote_src: yes
         
 
@@ -34,21 +34,25 @@
         path: /etc/sudoers
         line: "jenkins ALL=(ALL) NOPASSWD: ALL"
     
-    - name: mvn clean
-      command: mvn clean test checkstyle:checkstyle
-      args:
-        chdir: "{{ itrust_repo }}/iTrust2/iTrust2"
-
     - name: mvn test classes
       command: mvn process-test-classes
       args:
-        chdir: "{{ itrust_repo }}/iTrust2/iTrust2"
+        chdir: "{{ vagrant_home }}/iTrust2-v4/iTrust2"
 
     - name: Update apt
       apt: update_cache=yes
 
-
-    - name: mvn checkstyle
-      command: sh -c "mvn clean test checkstyle:checkstyle"
+    - name: mv clean install
+      command: mvn clean install 
       args:
-        chdir: "{{ itrust_repo }}/iTrust2/iTrust2"
+        chdir: "{{ vagrant_home }}/iTrust2-v4/iTrust2"
+
+    - name: mvn clean
+      command: mvn clean test checkstyle:checkstyle
+      args:
+        chdir: "{{ vagrant_home }}/iTrust2-v4/iTrust2"
+
+    
+
+
+    

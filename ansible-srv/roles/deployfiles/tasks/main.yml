@@ -61,15 +61,20 @@
 #    repo: "{{ itrust_repo }}"
 #    dest: "{{ itrust_repo }}/iTrust2-v4"
 
+#- name: Git clone 
+#  git:
+#    repo: "{{ itrust_repo }}"
+#    dest: iTrust2-v4
+
 - name: Copy jFuzzer
   copy:
     src: roles/jFuzzer
-    dest: "{{ itrust_repo }}/" 
+    dest: "{{ vagrant_home }}/" 
 
 - name: Add Post commit hook
   copy:
     src: templates/post_commit_hook.j2
-    dest: "{{itrust_repo}}/iTrust2-v4/.git/hooks/post-commit"
+    dest: "{{vagrant_home}}/iTrust2-v4/.git/hooks/post-commit"
     mode: 0767
     
 
