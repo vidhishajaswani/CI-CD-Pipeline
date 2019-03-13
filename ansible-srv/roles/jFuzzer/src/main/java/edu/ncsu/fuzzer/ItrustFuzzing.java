@@ -1,7 +1,6 @@
 package edu.ncsu.fuzzer;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +15,7 @@ import com.github.javaparser.ast.expr.AssignExpr;
 import com.github.javaparser.ast.expr.BinaryExpr;
 import com.github.javaparser.ast.expr.BooleanLiteralExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
+import com.github.javaparser.utils.SourceRoot;
 
 public class ItrustFuzzing {
 	private HandleGit git;
@@ -39,19 +39,22 @@ public class ItrustFuzzing {
 	}
 
 	public void doFuzzing() throws IOException, GitAPIException {
-		for (int i = 1; i <= 100; i++) {
+		for (int i = 1; i <= 5; i++) {
 			for (String path : paths) {
 				File folder = new File(path);
+				SourceRoot root = new SourceRoot(folder.toPath());
 				File[] listOfFiles = folder.listFiles();
 				for (File file : listOfFiles) {
-					if (file.isFile()) {
-						// System.out.println(file.getAbsolutePath());
+					if (file != null && file.isFile()) {
 						CompilationUnit compilationUnit = StaticJavaParser.parse(file);
-						// System.out.println(compilationUnit.toString());
 						int rand = random.nextInt(10);
 						// introducing randomness
-						if (rand <= 4) // probability 50%
-							changeStringConstants(compilationUnit);
+						if (rand <= 4) {// probability 50%
+							if (rand < 2)
+								changeStringConstants(compilationUnit);
+							else
+								changeStringConstants2(compilationUnit);
+						}
 						if (rand >= 2 && rand <= 6) // probability 50%
 							swap0_1(compilationUnit);
 						if (rand >= 3 && rand <= 9) // probability 70%
@@ -61,11 +64,10 @@ public class ItrustFuzzing {
 						if (rand >= 7 && rand < 10) // probability 30%
 							swapEqualsOperator(compilationUnit);
 
-						FileWriter wr = new FileWriter(file);
-						wr.write(compilationUnit.toString());
-						wr.close();
+						root.add(compilationUnit);
 					}
 				}
+				root.saveAll();
 			}
 			// commit all changes!
 			git.addFileToIndex();
@@ -79,6 +81,11 @@ public class ItrustFuzzing {
 	// This function changes string constant
 	public void changeStringConstants(CompilationUnit compilationUnit) {
 		compilationUnit.walk(StringLiteralExpr.class, e -> e.setString("FUZZY"));
+	}
+
+	// This function changes string constant
+	public void changeStringConstants2(CompilationUnit compilationUnit) {
+		compilationUnit.walk(StringLiteralExpr.class, e -> e.setString("MORE_FUZZY"));
 	}
 
 	// This function swap true & false
@@ -106,10 +113,14 @@ public class ItrustFuzzing {
 			return BinaryExpr.Operator.NOT_EQUALS;
 		if (e.getOperator() == BinaryExpr.Operator.NOT_EQUALS)
 			return BinaryExpr.Operator.EQUALS;
-		if (e.getOperator() == BinaryExpr.Operator.GREATER_EQUALS)
-			return BinaryExpr.Operator.LESS_EQUALS;
-		if (e.getOperator() == BinaryExpr.Operator.LESS_EQUALS)
-			return BinaryExpr.Operator.GREATER_EQUALS;
+		if (e.getOperator() == BinaryExpr.Operator.LESS)
+			return BinaryExpr.Operator.GREATER;
+		if (e.getOperator() == BinaryExpr.Operator.BINARY_AND)
+			return BinaryExpr.Operator.BINARY_OR;
+		if (e.getOperator() == BinaryExpr.Operator.BINARY_OR)
+			return BinaryExpr.Operator.BINARY_AND;
+		if (e.getOperator() == BinaryExpr.Operator.MULTIPLY)
+			return BinaryExpr.Operator.DIVIDE;
 
 		return e.getOperator();
 	}
