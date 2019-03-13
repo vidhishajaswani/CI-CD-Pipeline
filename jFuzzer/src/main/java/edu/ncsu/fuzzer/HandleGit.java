@@ -26,7 +26,6 @@ public class HandleGit {
 	private final static String authorName = "FuzzingTool";
 	private final static String authorEmail = "fuzzingTool@ncsu.edu";
 	private static RevCommit head = null;
-	private static RevCommit prevCommit = null;
 
 	public HandleGit(String repositoryURL) throws IOException, GitAPIException {
 
@@ -91,10 +90,10 @@ public class HandleGit {
 
 	public void commitChanges(String commitMessage) throws GitAPIException, EmtpyCommitException {
 		CommitCommand commit = repository.commit().setAuthor(authorName, authorEmail).setAllowEmpty(true);
-		prevCommit = commit.setMessage(commitMessage).call();
+		commit.setMessage(commitMessage).call();
 	}
 
-	public void completeReset() {
+	public void reset() {
 		System.out.println("Reset this to " + head);
 		ResetCommand command = repository.reset();
 		try {
@@ -102,22 +101,6 @@ public class HandleGit {
 				command.setRef(head.getName());
 				command.call();
 				repository.reset().setMode(ResetType.HARD).call();
-				head = null;
-			}
-		} catch (GitAPIException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void reset() {
-		System.out.println("Revert this to last " + prevCommit);
-		ResetCommand command = repository.reset();
-		try {
-			if (prevCommit != null) {
-				command.setRef(prevCommit.getName());
-				command.call();
-				repository.reset().setMode(ResetType.HARD).call();
-				prevCommit = null;
 			}
 		} catch (GitAPIException e) {
 			e.printStackTrace();
@@ -130,7 +113,6 @@ public class HandleGit {
 		try {
 			command.include(head);
 			command.call();
-			head = null;
 		} catch (GitAPIException e) {
 			e.printStackTrace();
 		}
