@@ -24,7 +24,7 @@ public class Application {
 			e.printStackTrace();
 		} finally {
 			git.lapse(10000);
-			git.completeReset(); // reset back to original commit
+			git.reset(); // reset back to original commit
 		}
 	}
 

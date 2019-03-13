@@ -50,12 +50,11 @@ public class ItrustFuzzing {
 						CompilationUnit compilationUnit = StaticJavaParser.parse(file);
 						int rand = random.nextInt(10);
 						// introducing randomness
-						if (rand <= 4) {// probability 50%
-							if (rand < 2)
-								changeStringConstants(compilationUnit);
-							else
-								changeStringConstants2(compilationUnit);
-						}
+						/*
+						 * if (rand <= 4) {// probability 50% if (rand < 2)
+						 * changeStringConstants(compilationUnit); else
+						 * changeStringConstants2(compilationUnit); }
+						 */
 						if (rand >= 2 && rand <= 6) // probability 50%
 							swap0_1(compilationUnit);
 						if (rand >= 3 && rand <= 9) // probability 70%
@@ -73,7 +72,7 @@ public class ItrustFuzzing {
 			// commit all changes!
 			git.addFileToIndex();
 			git.commitChanges("Fuzzing commit " + i);
-			// git.lapse(6000);
+			git.lapse(1500); //lapse of 1.5 sec
 			git.reset();
 		}
 		System.out.println("Fuzzing Completed!");
