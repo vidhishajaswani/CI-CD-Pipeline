@@ -14,6 +14,5 @@
 /iTrust2/src/main/java/edu/ncsu/csc/itrust2/forms/patient
 /iTrust2/src/main/java/edu/ncsu/csc/itrust2/forms/personnel
 /iTrust2/src/main/java/edu/ncsu/csc/itrust2/models/enums
-/iTrust2/src/main/java/edu/ncsu/csc/itrust2/models/persistent
 /iTrust2/src/main/java/edu/ncsu/csc/itrust2/mvc/config
 /iTrust2/src/main/java/edu/ncsu/csc/itrust2/utils

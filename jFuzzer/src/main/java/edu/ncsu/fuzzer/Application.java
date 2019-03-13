@@ -22,6 +22,8 @@ public class Application {
 			fuzzing.doFuzzing();
 		} catch (IOException | GitAPIException | ParseProblemException e) {
 			e.printStackTrace();
+		} finally {
+			git.lapse(10000);
 			git.reset(); // reset back to original commit
 		}
 	}
