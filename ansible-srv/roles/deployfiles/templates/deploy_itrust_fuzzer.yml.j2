@@ -63,12 +63,21 @@
       debug:
         msg: {% raw %}"{{ tests.stdout.split('\n') }}"{% endraw %}
 
-    - name: mvn clean test checkstyle:checkstyle
-      command: mvn clean test checkstyle:checkstyle
-      args:
-        chdir: "{{ vagrant_home }}/iTrust2-v4/iTrust2"
+    #- name: mvn clean install
+    #  command: sudo mvn clean install
+    #  args:
+    #    chdir: "{{ vagrant_home }}/iTrust2-v4/iTrust2"
 
+    #- name: mvn clean install
+    #  command:  sudo mvn clean install
+    #  args:
+    #    chdir: /var/lib/jenkins/jobs/iTrust/workspace/iTrust2-v4/iTrust2
 
+    - name: copy to workspace
+      synchronize: 
+        src: /home/vagrant/iTrust2-v4 
+        dest: /var/lib/jenkins/jobs/iTrust/workspace/
+        recursive: yes
     
 
     

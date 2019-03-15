@@ -9,6 +9,5 @@
     #- mysql
     #- java
     #- jenkins
-    #- fuzzer
     - deployfiles
     - job
