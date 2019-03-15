@@ -5,4 +5,29 @@
     builders:
       #- shell: 'sudo git clone https://github.ncsu.edu/engr-csc326-staff/iTrust2-v4.git'
       - shell: 'ansible-playbook /var/lib/jenkins/deploy_itrust_fuzzer.yml'
-    
+    publishers:
+      - jacoco:
+          exec-pattern: 'iTrust2-v4/iTrust2/target/coverage-reports/**.exec'
+          class-pattern: '**/classes'
+          source-pattern: '**/src/main/java'
+          update-build-status: true
+          inclusion-pattern: '**/*.java'
+          targets:
+            - instruction:
+                healthy: 7
+                unhealthy: 1
+            - branch:
+                healthy: 8
+                unhealthy: 2
+            - complexity:
+                healthy: 9
+                unhealthy: 3
+            - line:
+                healthy: 10
+                unhealthy: 4
+            - method:
+                healthy: 11
+                unhealthy: 5
+            - class:
+                healthy: 12
+                unhealthy: 6
