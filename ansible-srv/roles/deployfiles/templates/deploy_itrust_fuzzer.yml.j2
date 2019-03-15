@@ -63,10 +63,10 @@
       debug:
         msg: {% raw %}"{{ tests.stdout.split('\n') }}"{% endraw %}
 
-    #- name: mvn clean test checkstyle:checkstyle
-    #  command: mvn clean test checkstyle:checkstyle
-    #  args:
-    #    chdir: "{{ vagrant_home }}/iTrust2-v4/iTrust2"
+    - name: mvn clean test checkstyle:checkstyle
+      command: mvn clean test checkstyle:checkstyle
+      args:
+        chdir: "{{ vagrant_home }}/iTrust2-v4/iTrust2"
 
 
     
