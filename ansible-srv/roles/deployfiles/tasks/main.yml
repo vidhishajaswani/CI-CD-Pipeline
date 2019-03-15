@@ -76,6 +76,11 @@
     src: templates/post_commit_hook.j2
     dest: "{{vagrant_home}}/iTrust2-v4/.git/hooks/post-commit"
     mode: 0767
+
+- name: Copy test Prioritization
+  copy: 
+    src: roles/test-prioritization
+    dest: "{{vagrant_home}}"
     
 
 # - name: Add Fuzzer.js file

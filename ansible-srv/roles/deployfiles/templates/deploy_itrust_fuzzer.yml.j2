@@ -42,15 +42,34 @@
     - name: Update apt
       apt: update_cache=yes
 
-    - name: mvn clean install
-      command: mvn clean install 
+    - name: mvn compile
+      command: mvn compile
       args:
         chdir: "{{ vagrant_home }}/iTrust2-v4/iTrust2"
 
-    - name: mvn clean test checkstyle:checkstyle
-      command: mvn clean test checkstyle:checkstyle
+
+    - name: Run Test Prioritisation
+      command: sudo npm install 
       args:
-        chdir: "{{ vagrant_home }}/iTrust2-v4/iTrust2"
+        chdir:  "{{ vagrant_home }}/test-prioritization"
+
+    - name: Run Test Prioritisation
+      command: sudo node main.js 
+      register: tests
+      args:
+        chdir:  "{{ vagrant_home }}/test-prioritization"
+
+    - name: Results of Prioritisation
+      debug:
+        msg: {% raw %}"{{ tests.stdout.split('\n') }}"{% endraw %}
+
+    #- name: mvn clean test checkstyle:checkstyle
+    #  command: mvn clean test checkstyle:checkstyle
+    #  args:
+    #    chdir: "{{ vagrant_home }}/iTrust2-v4/iTrust2"
+
+
+    
 
     
 

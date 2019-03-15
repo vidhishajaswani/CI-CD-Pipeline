@@ -97,10 +97,11 @@ public class HandleGit {
 		System.out.println("Reset this to " + head);
 		ResetCommand command = repository.reset();
 		try {
-			command.setRef(head.getName());
-			command.call();
-			head = null;
-			repository.reset().setMode(ResetType.HARD).call();
+			if (head != null) {
+				command.setRef(head.getName());
+				command.call();
+				repository.reset().setMode(ResetType.HARD).call();
+			}
 		} catch (GitAPIException e) {
 			e.printStackTrace();
 		}
@@ -112,9 +113,17 @@ public class HandleGit {
 		try {
 			command.include(head);
 			command.call();
-			head = null;
 		} catch (GitAPIException e) {
 			e.printStackTrace();
 		}
 	}
+
+	public void lapse(long timeInMillis) {
+		try {
+			Thread.sleep(timeInMillis);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

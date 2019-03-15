@@ -21,6 +21,7 @@ public class ItrustFuzzing {
 	private HandleGit git;
 	private List<String> paths = new ArrayList<>();
 	private Random random = new Random();
+	private static int COMMITS = 1;
 
 	public ItrustFuzzing(String repoURL, HandleGit git) throws GitAPIException {
 		this.git = git;
@@ -39,7 +40,7 @@ public class ItrustFuzzing {
 	}
 
 	public void doFuzzing() throws IOException, GitAPIException {
-		for (int i = 1; i <= 7; i++) {
+		for (int i = 1; i <= COMMITS; i++) {
 			for (String path : paths) {
 				File folder = new File(path);
 				SourceRoot root = new SourceRoot(folder.toPath());
@@ -49,18 +50,17 @@ public class ItrustFuzzing {
 						CompilationUnit compilationUnit = StaticJavaParser.parse(file);
 						int rand = random.nextInt(10);
 						// introducing randomness
-						if (rand <= 4) {// probability 50%
-							if (rand < 2)
-								changeStringConstants(compilationUnit);
-							else
-								changeStringConstants2(compilationUnit);
-						}
+						/*
+						 * if (rand <= 4) {// probability 50% if (rand < 2)
+						 * changeStringConstants(compilationUnit); else
+						 * changeStringConstants2(compilationUnit); }
+						 */
 						if (rand >= 2 && rand <= 6) // probability 50%
 							swap0_1(compilationUnit);
 						if (rand >= 3 && rand <= 9) // probability 70%
 							swapRelatationOperator(compilationUnit);
-						//if (rand >= 5 && rand <= 7) // probability 30%
-						//	swapAssignmentOperator(compilationUnit);
+						if (rand >= 5 && rand <= 7) // probability 30%
+							swapAssignmentOperator(compilationUnit);
 						if (rand >= 7 && rand < 10) // probability 30%
 							swapEqualsOperator(compilationUnit);
 
@@ -72,9 +72,9 @@ public class ItrustFuzzing {
 			// commit all changes!
 			git.addFileToIndex();
 			git.commitChanges("Fuzzing commit " + i);
+			git.lapse(200000); //lapse of 1.5 sec
+			git.reset();
 		}
-		//git.reset(); // reset back to original commit
-		// git.revert(); // reverting back to original commit
 		System.out.println("Fuzzing Completed!");
 	}
 
@@ -126,12 +126,9 @@ public class ItrustFuzzing {
 	}
 
 	private AssignExpr.Operator getCorrect(AssignExpr e) {
-		//if (e.getOperator() == AssignExpr.Operator.MINUS)
-		//	return AssignExpr.Operator.PLUS;
-		//if (e.getOperator() == AssignExpr.Operator.PLUS)
-		//	return AssignExpr.Operator.MINUS;
+		if (e.getOperator() == AssignExpr.Operator.PLUS)
+			return AssignExpr.Operator.ASSIGN;
 
 		return e.getOperator();
 	}
-
 }
