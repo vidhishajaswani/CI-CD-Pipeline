@@ -20,8 +20,6 @@
     chdir: {{vagrant_home}}/analysis/ 
   become: true
 
-# This task must be called in some playbook that relates to checkbox job build - TO DO
-- name: Start the analysis
-  command: node analysis.js > checkboxCA.log
-  args:
-    chdir: {{vagrant_home}}/analysis/
+- include: create_checkbox_analysis_job.yml
+
+- include: build_checkbox_analysis_job.yml

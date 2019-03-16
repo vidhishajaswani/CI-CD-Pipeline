@@ -4,6 +4,10 @@ var fs = require("fs");
 var findInFiles = require("find-in-files");
 var jsinspect = require('jsinspect');
 var filepaths = require('filepaths');
+var find = require('find');
+var regex = require('regex');
+
+dup_method = 'internal';
 
 function main()
 {
@@ -11,14 +15,23 @@ function main()
 
 	if( args.length == 0 )
 	{
-		args = ["{{checkbox_repo}}", "analysis.js", 100, 70];		
+		args = ["{{checkbox_repo}}", 100, 10, 'jsinspect'];		
 	}
 	var searchPath = args[0];
-	var filePath = args[1];
-	var MaxLines = args[2];
-	var MaxConditions = args[3];
+	// var filePath = args[1];
+	// var files = find.file('^((?!node_modules).)*$ | .js$', __dirname)
+	// console.log(files);
+	var files = ['./server-side/site/marqdown.js','./server-side/site/server.js'];
+	var MaxLines = args[1];
+	var MaxConditions = args[2];
+	dup_method = args[3];
+	
 
-	complexity(filePath);
+	// complexity(filePath);
+	for(i in files)
+	{
+		complexity(files[i]);
+	}
 
 	// Report
 	// 1. & 2. Check for Max Conditions and Number of Lines
@@ -28,24 +41,32 @@ function main()
 	{
 		var builder = builders[node];
 		builder.report();
+	}
+
+	for( var node in builders )
+	{
+		var builder = builders[node];
 		builder.Analyze(MaxLines, MaxConditions);
 	}
 
 	// 3. Detect Duplicate code
-	console.log("------------------------------------------------------------");
-	console.log("Custom Analysis - Detection of Duplicate or Structurally similar code");
-	var matches = detectDuplicates('.', 30);
-	if(matches > 0)
+	if (dup_method != 'internal')
 	{
-		console.log("Analysis Error: Duplicate or Structurally similar detected - Modify code and resubmit");
-		process.exit(1);
+		console.log("------------------------------------------------------------");
+		console.log("Custom Analysis - Detection of Duplicate or Structurally similar code");
+		var matches = detectDuplicates('.', 30);
+		if(matches > 0)
+		{
+			console.log("Analysis Error: Duplicate or Structurally similar detected - Modify code and resubmit");
+			process.exit(1);
+		}
 	}
 
 	// 4. Check for security tokens in the code 
 	console.log("------------------------------------------------------------");
 	console.log("Custom Analysis - Detection of Security Tokens")
-	findInFiles.find("token", searchPath, ".js$")
-    .then(function(results) {
+	findInFiles.find("token|secret", searchPath, "^((?!node_modules).)*$ | .js$")
+	    .then(function(results) {
 		var count = 0;
         for (var result in results) {
             var res = results[result];
@@ -123,29 +144,36 @@ function FileBuilder()
 	// Number of imports in a file.
 	this.ImportCount = 0;
 	this.Functions = [];
-	this.CheckDuplicates = function()
+	this.FunctionNames = [];
+	this.FunctionList = [];
+	this.Analyze = function(a, b)
 	{
-		for (node_a in this.Functions)
-			for (node_b in this.Functions)
-			{
-				var result = isSameNode(node_a, node_b);
-				if (result)
+		if (dup_method == 'internal')
+		{
+			console.log("------------------------------------------------------------");
+			console.log("Custom Analysis - Detection of Duplicate or Structurally similar code - Internal");
+			for (i in this.FunctionList)
+				for (j in this.FunctionList)
 				{
-					console.log("Duplication detected");
+					if (i < j)
+					{
+						var result = [];
+						result = longestCommonSubstring(this.FunctionList[i], this.FunctionList[j]);
+						var similarNodes = result[0];
+						var lines = result[1];
+						if (Math.max.apply(null, lines) - Math.min.apply(null, lines) >= 10)
+						{
+							console.log("Duplicate code between "+this.FunctionNames[i]+"() and "+this.FunctionNames[j]+"()");
+							console.log("First instance at: " + Math.min.apply(null, lines) + "-" + Math.max.apply(null, lines) + '\n');
+							console.log("Analysis Error: Security Token detected - Modify code and resubmit");
+							process.exit(1);
+						}
+					}
 				}
-			}
+			console.log("No matches detected\n");
+		}
 	}
-	this.report = function()
-	{
-		// console.log (
-			// ( "{0}\n" +
-			//   "~~~~~~~~~~~~\n"+
-			//   "ImportCount {1}\t" +
-			//   "Strings {2}\n"
-			// ).format( this.FileName, this.ImportCount, this.Strings));
-		// this.CheckDuplicates();
-	}
-	this.Analyze = function(){}
+	this.report = function(){}
 }
 
 // A function following the Visitor pattern.
@@ -184,6 +212,7 @@ function complexity(filePath)
 	// Tranverse program with a function visitor.
 	traverseWithParents(ast, function (node) 
 	{
+		var node_list = [];
 		if (node.type === 'FunctionDeclaration') 
 		{
 			var builder = new FunctionBuilder();
@@ -209,7 +238,16 @@ function complexity(filePath)
 				}
 			});
 			builders[builder.FunctionName] = builder;
-			fileBuilder.Functions.push(node);
+			if (dup_method == 'internal')
+			{
+				fileBuilder.FunctionNames.push(builder.FunctionName);
+				preOrder(node, node_list);
+				fileBuilder.FunctionList.push(node_list);
+			}
+			else
+			{
+				fileBuilder.Functions.push(node);
+			}
 		}
 		builders[filePath] = fileBuilder;
 	});
@@ -233,36 +271,107 @@ function countConditions(node)
 	return count+1;
 }
 
-// 4. Helper function to determine node similarity
-// function isSameNode(node_a, node_b)
-// {
-	// if (node_a == null && node_b == null)
-	// 	return true;
-	// if (node_a == null || node_b == null)
-	// 	return false;
-	// else
-	// {
-	// 	let result = true && (node_a.type == node_b.type) && (Object.keys(node_a).length == Object.keys(node_b).length);
-	// 	// Count is same, then call isSameNode(child_a, child_b)
-	// 	// return the final result
-	// 	var key_a, child_a, child_b;
-	// 	if (result)
-	// 		for (key_a in node_a) 
-	// 		{
-	// 			if (node_a.hasOwnProperty(key_a) && node_b.hasOwnProperty(key_a)) 
-	// 			{
-	// 				child_a = node_a[key_a];
-	// 				child_b = node_b[key_a];
-	// 				if (typeof child_a === 'object' && typeof child_b === 'object' && child_a !== null && child_b !== null && key_a != 'parent') 
-	// 				{
-	// 					result = result && isSameNode(child_a, child_b);
-	// 				}
-	// 			}
-	// 		}
-	// 	return result;
-	// }
-	// return Object.is(node_a, node_b);
-// }
+function preOrder(node, list) {
+	if(Object.keys(node).length == 0) 
+		return list;
+	if (node.type != null)
+	{
+		var obj = new Object;
+		obj[node.type]=node.loc.start.line;
+		list.push(obj);
+	}
+	for (key in node) 
+	{
+		if (node.hasOwnProperty(key)) 
+		{
+			child = node[key];
+			if (child === null)
+			{
+				list.push('null'+toString(key));	
+			}
+			if (typeof child === 'object' && child !== null && key != 'parent') 
+			{
+				preOrder(node[key], list);			
+			}
+		}
+	}
+}
+
+function zeros(dimensions)
+{
+	var array = [];
+
+	for (var i = 0; i < dimensions[0]; ++i) 
+	{
+        array.push(dimensions.length == 1 ? '' : zeros(dimensions.slice(1)));
+	}
+	
+	return array;
+}
+
+function longestCommonSubstring(s1, s2) {
+	// Convert strings to arrays to treat unicode symbols length correctly.
+	// For example:
+	// '𐌵'.length === 2
+	// [...'𐌵'].length === 1
+	// const s1 = [...string1];
+	// const s2 = [...string2];
+  
+	// Init the matrix of all substring lengths to use Dynamic Programming approach.
+	const substringMatrix = zeros([s2.length+1, s1.length+1]);
+  
+	// Fill the first row and first column with zeros to provide initial values.
+	for (let columnIndex = 0; columnIndex <= s1.length; columnIndex += 1) {
+	  substringMatrix[0][columnIndex] = 0;
+	}
+  
+	for (let rowIndex = 0; rowIndex <= s2.length; rowIndex += 1) {
+	  substringMatrix[rowIndex][0] = 0;
+	}
+  
+	// Build the matrix of all substring lengths to use Dynamic Programming approach.
+	let longestSubstringLength = 0;
+	let longestSubstringColumn = 0;
+	let longestSubstringRow = 0;
+  
+	for (let rowIndex = 1; rowIndex <= s2.length; rowIndex += 1) {
+	  for (let columnIndex = 1; columnIndex <= s1.length; columnIndex += 1) {
+		if (Object.keys(s1[columnIndex - 1])[0] === Object.keys(s2[rowIndex - 1])[0]) {
+		  substringMatrix[rowIndex][columnIndex] = substringMatrix[rowIndex - 1][columnIndex - 1] + 1;
+		} else {
+		  substringMatrix[rowIndex][columnIndex] = 0;
+		}
+  
+		// Try to find the biggest length of all common substring lengths
+		// and to memorize its last character position (indices)
+		if (substringMatrix[rowIndex][columnIndex] > longestSubstringLength) {
+		  longestSubstringLength = substringMatrix[rowIndex][columnIndex];
+		  longestSubstringColumn = columnIndex;
+		  longestSubstringRow = rowIndex;
+		}
+	  }
+	}
+  
+	if (longestSubstringLength === 0) {
+	  // Longest common substring has not been found.
+	  return '';
+	}
+  
+	// Detect the longest substring from the matrix.
+	let longestSubstring = [];
+	let lines = [];
+  
+	while (substringMatrix[longestSubstringRow][longestSubstringColumn] > 0) {
+		if (typeof Object.values(s1[longestSubstringColumn - 1])[0] == 'number')
+			lines.push(Object.values(s1[longestSubstringColumn - 1])[0]);
+		// console.log(Object.values(s1[longestSubstringColumn - 1])[0])
+	  	longestSubstring.unshift(Object.keys(s1[longestSubstringColumn - 1])[0]);
+	 	longestSubstringRow -= 1;
+	  	longestSubstringColumn -= 1;
+	}
+  
+	return [longestSubstring, lines];
+  }
 
 // Helper function for counting children of node.
 function childrenLength(node)
@@ -320,138 +429,47 @@ if (!String.prototype.format) {
 
 main();
 
-function Crazy (argument) 
+function detectDuplicates(suppliedPaths, thresh)
 {
-
-	var date_bits = element.value.match(/^(\d{4})\-(\d{1,2})\-(\d{1,2})$/);
-	var new_date = null;
-	if(date_bits && date_bits.length == 4 && parseInt(date_bits[2]) > 0 && parseInt(date_bits[3]) > 0)
-    new_date = new Date(parseInt(date_bits[1]), parseInt(date_bits[2]) - 1, parseInt(date_bits[3]));
-
-    var secs = bytes / 3500;
-
-      if ( secs < 59 )
-      {
-          return secs.toString().split(".")[0] + " seconds";
-      }
-      else if ( secs > 59 && secs < 3600 )
-      {
-          var mints = secs / 60;
-          var remainder = parseInt(secs.toString().split(".")[0]) -
-(parseInt(mints.toString().split(".")[0]) * 60);
-          var szmin;
-          if ( mints > 1 )
-          {
-              szmin = "minutes";
-          }
-          else
-          {
-              szmin = "minute";
-          }
-          return mints.toString().split(".")[0] + " " + szmin + " " +
-remainder.toString() + " seconds";
-      }
-      else
-      {
-          var mints = secs / 60;
-          var hours = mints / 60;
-          var remainders = parseInt(secs.toString().split(".")[0]) -
-(parseInt(mints.toString().split(".")[0]) * 60);
-          var remainderm = parseInt(mints.toString().split(".")[0]) -
-(parseInt(hours.toString().split(".")[0]) * 60);
-          var szmin;
-          if ( remainderm > 1 )
-          {
-              szmin = "minutes";
-          }
-          else
-          {
-              szmin = "minute";
-          }
-          var szhr;
-          if ( remainderm > 1 )
-          {
-              szhr = "hours";
-          }
-          else
-          {
-              szhr = "hour";
-              for ( i = 0 ; i < cfield.value.length ; i++)
-				  {
-				    var n = cfield.value.substr(i,1);
-				    if ( n != 'a' && n != 'b' && n != 'c' && n != 'd'
-				      && n != 'e' && n != 'f' && n != 'g' && n != 'h'
-				      && n != 'i' && n != 'j' && n != 'k' && n != 'l'
-				      && n != 'm' && n != 'n' && n != 'o' && n != 'p'
-				      && n != 'q' && n != 'r' && n != 's' && n != 't'
-				      && n != 'u' && n != 'v' && n != 'w' && n != 'x'
-				      && n != 'y' && n != 'z'
-				      && n != 'A' && n != 'B' && n != 'C' && n != 'D'
-				      && n != 'E' && n != 'F' && n != 'G' && n != 'H'
-				      && n != 'I' && n != 'J' && n != 'K' && n != 'L'
-				      && n != 'M' && n != 'N' &&  n != 'O' && n != 'P'
-				      && n != 'Q' && n != 'R' && n != 'S' && n != 'T'
-				      && n != 'U' && n != 'V' && n != 'W' && n != 'X'
-				      && n != 'Y' && n != 'Z'
-				      && n != '0' && n != '1' && n != '2' && n != '3'
-				      && n != '4' && n != '5' && n != '6' && n != '7'
-				      && n != '8' && n != '9'
-				      && n != '_' && n != '@' && n != '-' && n != '.' )
-				    {
-				      window.alert("Only Alphanumeric are allowed.\nPlease re-enter the value.");
-				      cfield.value = '';
-				      cfield.focus();
-				    }
-				    cfield.value =  cfield.value.toUpperCase();
-				  }
-				  return;
-          }
-          return hours.toString().split(".")[0] + " " + szhr + " " +
-mints.toString().split(".")[0] + " " + szmin;
-      }
-  }
-
-  function detectDuplicates(suppliedPaths, thresh)
-  {
-	  // By default, ignore deps and tests
-	  var ignorePatterns = ['node_modules', 'bower_components', 'test', 'spec'];
-	  var extensions = ['.js', '.jsx'];
-	  try {
-		  paths = filepaths.getSync(suppliedPaths, {
-		  ext: extensions,
-		  ignore: ignorePatterns
-		  });
-	  } catch(e) {
-		  console.log(e.message);
-		  process.exit(4);
-	  }
-  
-	  if (!paths.length) {
-		  console.log('No files found in the list of paths');
-		  process.exit(0);
-	  }
-  
-	  var inspector = new jsinspect.Inspector(paths, {
-		  threshold:    thresh
+	// By default, ignore deps and tests
+	var ignorePatterns = ['node_modules', 'bower_components', 'test', 'spec'];
+	var extensions = ['.js', '.jsx'];
+	try {
+		paths = filepaths.getSync(suppliedPaths, {
+		ext: extensions,
+		ignore: ignorePatterns
 		});
-  
-	  // Retrieve the requested reporter
-	  var reporterType = jsinspect.reporters['default'];
-	  new reporterType(inspector);
-  
-	  // Track the number of matches
-	  matches = 0;
-	  inspector.on('match', function() {matches++});
-  
-	  try {
-		  inspector.run();
-		//   process.exit(5);
-	  } catch(err) {
-		  console.log("Error");
-		  process.exit(1);
-	  }
+	} catch(e) {
+		console.log(e.message);
+		process.exit(4);
+	}
 
-	  return matches;
-  }
+	if (!paths.length) {
+		console.log('No files found in the list of paths');
+		process.exit(0);
+	}
+
+	var inspector = new jsinspect.Inspector(paths, {
+		threshold:    thresh
+	});
+
+	// Retrieve the requested reporter
+	var reporterType = jsinspect.reporters['default'];
+	new reporterType(inspector);
+
+	// Track the number of matches
+	matches = 0;
+	inspector.on('match', function() {matches++});
+
+	try {
+		inspector.run();
+	//   process.exit(5);
+	} catch(err) {
+		console.log("Error");
+		process.exit(1);
+	}
+
+	return matches;
+}
   
- exports.main = main;
+exports.main = main;
