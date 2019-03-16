@@ -28,6 +28,18 @@
   template:                                     
     src: templates/db.properties.j2
     dest: /var/lib/jenkins/db.properties
+
+- name: db.properties
+  copy:
+    src: /var/lib/jenkins/db.properties
+    dest: "{{ vagrant_home }}/iTrust2-v4/iTrust2/src/main/java/db.properties"
+    remote_src: yes
+
+- name: email.properties
+  copy:                                     
+    src: /var/lib/jenkins/email.properties
+    dest: "{{ vagrant_home }}/iTrust2-v4/iTrust2/src/main/java/email.properties"
+    remote_src: yes
         
 - name: Create rebuild directory
   file:

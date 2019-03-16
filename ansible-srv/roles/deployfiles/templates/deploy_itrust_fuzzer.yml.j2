@@ -12,17 +12,17 @@
     - name: npm and node
       shell: |
         curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && sudo apt-get install -y nodejs
-    - name: db.properties
-      copy:
-        src: /var/lib/jenkins/db.properties
-        dest: "{{ vagrant_home }}/iTrust2-v4/iTrust2/src/main/java/db.properties"
-        remote_src: yes
+    #- name: db.properties
+    #  copy:
+    #    src: /var/lib/jenkins/db.properties
+    #    dest: "{{ vagrant_home }}/iTrust2-v4/iTrust2/src/main/java/db.properties"
+    #    remote_src: yes
 
-    - name: email.properties
-      copy:                                     
-        src: /var/lib/jenkins/email.properties
-        dest: "{{ vagrant_home }}/iTrust2-v4/iTrust2/src/main/java/email.properties"
-        remote_src: yes
+    #- name: email.properties
+    #  copy:                                     
+    #    src: /var/lib/jenkins/email.properties
+    #    dest: "{{ vagrant_home }}/iTrust2-v4/iTrust2/src/main/java/email.properties"
+    #    remote_src: yes
         
 
     - name: Edit mysql.conf file
