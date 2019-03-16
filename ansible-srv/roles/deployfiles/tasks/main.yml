@@ -24,6 +24,10 @@
   template:                                     
     src: templates/email.properties.j2
     dest: /var/lib/jenkins/email.properties
+- name: db.properties
+  template:                                     
+    src: templates/db.properties.j2
+    dest: /var/lib/jenkins/db.properties
         
 - name: Create rebuild directory
   file:

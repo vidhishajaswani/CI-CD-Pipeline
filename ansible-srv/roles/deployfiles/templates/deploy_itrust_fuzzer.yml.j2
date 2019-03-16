@@ -4,10 +4,17 @@
   vars_files:
     - /var/lib/jenkins/variables.yml
   tasks:
-    
+    #- name: Install nodejs
+    #  apt:
+    #    name: nodejs
+    #    state: present
+
+    - name: npm and node
+      shell: |
+        curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && sudo apt-get install -y nodejs
     - name: db.properties
       copy:
-        src: "{{ vagrant_home }}/iTrust2-v4/iTrust2/src/main/java/db.properties.template"
+        src: /var/lib/jenkins/db.properties
         dest: "{{ vagrant_home }}/iTrust2-v4/iTrust2/src/main/java/db.properties"
         remote_src: yes
 
@@ -34,18 +41,18 @@
         path: /etc/sudoers
         line: "jenkins ALL=(ALL) NOPASSWD: ALL"
     
-    - name: mvn test classes
-      command: mvn process-test-classes
-      args:
-        chdir: "{{ vagrant_home }}/iTrust2-v4/iTrust2"
+    #- name: mvn test classes
+    #  command: mvn process-test-classes
+    #  args:
+    #    chdir: "{{ vagrant_home }}/iTrust2-v4/iTrust2"
 
     - name: Update apt
       apt: update_cache=yes
 
-    - name: mvn compile
-      command: mvn compile
-      args:
-        chdir: "{{ vagrant_home }}/iTrust2-v4/iTrust2"
+    #- name: mvn compile
+    #  command: mvn compile
+    #  args:
+    #    chdir: "{{ vagrant_home }}/iTrust2-v4/iTrust2"
 
 
     - name: Run Test Prioritisation
@@ -63,8 +70,8 @@
       debug:
         msg: {% raw %}"{{ tests.stdout.split('\n') }}"{% endraw %}
 
-    #- name: mvn clean install
-    #  command: sudo mvn clean install
+    #- name: checkstyle
+    #  command: mvn clean test verify checkstyle:checkstyle
     #  args:
     #    chdir: "{{ vagrant_home }}/iTrust2-v4/iTrust2"
 
@@ -73,11 +80,11 @@
     #  args:
     #    chdir: /var/lib/jenkins/jobs/iTrust/workspace/iTrust2-v4/iTrust2
 
-    - name: copy to workspace
-      synchronize: 
-        src: /home/vagrant/iTrust2-v4 
-        dest: /var/lib/jenkins/jobs/iTrust/workspace/
-        recursive: yes
+    #- name: copy to workspace
+    #  synchronize: 
+    #    src: /home/vagrant/iTrust2-v4 
+    #    dest: /var/lib/jenkins/jobs/iTrust/workspace/
+    #    recursive: yes
     
 
     
