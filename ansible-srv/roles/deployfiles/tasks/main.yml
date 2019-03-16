@@ -63,7 +63,7 @@
 #- name: Git Clone
 #  git:
 #    repo: "{{ itrust_repo }}"
-#    dest: "{{ itrust_repo }}/iTrust2-v4"
+#    dest: iTrust2-v4
 
 #- name: Git clone 
 #  git:
