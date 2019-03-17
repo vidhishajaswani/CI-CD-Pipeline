@@ -21,8 +21,8 @@ function main()
 	// var files = find.file('^((?!node_modules).)*$ | .js$', __dirname)
 	// console.log(files);
 	console.log('---------------------------------------------------');
-	getJSfiles(searchPath);
-	var files = ['{{checkbox_install_dir}}/server-side/site/marqdown.js','{{checkbox_install_dir}}/server-side/site/server.js'];
+	var files = getJSfiles(searchPath);
+	// var files = ['{{checkbox_install_dir}}/server-side/site/marqdown.js','{{checkbox_install_dir}}/server-side/site/server.js'];
 	var MaxLines = args[1];
 	var MaxConditions = args[2];
 	dup_method = args[3];
@@ -92,9 +92,10 @@ function getJSfiles(searchPath)
 	const fs = require('fs');
 	const path = require('path');
 
+	const find = require('find');
 	// EXCLUDE  must be directories, and not contain trailing slashes
 	// This script does not create globs that ignore individual files
-	const EXCLUDE = ['node_modules'];
+	const EXCLUDE = ['node_modules','.git','.gitignore'];
 
 	let dirs = fs
 		.readdirSync(searchPath)
@@ -102,9 +103,15 @@ function getJSfiles(searchPath)
 		.filter(dir => dir.indexOf('.') !== 0)
 		.filter(dir => EXCLUDE.indexOf(dir) === -1);
 
-	const glob = `{,${dirs.join(',')}}*.js`;
+	//const glob = `{,${dirs.join(',')}}*.js`;
 
-	console.log(glob);
+	var file_list = [];
+	for( i in dirs)
+	{
+		subdir = searchPath + '/' + dirs[i];
+		file_list = file_list.concat(find.fileSync(/\.js$/, subdir));
+	}
+	return file_list;
 }
 
 var builders = {};
@@ -147,11 +154,10 @@ function FunctionBuilder()
 		   	"{0}(): {1}\n" +
 			   "============\n" +
 			   "Lines: {2}\t" +
-				"MaxConditions: {3}\t" +
-				"Children: {4}\n"
+				"MaxConditions: {3}\n"
 			)
 			.format(this.FunctionName, this.StartLine,
-			        this.Lines, this.MaxConditions, this.childrenLength)
+			        this.Lines, this.MaxConditions)
 		);
 	}
 };
@@ -239,7 +245,7 @@ function complexity(filePath)
 		{
 			var builder = new FunctionBuilder();
 
-			builder.FunctionName = functionName(node);
+			builder.FunctionName = fileBuilder.FileName + ': ' + functionName(node);
 			builder.StartLine    = node.loc.start.line;
 			builder.EndLine 	 = node.loc.end.line;
 
