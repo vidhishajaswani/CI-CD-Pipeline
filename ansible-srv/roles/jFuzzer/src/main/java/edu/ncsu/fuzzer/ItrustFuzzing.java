@@ -21,7 +21,7 @@ public class ItrustFuzzing {
 	private HandleGit git;
 	private List<String> paths = new ArrayList<>();
 	private Random random = new Random();
-	private static int COMMITS = 100;
+	private static int COMMITS = 4;
 
 	public ItrustFuzzing(String repoURL, HandleGit git) throws GitAPIException {
 		this.git = git;

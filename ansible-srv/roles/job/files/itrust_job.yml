@@ -10,7 +10,7 @@
       - shell: 'cd /var/lib/jenkins/jobs/iTrust/workspace/iTrust2-v4/iTrust2 && sudo mvn clean compile'
       - shell: 'cd /var/lib/jenkins/jobs/iTrust/workspace/iTrust2-v4/iTrust2 && sudo mvn clean checkstyle:checkstyle'
       - shell: 'sudo cp /var/lib/jenkins/jobs/iTrust/workspace/iTrust2-v4/iTrust2/target/site/checkstyle.html /jenkins-srv/checkstyle_results/cs_$(date +"%s").html'
-      #- shell: 'cd /var/lib/jenkins/jobs/iTrust/workspace/iTrust2-v4/iTrust2 && sudo mvn test verify'
+      - shell: 'cd /var/lib/jenkins/jobs/iTrust/workspace/iTrust2-v4/iTrust2 && sudo mvn test'
       #- shell: 'cd /var/lib/jenkins/jobs/iTrust/workspace/iTrust2-v4/iTrust2 && sudo mvn process-test-classes'
       #- shell: 'cd /var/lib/jenkins/jobs/iTrust/workspace/iTrust2-v4/iTrust2 && sudo mvn checkstyle:checkstyle'      
       #- shell: 'cd /var/lib/jenkins/jobs/iTrust/workspace/iTrust2-v4/iTrust2 && sudo mvn test site'
