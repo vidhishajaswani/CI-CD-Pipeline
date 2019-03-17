@@ -11,3 +11,4 @@
     #- jenkins
     - deployfiles
     - job
+    - analysis

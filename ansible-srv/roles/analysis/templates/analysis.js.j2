@@ -1,0 +1,497 @@
+var esprima = require("esprima");
+var options = {tokens:true, tolerant: true, loc: true, range: true };
+var fs = require("fs");
+var findInFiles = require("find-in-files");
+var jsinspect = require('jsinspect');
+var filepaths = require('filepaths');
+var find = require('find');
+
+dup_method = 'internal';
+
+function main()
+{
+	var args = process.argv.slice(2);
+
+	if( args.length == 0 )
+	{
+		args = ["{{checkbox_install_dir}}", {{cust_anlys_maxlines}}, {{cust_anlys_maxconds}}, '{{cust_anlys_dup_method}}'];		
+	}
+	var searchPath = args[0];
+	// var filePath = args[1];
+	// var files = find.file('^((?!node_modules).)*$ | .js$', __dirname)
+	// console.log(files);
+	console.log('---------------------------------------------------');
+	getJSfiles(searchPath);
+	var files = ['{{checkbox_install_dir}}/server-side/site/marqdown.js','{{checkbox_install_dir}}/server-side/site/server.js'];
+	var MaxLines = args[1];
+	var MaxConditions = args[2];
+	dup_method = args[3];
+	
+
+	// complexity(filePath);
+	for(i in files)
+	{
+		complexity(files[i]);
+	}
+
+	// Report
+	// 1. & 2. Check for Max Conditions and Number of Lines
+	console.log("------------------------------------------------------------");
+	console.log("Custom Analysis - Method Analysis");
+	for( var node in builders )
+	{
+		var builder = builders[node];
+		builder.report();
+	}
+
+	for( var node in builders )
+	{
+		var builder = builders[node];
+		builder.Analyze(MaxLines, MaxConditions);
+	}
+
+	// 3. Detect Duplicate code
+	if (dup_method != 'internal')
+	{
+		console.log("------------------------------------------------------------");
+		console.log("Custom Analysis - Detection of Duplicate or Structurally similar code");
+		var matches = detectDuplicates("{{checkbox_install_dir}}", {{cust_anlys_jdup_lines}});
+		if(matches > 0)
+		{
+			console.log("Analysis Warning: Duplicate or Structurally similar detected - Modify code and resubmit");
+			// process.exit(1);
+		}
+	}
+
+	// 4. Check for security tokens in the code 
+	console.log("------------------------------------------------------------");
+	console.log("Custom Analysis - Detection of Security Tokens")
+	findInFiles.find("token|secret", searchPath, "^((?!node_modules).)*$ | .js$")
+	    .then(function(results) {
+		var count = 0;
+        for (var result in results) {
+            var res = results[result];
+            console.log(
+                '!WARNING! Found "' + res.matches[0] + '" ' + res.count
+                + ' times in "' + result + '"'
+			);
+			count += res.count;
+		}
+		if (count == 0)
+			console.log("No matches found");
+		else
+		{
+			console.log("Analysis Error: Security Token detected - Modify code and resubmit");
+			process.exit(1);
+		}
+	});
+}
+
+function getJSfiles(searchPath)
+{
+	const fs = require('fs');
+	const path = require('path');
+
+	// EXCLUDE  must be directories, and not contain trailing slashes
+	// This script does not create globs that ignore individual files
+	const EXCLUDE = ['node_modules'];
+
+	let dirs = fs
+		.readdirSync(searchPath)
+		.filter(path => fs.statSync(searchPath+'/'+path).isDirectory())
+		.filter(dir => dir.indexOf('.') !== 0)
+		.filter(dir => EXCLUDE.indexOf(dir) === -1);
+
+	const glob = `{,${dirs.join(',')}}*.js`;
+
+	console.log(glob);
+}
+
+var builders = {};
+
+// Represent a reusable "class" following the Builder pattern.
+function FunctionBuilder()
+{
+	this.StartLine = 0;
+	this.EndLine = 0;
+	this.Lines = 0;
+	this.FunctionName = "";
+	// The number of parameters for functions
+	this.ParameterCount  = 0,
+	// Number of if statements/loops + 1
+	this.SimpleCyclomaticComplexity = 0;
+	// The max depth of scopes (nested ifs, loops, etc)
+	this.MaxNestingDepth    = 0;
+	// The max number of conditions if one decision statement.
+	this.MaxConditions      = 0;
+	this.childrenLength = 0;
+	this.Analyze = function(MaxLines, MaxConditions)
+	{
+		if(this.MaxConditions > MaxConditions) 
+		{
+			console.log("Analysis Error: MaxCondition limit exceeded - Modify code and resubmit");
+			console.log(this.FunctionName);
+			process.exit(1);
+		}
+		if(this.Lines > MaxLines)
+		{
+			console.log("Analysis Error: MaxLines limit exceeded - Modify code and resubmit");
+			console.log(this.FunctionName);
+			process.exit(1);
+		}
+	}
+	this.report = function()
+	{
+		console.log(
+		   (
+		   	"{0}(): {1}\n" +
+			   "============\n" +
+			   "Lines: {2}\t" +
+				"MaxConditions: {3}\t" +
+				"Children: {4}\n"
+			)
+			.format(this.FunctionName, this.StartLine,
+			        this.Lines, this.MaxConditions, this.childrenLength)
+		);
+	}
+};
+
+
+// A builder for storing file level information.
+function FileBuilder()
+{
+	this.FileName = "";
+	// Number of strings in a file.
+	this.Strings = 0;
+	// Number of imports in a file.
+	this.ImportCount = 0;
+	this.Functions = [];
+	this.FunctionNames = [];
+	this.FunctionList = [];
+	this.Analyze = function(a, b)
+	{
+		if (dup_method == 'internal')
+		{
+			console.log("------------------------------------------------------------");
+			console.log("Custom Analysis - Detection of Duplicate or Structurally similar code - Internal");
+			for (i in this.FunctionList)
+				for (j in this.FunctionList)
+				{
+					if (i < j)
+					{
+						var result = [];
+						result = longestCommonSubstring(this.FunctionList[i], this.FunctionList[j]);
+						var similarNodes = result[0];
+						var lines = result[1];
+						if (Math.max.apply(null, lines) - Math.min.apply(null, lines) >= {{cust_anlys_dup_lines}})
+						{
+							console.log("Duplicate code between "+this.FunctionNames[i]+"() and "+this.FunctionNames[j]+"()");
+							console.log("First instance at: " + Math.min.apply(null, lines) + "-" + Math.max.apply(null, lines) + '\n');
+							console.log("Analysis Warning: Security Token detected - Modify code and resubmit");
+							// process.exit(1);
+						}
+					}
+				}
+			console.log("---------------------------------------\n");
+		}
+	}
+	this.report = function(){}
+}
+
+// A function following the Visitor pattern.
+// Annotates nodes with parent objects.
+function traverseWithParents(object, visitor)
+{
+    var key, child;
+
+    visitor.call(null, object);
+
+    for (key in object) {
+        if (object.hasOwnProperty(key)) {
+            child = object[key];
+            if (typeof child === 'object' && child !== null && key != 'parent') 
+            {
+            	child.parent = object;
+					traverseWithParents(child, visitor);
+            }
+        }
+    }
+}
+
+function complexity(filePath)
+{
+	var buf = fs.readFileSync(filePath, "utf8");
+	var ast = esprima.parse(buf, options);
+
+	var i = 0;
+
+	// A file level-builder:
+	var fileBuilder = new FileBuilder();
+	fileBuilder.FileName = filePath;
+	fileBuilder.ImportCount = 0;
+	builders[filePath] = fileBuilder;
+
+	// Tranverse program with a function visitor.
+	traverseWithParents(ast, function (node) 
+	{
+		var node_list = [];
+		if (node.type === 'FunctionDeclaration') 
+		{
+			var builder = new FunctionBuilder();
+
+			builder.FunctionName = functionName(node);
+			builder.StartLine    = node.loc.start.line;
+			builder.EndLine 	 = node.loc.end.line;
+
+			// 2. Number of lines in a method
+			builder.Lines = builder.EndLine - builder.StartLine;
+
+			// if (node.params.length > 0)
+			// {
+			// 	builder.ParameterCount = node.params.length;
+			// }
+			builder.childrenLength = childrenLength(node);
+			// 1. Max Conditions in a statement
+			traverseWithParents(node, function(child)
+			{
+				if (isDecision(child))
+				{
+					builder.MaxConditions = countConditions(child);
+				}
+			});
+			builders[builder.FunctionName] = builder;
+			if (dup_method == 'internal')
+			{
+				fileBuilder.FunctionNames.push(builder.FunctionName);
+				preOrder(node, node_list);
+				fileBuilder.FunctionList.push(node_list);
+			}
+			else
+			{
+				fileBuilder.Functions.push(node);
+			}
+		}
+		builders[filePath] = fileBuilder;
+	});
+
+}
+count = 0;
+// Helper function for counting conditions in a Decision statement node.
+function countConditions(node)
+{
+	count = 0;
+	traverseWithParents(node, function(child)
+	{
+		if(child.operator)
+		{
+			if(child.operator == '&&' || child.operator == '||')
+			{
+				count++;
+			}
+		}
+	});
+	return count+1;
+}
+
+function preOrder(node, list) {
+	if(Object.keys(node).length == 0) 
+		return list;
+	if (node.type != null)
+	{
+		var obj = new Object;
+		obj[node.type]=node.loc.start.line;
+		list.push(obj);
+	}
+	for (key in node) 
+	{
+		if (node.hasOwnProperty(key)) 
+		{
+			child = node[key];
+			if (child === null)
+			{
+				list.push('null'+toString(key));	
+			}
+			if (typeof child === 'object' && child !== null && key != 'parent') 
+			{
+				preOrder(node[key], list);			
+			}
+		}
+	}
+}
+
+function zeros(dimensions)
+{
+	var array = [];
+
+	for (var i = 0; i < dimensions[0]; ++i) 
+	{
+        array.push(dimensions.length == 1 ? '' : zeros(dimensions.slice(1)));
+	}
+	
+	return array;
+}
+
+function longestCommonSubstring(s1, s2) {
+	// Convert strings to arrays to treat unicode symbols length correctly.
+	// For example:
+	// '𐌵'.length === 2
+	// [...'𐌵'].length === 1
+	// const s1 = [...string1];
+	// const s2 = [...string2];
+  
+	// Init the matrix of all substring lengths to use Dynamic Programming approach.
+	const substringMatrix = zeros([s2.length+1, s1.length+1]);
+  
+	// Fill the first row and first column with zeros to provide initial values.
+	for (let columnIndex = 0; columnIndex <= s1.length; columnIndex += 1) {
+	  substringMatrix[0][columnIndex] = 0;
+	}
+  
+	for (let rowIndex = 0; rowIndex <= s2.length; rowIndex += 1) {
+	  substringMatrix[rowIndex][0] = 0;
+	}
+  
+	// Build the matrix of all substring lengths to use Dynamic Programming approach.
+	let longestSubstringLength = 0;
+	let longestSubstringColumn = 0;
+	let longestSubstringRow = 0;
+  
+	for (let rowIndex = 1; rowIndex <= s2.length; rowIndex += 1) {
+	  for (let columnIndex = 1; columnIndex <= s1.length; columnIndex += 1) {
+		if (Object.keys(s1[columnIndex - 1])[0] === Object.keys(s2[rowIndex - 1])[0]) {
+		  substringMatrix[rowIndex][columnIndex] = substringMatrix[rowIndex - 1][columnIndex - 1] + 1;
+		} else {
+		  substringMatrix[rowIndex][columnIndex] = 0;
+		}
+  
+		// Try to find the biggest length of all common substring lengths
+		// and to memorize its last character position (indices)
+		if (substringMatrix[rowIndex][columnIndex] > longestSubstringLength) {
+		  longestSubstringLength = substringMatrix[rowIndex][columnIndex];
+		  longestSubstringColumn = columnIndex;
+		  longestSubstringRow = rowIndex;
+		}
+	  }
+	}
+  
+	if (longestSubstringLength === 0) {
+	  // Longest common substring has not been found.
+	  return '';
+	}
+  
+	// Detect the longest substring from the matrix.
+	let longestSubstring = [];
+	let lines = [];
+  
+	while (substringMatrix[longestSubstringRow][longestSubstringColumn] > 0) {
+		if (typeof Object.values(s1[longestSubstringColumn - 1])[0] == 'number')
+			lines.push(Object.values(s1[longestSubstringColumn - 1])[0]);
+		// console.log(Object.values(s1[longestSubstringColumn - 1])[0])
+	  	longestSubstring.unshift(Object.keys(s1[longestSubstringColumn - 1])[0]);
+	 	longestSubstringRow -= 1;
+	  	longestSubstringColumn -= 1;
+	}
+  
+	return [longestSubstring, lines];
+  }
+
+// Helper function for counting children of node.
+function childrenLength(node)
+{
+	var key, child;
+	var count = 0;
+	for (key in node) 
+	{
+		if (node.hasOwnProperty(key)) 
+		{
+			child = node[key];
+			if (typeof child === 'object' && child !== null && key != 'parent') 
+			{
+				count++;
+			}
+		}
+	}
+	return count;
+}
+
+
+// Helper function for checking if a node is a "decision type node"
+function isDecision(node)
+{
+	if( node.type == 'IfStatement' || node.type == 'ForStatement' || node.type == 'WhileStatement' ||
+		 node.type == 'ForInStatement' || node.type == 'DoWhileStatement')
+	{
+		return true;
+	}
+	return false;
+}
+
+// Helper function for printing out function name.
+function functionName( node )
+{
+	if( node.id )
+	{
+		return node.id.name;
+	}
+	return "anon function @" + node.loc.start.line;
+}
+
+// Helper function for allowing parameterized formatting of strings.
+if (!String.prototype.format) {
+  String.prototype.format = function() {
+    var args = arguments;
+    return this.replace(/{(\d+)}/g, function(match, number) { 
+      return typeof args[number] != 'undefined'
+        ? args[number]
+        : match
+      ;
+    });
+  };
+}
+
+main();
+
+function detectDuplicates(suppliedPaths, thresh)
+{
+	// By default, ignore deps and tests
+	var ignorePatterns = ['node_modules', 'bower_components', 'test', 'spec'];
+	var extensions = ['.js', '.jsx'];
+	try {
+		paths = filepaths.getSync(suppliedPaths, {
+		ext: extensions,
+		ignore: ignorePatterns
+		});
+	} catch(e) {
+		console.log(e.message);
+		process.exit(4);
+	}
+
+	if (!paths.length) {
+		console.log('No files found in the list of paths');
+		process.exit(0);
+	}
+
+	var inspector = new jsinspect.Inspector(paths, {
+		threshold:    thresh
+	});
+
+	// Retrieve the requested reporter
+	var reporterType = jsinspect.reporters['default'];
+	new reporterType(inspector);
+
+	// Track the number of matches
+	matches = 0;
+	inspector.on('match', function() {matches++});
+
+	try {
+		inspector.run();
+	//   process.exit(5);
+	} catch(err) {
+		console.log("Error");
+		process.exit(1);
+	}
+
+	return matches;
+}
+  
+exports.main = main;
