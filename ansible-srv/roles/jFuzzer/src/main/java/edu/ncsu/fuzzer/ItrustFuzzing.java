@@ -21,7 +21,7 @@ public class ItrustFuzzing {
 	private HandleGit git;
 	private List<String> paths = new ArrayList<>();
 	private Random random = new Random();
-	private static int COMMITS = 4;
+	private static int COMMITS = 2;
 
 	public ItrustFuzzing(String repoURL, HandleGit git) throws GitAPIException {
 		this.git = git;
@@ -51,7 +51,7 @@ public class ItrustFuzzing {
 						int rand = random.nextInt(10);
 						// introducing randomness
 						
-						if (rand <= 10) {// probability 50% 
+						if (rand <= 4) {// probability 50% 
 						  if (rand < 2)
 						   changeStringConstants(compilationUnit); 
 						  else

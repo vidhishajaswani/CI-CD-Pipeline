@@ -9,5 +9,5 @@
     #- mysql
     #- java
     #- jenkins
-    - deployfiles
+    #- deployfiles
     - job

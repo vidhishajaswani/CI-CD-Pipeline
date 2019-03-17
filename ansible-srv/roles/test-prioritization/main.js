@@ -163,7 +163,7 @@ async function calculatePriority()
 {
     var finalResults = [];
     try{
-        child.execSync('cd /home/vagrant/iTrust2-v4/iTrust2 && mvn test');
+        child.execSync('cd /home/vagrant/iTrust2-v4/iTrust2 && mvn clean install && mvn test');
     }catch(e){}
     for(var i=0; i<testReports.length; i++) {
         var contents = fs.readFileSync(testReports[i])
