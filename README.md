@@ -58,7 +58,7 @@ For this milestone, we designed a tool called jFuzzer (maven project) using [Jav
 
 **How does JGit helps?** JGit allows java program to execture git commands. In jFuzzer a new fuzzer branch is created if not present using JGit. Further it commits the code after fuzzing is done on the source files and reset it at the end. This is done till 100 commits are made. *For fail-safe a final reset is done to the original commit of iTrust*.
 
-**Future scope: ** jFuzzer designed for this milestone consider the most basic parameters for fuzzing. However there are lot of other ways a fuzzing can be done including:
+**Future scope:** jFuzzer designed for this milestone consider the most basic parameters for fuzzing. However there are lot of other ways a fuzzing can be done including:
   - Fuzzing on lambda expressions
   - Fuzzing on arrays creation & initialization
   - Fuzzing on method call expressions
