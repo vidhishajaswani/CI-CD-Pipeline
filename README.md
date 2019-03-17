@@ -26,7 +26,7 @@ In this milestone the following objectives were tackled.
 7. Jobs: Creates and triggers build for checkbox.io and iTrust applications.
 8. jFuzzer: Java code to read all java files and fuzz the code with some probability. It resets the head after each commit so that each time we fuzz, we fuzz the base code.
 9. Test-Prioritization: NodeJS code to prioritize tests.
-
+10. Analysis: Custom Analysis for Checkbox
 
 ## Workflow
 
@@ -59,6 +59,15 @@ For this milestone, we designed a tool called jFuzzer (maven project) using [Jav
 **How does JGit helps?** JGit allows java program to execture git commands. In jFuzzer a new fuzzer branch is created if not present using JGit. Further it commits the code after fuzzing is done on the source files and reset it at the end. This is done till 100 commits are made. *For fail-safe a final reset is done to the original commit of iTrust*.
 ## Test Prioritization
 
+
+## Custom Analysis for Checkbox
+To achieve this objective, the code ```analysis.js``` is used. We use the open-source tool [esprima](http://esprima.org/index.html), to parse the source code of Checkbox into an AST. We then process the derived AST to check if the code meets the desired thresholds. These thresholds are specified in the ```variables.yml``` file under the Analysis section. When these thresholds aren't met, the build has been failed. The techniques that have been used to perform the analysis are as follows:
+1. Max Lines in a function
+2. Max Conditions
+3. Duplicate or structurally similar code (Warning not Build Failure): Two methods are specified. If the ```jsinspect``` method is specified, then the [jsinspect](https://www.npmjs.com/package/jsinspect) tool is used to detect code similarity. On the other hand, if the ```internal``` method is specified, then a self-developed algorithm is used to detect similarity between functions.
+4. Detection of security token: Keyword search is performed on the files in the sepcified directory
+
+The default recommended values are specified in [variables.yml](variables.yml).
 
 ## Instructions for execution
 Follow the below instructions.
@@ -127,9 +136,12 @@ Example of a job build that passes based on code coverage threshold.
 Example of a job build that fails based on code coverage threshold.
 ![failure_coverage](results/failure_coverage.png)
 
+Example of checkbox custom analysis build log
+![custom_analysis](results/custom_analysis.png)
+
 
 ## Contribution
-1. **Karthik Medidisiva** : 
+1. **Karthik Medidisiva** : Custom Analysis of Checkbox and Contribution to Test Case Prioritization.
 
 2. **Kshittiz Kumar**: 
 
