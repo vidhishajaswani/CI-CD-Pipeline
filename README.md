@@ -43,7 +43,20 @@ In this milestone the following objectives were tackled.
 
 
 ## About the Fuzzer
+For this milestone, we designed a tool called jFuzzer (maven project) using [JavaParser](http://javaparser.org/) API and [JGit](https://git-scm.com/book/uz/v2/Appendix-B%3A-Embedding-Git-in-your-Applications-JGit). JavaParser APIs allows us to parse java source code and build Abstract Syntax Tree (AST) which further can be used to do fuzzing.
+**Fuzzing operations perforemd using jFuzzer**
+- change string constant (50% probability)
+  - introduce a new string constant called 'FUZZY' with probablity of 20%
+  - introduce a new string constant called 'MORE_FUZZY' with probablity of 30%
+- swap true with false values and vice versa (probability 50%)
+- swap binary-relational operators (probability 70%)
+  - swap "<" with ">" (not > with < to avoid lambda expressions errors)
+  - swap "*" (multiply) with "/" (divide)
+  - swap "|" (binary AND) with "&" (binary OR) and vice versa
+- swap "==" with "!=" and vice versa (probablity 30%)
+- swap "+=" with "=" (probability 30%)
 
+**How does JGit helps?** JGit allows java program to execture git commands. In jFuzzer a new fuzzer branch is created if not present using JGit. Further it commits the code after fuzzing is done on the source files and reset it at the end. This is done till 100 commits are made. *For fail-safe a final reset is done to the original commit of iTrust*.
 ## Test Prioritization
 
 
