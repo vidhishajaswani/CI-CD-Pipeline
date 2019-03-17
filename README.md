@@ -79,23 +79,23 @@ Follow the below instructions.
 
    - At the host machine (which is able to SSH into the jenkins-srv without the need to specify identity file), clone the checkbox.io and iTrust applications from the online github repositories ([checkbox.io](https://github.com/ShivamChamoli/checkbox.io) and [iTrust](https://github.ncsu.edu/engr-csc326-staff/iTrust2-v4)). This includes creating a ssh-key pair, adding this public key in the ~/.ssh/authorized-keys of jenkins-srv and on github and keeping the private keys inside ~/.ssh of host machine. In case it gives permission denied error, also run ```ssh-agent -s``` and ``` ssh-add ~/.ssh/<private_key_name>``` on local host machine.
 
-   - Now navigate inside this repo and add the bare repositories created inside jenkins-srv as a remote repo called ```prod```.
-<br>```$ git remote add prod vagrant@<IP of jenkins-srv>:/~/<bare_repo>```
+   - Now navigate inside this repo and add the bare repositories created inside jenkins-srv as a remote repo called       ```prod```.
+    <br>```$ git remote add prod vagrant@<IP of jenkins-srv>:/~/<bare_repo>```
 
-For example,
-<br>```$ git remote add prod vagrant@192.168.33.100:/~/checkbox.git```
+   - For example,
+     <br>```$ git remote add prod vagrant@192.168.33.100:/~/checkbox.git```
 
-  - Inside post-receive of itrust.git/hooks add content
-```
-#!/bin/sh
-GIT_WORK_TREE=/home/vagrant/ git checkout -f                                              
-```
-Also, give permission using ```chmod +x post-receive```
+   - Inside post-receive of itrust.git/hooks add content
+     ```
+     #!/bin/sh
+     GIT_WORK_TREE=/home/vagrant/ git checkout -f                                              
+     ```
+   - Also, give permission using ```chmod +x post-receive```
 
-  - Create an initial push into this bare repo from the local repo
-<br>```$ git push prod master```
+   - Create an initial push into this bare repo from the local repo
+   <br>```$ git push prod master```
 
-NOTE: You may edit this [file](variables.yml) if you have the remote repo at a different location.
+   - NOTE: You may edit this [file](variables.yml) if you have the remote repo at a different location.
 
 
 
