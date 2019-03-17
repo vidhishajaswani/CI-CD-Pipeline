@@ -1,5 +1,12 @@
 ---
-
+#- name: Delete if present
+#  file:
+#    path: "{{ vagrant_home }}/iTrust2-v4"
+#    state: absent
+#- name: Git Clone
+#  git:
+#    repo: "{{ itrust_repo }}"
+#    dest: "{{vagrant_home}}"
 - name: Copy vars
   copy: 
     src: variables.yml
@@ -76,11 +83,6 @@
     src: templates/rebuild_itrust_fuzzer_job.yml.j2
     dest: "{{ vagrant_home }}/job_rebuilds/rebuild_itrust_fuzzer_job.yml"
 
-- name: Git Clone
-  git:
-    repo: "{{ itrust_repo }}"
-    dest: "{{vagrant_home}}"
-
 - name: Copy jFuzzer
   copy:
     src: roles/jFuzzer
@@ -96,6 +98,11 @@
   copy: 
     src: roles/test-prioritization
     dest: "{{vagrant_home}}"
+
+- name: Copy final test Prioritization
+  copy: 
+    src: roles/final-test-prioritization
+    dest: /var/lib/jenkins/jobs/iTrust
     
 
 # - name: Add Fuzzer.js file
