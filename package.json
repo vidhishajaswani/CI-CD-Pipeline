@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "express": "^4.16.4",
+    "fs": "0.0.1-security",
     "got": "^9.5.0"
   }
 }

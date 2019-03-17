@@ -21,6 +21,8 @@
     "esprima": "^1.2.2",
     "find-in-files": "^0.5.0",
     "jsinspect": "^0.12.7",
-    "filepaths": "^0.3.0"
+    "filepaths": "^0.3.0",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7" 
   }
 }

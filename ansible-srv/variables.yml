@@ -6,6 +6,7 @@ mysql_database: itrust
 mysql_user: myuser  
 mysql_password: myuser
 checkbox_repo: /home/vagrant/checkbox.git
+checkbox_install_dir: /var/lib/jenkins/checkbox
 itrust_repo: /home/vagrant/itrust.git
 vagrant_home: /home/vagrant
 mongo_admin_password: admin
@@ -13,3 +14,9 @@ mongo_checkbox_user: admin
 email_password: qwerty@123
 email_username: csc519team5
 
+# Custom Analysis for Checkbox 
+cust_anlys_maxlines: 500
+cust_anlys_maxconds: 20
+cust_anlys_dup_method: jsinspect
+cust_anlys_jdup_lines: 100
+cust_anlys_dup_lines: 100

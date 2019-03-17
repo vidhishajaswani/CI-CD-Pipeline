@@ -4,10 +4,11 @@
   vars_files: 
     variables.yml
   roles:
-    #- ansible
-    #- maven
-    #- mysql
-    #- java
-    #- jenkins
-    #- deployfiles
-    - job
+    # - ansible
+    # - maven
+    # - mysql
+    # - java
+    # - jenkins
+    # - deployfiles
+    # - job
+    - analysis

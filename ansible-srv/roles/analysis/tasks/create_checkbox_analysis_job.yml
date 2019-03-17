@@ -6,7 +6,7 @@
 - name: Copy checkbox analysis job yaml file
   template:
     src: templates/checkbox_analysis_job.yml
-    dest: /var/lib/jenkins/jobs/checkbox_analysis_job.yml
+    dest: jobs/checkbox_analysis_job.yml
 
 - name: Security setup for configuration
   jenkins_script:

@@ -5,7 +5,6 @@ var findInFiles = require("find-in-files");
 var jsinspect = require('jsinspect');
 var filepaths = require('filepaths');
 var find = require('find');
-var regex = require('regex');
 
 dup_method = 'internal';
 
@@ -15,13 +14,15 @@ function main()
 
 	if( args.length == 0 )
 	{
-		args = ["{{checkbox_repo}}", 100, 10, 'jsinspect'];		
+		args = ["{{checkbox_install_dir}}", {{cust_anlys_maxlines}}, {{cust_anlys_maxconds}}, '{{cust_anlys_dup_method}}'];		
 	}
 	var searchPath = args[0];
 	// var filePath = args[1];
 	// var files = find.file('^((?!node_modules).)*$ | .js$', __dirname)
 	// console.log(files);
-	var files = ['./server-side/site/marqdown.js','./server-side/site/server.js'];
+	console.log('---------------------------------------------------');
+	getJSfiles(searchPath);
+	var files = ['{{checkbox_install_dir}}/server-side/site/marqdown.js','{{checkbox_install_dir}}/server-side/site/server.js'];
 	var MaxLines = args[1];
 	var MaxConditions = args[2];
 	dup_method = args[3];
@@ -54,11 +55,11 @@ function main()
 	{
 		console.log("------------------------------------------------------------");
 		console.log("Custom Analysis - Detection of Duplicate or Structurally similar code");
-		var matches = detectDuplicates('.', 30);
+		var matches = detectDuplicates("{{checkbox_install_dir}}", {{cust_anlys_jdup_lines}});
 		if(matches > 0)
 		{
-			console.log("Analysis Error: Duplicate or Structurally similar detected - Modify code and resubmit");
-			process.exit(1);
+			console.log("Analysis Warning: Duplicate or Structurally similar detected - Modify code and resubmit");
+			// process.exit(1);
 		}
 	}
 
@@ -84,6 +85,26 @@ function main()
 			process.exit(1);
 		}
 	});
+}
+
+function getJSfiles(searchPath)
+{
+	const fs = require('fs');
+	const path = require('path');
+
+	// EXCLUDE  must be directories, and not contain trailing slashes
+	// This script does not create globs that ignore individual files
+	const EXCLUDE = ['node_modules'];
+
+	let dirs = fs
+		.readdirSync(searchPath)
+		.filter(path => fs.statSync(searchPath+'/'+path).isDirectory())
+		.filter(dir => dir.indexOf('.') !== 0)
+		.filter(dir => EXCLUDE.indexOf(dir) === -1);
+
+	const glob = `{,${dirs.join(',')}}*.js`;
+
+	console.log(glob);
 }
 
 var builders = {};
@@ -135,6 +156,7 @@ function FunctionBuilder()
 	}
 };
 
+
 // A builder for storing file level information.
 function FileBuilder()
 {
@@ -161,16 +183,16 @@ function FileBuilder()
 						result = longestCommonSubstring(this.FunctionList[i], this.FunctionList[j]);
 						var similarNodes = result[0];
 						var lines = result[1];
-						if (Math.max.apply(null, lines) - Math.min.apply(null, lines) >= 10)
+						if (Math.max.apply(null, lines) - Math.min.apply(null, lines) >= {{cust_anlys_dup_lines}})
 						{
 							console.log("Duplicate code between "+this.FunctionNames[i]+"() and "+this.FunctionNames[j]+"()");
 							console.log("First instance at: " + Math.min.apply(null, lines) + "-" + Math.max.apply(null, lines) + '\n');
-							console.log("Analysis Error: Security Token detected - Modify code and resubmit");
-							process.exit(1);
+							console.log("Analysis Warning: Security Token detected - Modify code and resubmit");
+							// process.exit(1);
 						}
 					}
 				}
-			console.log("No matches detected\n");
+			console.log("---------------------------------------\n");
 		}
 	}
 	this.report = function(){}
