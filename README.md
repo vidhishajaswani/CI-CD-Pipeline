@@ -65,7 +65,15 @@ For this milestone, we designed a tool called jFuzzer (maven project) using [Jav
   - Fuzzing on Fields access expressions
   - Fuzzing on switch cases expressions
 ## Test Prioritization
+1. Test Prioritization is automated at the end of 100 commits of the fuzzed code. It is in the following format: Name of the testcase [maximumRuntime failedCount].
+2. maximumRuntime is the maximum time that the test case took to run out of those 100 builds. failedCount is the number of times the test case failed out of 100 builds, subsequently the test case passed (100-failedCount) number of times.
+3. Our Test Prioritization sorts based on number of times the test case failed and then on the maximumRuntime.
+4. We run per build analysis of the test cases which is logged on the jenkins build and then we finally parse all the log files to perform the prioritization.
+ #### Test Prioritization result analysis
 
+ 1. We performed the analysis based on the logs of the jenkins builds and prioritized based on the number of times the same test case failed over the 100 builds and then over maximumRuntime of the test case.
+ 2. We faced several issues, firstly we needed persistent data to consolidate the report and we resolved that by researching more about jenkins builds and then using the log data. Secondly, we faced many issues while parsing and reading those log files and learnt a lot about the intricacies of the synchronous and asynchronous code.
+ 3. According to our results the test cases should be run in the same order as in the image ![test-prioritization-results](results/test-prioritization-snap.png)
 
 ## Custom Analysis for Checkbox
 To achieve this objective, the code ```analysis.js``` is used. We use the open-source tool [esprima](http://esprima.org/index.html), to parse the source code of Checkbox into an AST. We then process the derived AST to check if the code meets the desired thresholds. These thresholds are specified in the ```variables.yml``` file under the Analysis section. When these thresholds aren't met, the build has been failed. The techniques that have been used to perform the analysis are as follows:
