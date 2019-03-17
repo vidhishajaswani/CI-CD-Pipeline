@@ -23,7 +23,7 @@ public class Application {
 		} catch (IOException | GitAPIException | ParseProblemException e) {
 			e.printStackTrace();
 		} finally {
-			git.lapse(10000);
+			git.lapse(45000);
 			git.reset(); // reset back to original commit
 		}
 	}

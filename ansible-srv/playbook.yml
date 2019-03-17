@@ -10,4 +10,4 @@
     #- java
     #- jenkins
     - deployfiles
-    #- job
+    - job

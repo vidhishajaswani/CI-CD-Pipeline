@@ -51,7 +51,11 @@
     src: templates/rebuild_checkbox_job.yml.j2
     dest: "{{ vagrant_home }}/job_rebuilds/rebuild_checkbox_job.yml"
 
-
+- name: Create checkstyle folder
+  file:
+    path: /jenkins-srv/checkstyle_results
+    state: directory
+    
 - name: Copy Rebuild file for itrust_job
   template:
     src: templates/rebuild_itrust_job.yml.j2
