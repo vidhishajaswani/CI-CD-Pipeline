@@ -26,7 +26,7 @@ In this milestone the following objectives were tackled.
 7. Jobs: Creates and triggers build for checkbox.io and iTrust applications.
 8. jFuzzer: Java code to read all java files and fuzz the code with some probability. It resets the head after each commit so that each time we fuzz, we fuzz the base code.
 9. Test-Prioritization: NodeJS code to prioritize tests.
-
+10. Analysis: Custom Analysis for Checkbox
 
 ## Workflow
 
@@ -34,9 +34,9 @@ In this milestone the following objectives were tackled.
 2. Jenkins is then installed on this server. We have used port 9999 for Jenkins since iTrust runs on 8080. You may access Jenkins on 192.168.33.100:9999 and login using username ```jenkins``` and password ```jenkins```. You may change these values in variables.yml.
 3. After Jenkins is setup, Jobs for checkbox.io, iTrust Fuzzer, and iTrust are created. The iTrust Fuzzer job runs the command ```cd /home/vagrant/jFuzzer && sudo mvn assembly:assembly -DdescriptorId=jar-with-dependencies && sudo java -cp target/jFuzzer-0.0.1-SNAPSHOT-jar-with-dependencies.jar edu.ncsu.fuzzer.Application  ``` which runs the fuzzer code. The fuzzer code fuzzes the code with some probability, commits the code, and after a designated sleep time resets the head so that the next time we fuzz, we do it on the stable code. As soon as the commit is made from the Java code, a [file](hooks/post-commit) is invoked which is kept inside ```iTrust2-v4/iTrust2/.git/hooks```. We copy this hook automatically using deployfiles role. This hook in turn calls ```ansible-playbook /home/vagrant/job_rebuilds/rebuild_itrust_job.yml``` builds the iTrust job. 
 4. When the iTrust Job is build we run the following steps:
-4.1 ```ansible-playbook /var/lib/jenkins/deploy_itrust_fuzzer.yml``` . This ansible playbook does all things neccessary for iTrust deployment such as copying email.properties and db.properties.
-4.2 Inside this playbook we call a nodeJS code that in turn calls the ```mvn clean install && mvn test``` commands.
-4.3 After this, in build shell we call the ``` mvn checkstyle:checkstyle``` command to generate checkstyle reports.
+   - ```ansible-playbook /var/lib/jenkins/deploy_itrust_fuzzer.yml``` . This ansible playbook does all things neccessary for iTrust deployment such as copying email.properties and db.properties.
+   - Inside this playbook we call a nodeJS code that in turn calls the ```mvn clean install && mvn test``` commands.
+   - After this, in build shell we call the ``` mvn checkstyle:checkstyle``` command to generate checkstyle reports.
 5. You can alter the number of commits in [file](ansible-srv/roles/jFuzzer/src/main/java/edu/ncsu/fuzzer/ItrustFuzzing.java) on line 24 for variable COMMITS.
 6. We have also set a threshold for our iTrust job that if code coverage (Instructions, % Branch, % Complexity, % Line, % Method, % Class) is above 25%, our job always passes and if it is below 25% our job always fails. So when the iTrust Job is built, it may pass or fail according to this threshold.
 7. After the build is complete, you can see the Jacoco reports from the UI itself regardless if the build fails or passes.
@@ -60,6 +60,15 @@ For this milestone, we designed a tool called jFuzzer (maven project) using [Jav
 ## Test Prioritization
 
 
+## Custom Analysis for Checkbox
+To achieve this objective, the code ```analysis.js``` is used. We use the open-source tool [esprima](http://esprima.org/index.html), to parse the source code of Checkbox into an AST. We then process the derived AST to check if the code meets the desired thresholds. These thresholds are specified in the ```variables.yml``` file under the Analysis section. When these thresholds aren't met, the build has been failed. The techniques that have been used to perform the analysis are as follows:
+1. Max Lines in a function
+2. Max Conditions
+3. Duplicate or structurally similar code (Warning not Build Failure): Two methods are specified. If the ```jsinspect``` method is specified, then the [jsinspect](https://www.npmjs.com/package/jsinspect) tool is used to detect code similarity. On the other hand, if the ```internal``` method is specified, then a self-developed algorithm is used to detect similarity between functions.
+4. Detection of security token: Keyword search is performed on the files in the sepcified directory
+
+The default recommended values are specified in [variables.yml](variables.yml).
+
 ## Instructions for execution
 Follow the below instructions.
 
@@ -71,31 +80,30 @@ Follow the below instructions.
 
 3. Set up the interactions between local repo and this source repo. The following instructions achieve the same. 
 
-### Instructions for creating the interactions between Git repositories
-3.1. On the jenkins-srv VM, create the production git repositories ```checkbox.git``` and ```itrust.git```.
+   - On the jenkins-srv VM, create the production git repositories ```checkbox.git``` and ```itrust.git```.
 
-3.2. Inside the ```*.git``` directories, run the following command to initialize as a bare repository.
+   - Inside the ```*.git``` directories, run the following command to initialize as a bare repository.
 <br>```$ git init --bare```
 
-3.3. At the host machine (which is able to SSH into the jenkins-srv without the need to specify identity file), clone the checkbox.io and iTrust applications from the online github repositories ([checkbox.io](https://github.com/ShivamChamoli/checkbox.io) and [iTrust](https://github.ncsu.edu/engr-csc326-staff/iTrust2-v4)). This includes creating a ssh-key pair, adding this public key in the ~/.ssh/authorized-keys of jenkins-srv and on github and keeping the private keys inside ~/.ssh of host machine. In case it gives permission denied error, also run ```ssh-agent -s``` and ``` ssh-add ~/.ssh/<private_key_name>``` on local host machine.
+   - At the host machine (which is able to SSH into the jenkins-srv without the need to specify identity file), clone the checkbox.io and iTrust applications from the online github repositories ([checkbox.io](https://github.com/ShivamChamoli/checkbox.io) and [iTrust](https://github.ncsu.edu/engr-csc326-staff/iTrust2-v4)). This includes creating a ssh-key pair, adding this public key in the ~/.ssh/authorized-keys of jenkins-srv and on github and keeping the private keys inside ~/.ssh of host machine. In case it gives permission denied error, also run ```ssh-agent -s``` and ``` ssh-add ~/.ssh/<private_key_name>``` on local host machine.
 
-3.4. Now navigate inside this repo and add the bare repositories created inside jenkins-srv as a remote repo called ```prod```.
-<br>```$ git remote add prod vagrant@<IP of jenkins-srv>:/~/<bare_repo>```
+   - Now navigate inside this repo and add the bare repositories created inside jenkins-srv as a remote repo called       ```prod```.
+    <br>```$ git remote add prod vagrant@<IP of jenkins-srv>:/~/<bare_repo>```
 
-For example,
-<br>```$ git remote add prod vagrant@192.168.33.100:/~/checkbox.git```
+   - For example,
+     <br>```$ git remote add prod vagrant@192.168.33.100:/~/checkbox.git```
 
-3.5. Inside post-receive of itrust.git/hooks add content
-```
-#!/bin/sh
-GIT_WORK_TREE=/home/vagrant/ git checkout -f                                              
-```
-Also, give permission using ```chmod +x post-receive```
+   - Inside post-receive of itrust.git/hooks add content
+     ```
+     #!/bin/sh
+     GIT_WORK_TREE=/home/vagrant/ git checkout -f                                              
+     ```
+   - Also, give permission using ```chmod +x post-receive```
 
-3.6. Create an initial push into this bare repo from the local repo
-<br>```$ git push prod master```
+   - Create an initial push into this bare repo from the local repo
+   <br>```$ git push prod master```
 
-NOTE: You may edit this [file](variables.yml) if you have the remote repo at a different location.
+   - NOTE: You may edit this [file](variables.yml) if you have the remote repo at a different location.
 
 
 
@@ -127,9 +135,12 @@ Example of a job build that passes based on code coverage threshold.
 Example of a job build that fails based on code coverage threshold.
 ![failure_coverage](results/failure_coverage.png)
 
+Example of checkbox custom analysis build log
+![custom_analysis](results/custom_analysis.png)
+
 
 ## Contribution
-1. **Karthik Medidisiva** : 
+1. **Karthik Medidisiva** : Custom Analysis of Checkbox and Contribution to Test Case Prioritization.
 
 2. **Kshittiz Kumar**: 
 

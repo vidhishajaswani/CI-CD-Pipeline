@@ -21,10 +21,13 @@ public class ItrustFuzzing {
 	private HandleGit git;
 	private List<String> paths = new ArrayList<>();
 	private Random random = new Random();
-	private static int COMMITS = 100;
+	private static int COMMITS = 2;
 
-	public ItrustFuzzing(String repoURL, HandleGit git) throws GitAPIException {
+	public ItrustFuzzing(String repoURL, HandleGit git, int commits) throws GitAPIException {
 		this.git = git;
+		COMMITS = (commits == -1) ? COMMITS : commits;
+		System.out.println("Number of commits: " + COMMITS);
+
 		try {
 			// pass the path to the file as a parameter
 			File file = new File("itrust_source_files.txt");
@@ -50,14 +53,14 @@ public class ItrustFuzzing {
 						CompilationUnit compilationUnit = StaticJavaParser.parse(file);
 						int rand = random.nextInt(10);
 						// introducing randomness
-						
-						if (rand <= 4) {// probability 50% 
-						  if (rand < 2)
-						   changeStringConstants(compilationUnit); 
-						  else
-						   changeStringConstants2(compilationUnit); 
+
+						if (rand <= 4) {// probability 50%
+							if (rand < 2)
+								changeStringConstants(compilationUnit);
+							else
+								changeStringConstants2(compilationUnit);
 						}
-						 
+
 						if (rand >= 2 && rand <= 6) // probability 50%
 							swap0_1(compilationUnit);
 						if (rand >= 3 && rand <= 9) // probability 70%
@@ -75,7 +78,7 @@ public class ItrustFuzzing {
 			// commit all changes!
 			git.addFileToIndex();
 			git.commitChanges("Fuzzing commit " + i);
-			git.lapse(200000); //lapse of 1.5 sec
+			git.lapse(200000); // lapse of 1.5 sec
 			git.reset();
 		}
 		System.out.println("Fuzzing Completed!");

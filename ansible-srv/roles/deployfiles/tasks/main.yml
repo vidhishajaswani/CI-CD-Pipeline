@@ -1,12 +1,9 @@
 ---
-#- name: Delete if present
-#  file:
-#    path: "{{ vagrant_home }}/iTrust2-v4"
-#    state: absent
-#- name: Git Clone
-#  git:
-#    repo: "{{ itrust_repo }}"
-#    dest: "{{vagrant_home}}"
+- name: Git Clone
+  git:
+    repo: "{{ itrust_repo }}"
+    dest: "{{vagrant_home}}/iTrust2-v4/"
+
 - name: Copy vars
   copy: 
     src: variables.yml
