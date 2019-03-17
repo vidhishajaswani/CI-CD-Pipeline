@@ -19,6 +19,12 @@ email_username: csc519team5
 # Custom Analysis for Checkbox 
 cust_anlys_maxlines: 500
 cust_anlys_maxconds: 20
+
+# valid values are 'jsinspect' and 'internal'. Default: 'jsinspect'
 cust_anlys_dup_method: jsinspect
+
+# Thereshold value for jsinspect 
 cust_anlys_jdup_lines: 100
-cust_anlys_dup_lines: 100
+
+# Threshold value for internal tool
+cust_anlys_dup_lines: 20

@@ -193,12 +193,12 @@ function FileBuilder()
 						{
 							console.log("Duplicate code between "+this.FunctionNames[i]+"() and "+this.FunctionNames[j]+"()");
 							console.log("First instance at: " + Math.min.apply(null, lines) + "-" + Math.max.apply(null, lines) + '\n');
-							console.log("Analysis Warning: Security Token detected - Modify code and resubmit");
+							console.log("Analysis Warning: Similar code detected - Modify code and resubmit");
 							// process.exit(1);
 						}
 					}
 				}
-			console.log("---------------------------------------\n");
+			// console.log("---------------------------------------\n");
 		}
 	}
 	this.report = function(){}
