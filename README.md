@@ -77,7 +77,7 @@ Follow the below instructions.
 3.2. Inside the ```*.git``` directories, run the following command to initialize as a bare repository.
 <br>```$ git init --bare```
 
-3.3. At the host machine (which is able to SSH into the jenkins-srv without the need to specify identity file), clone the checkbox.io and iTrust applications from the online github repositories ([checkbox.io](https://github.com/ShivamChamoli/checkbox.io) and [iTrust](https://github.ncsu.edu/engr-csc326-staff/iTrust2-v4)).
+3.3. At the host machine (which is able to SSH into the jenkins-srv without the need to specify identity file), clone the checkbox.io and iTrust applications from the online github repositories ([checkbox.io](https://github.com/ShivamChamoli/checkbox.io) and [iTrust](https://github.ncsu.edu/engr-csc326-staff/iTrust2-v4)). This includes creating a ssh-key pair, adding this public key in the ~/.ssh/authorized-keys of jenkins-srv and on github and keeping the private keys inside ~/.ssh of host machine. In case it gives permission denied error, also run ```ssh-agent -s``` and ``` ssh-add ~/.ssh/<private_key_name>``` on local host machine.
 
 3.4. Now navigate inside this repo and add the bare repositories created inside jenkins-srv as a remote repo called ```prod```.
 <br>```$ git remote add prod vagrant@<IP of jenkins-srv>:/~/<bare_repo>```
@@ -85,7 +85,14 @@ Follow the below instructions.
 For example,
 <br>```$ git remote add prod vagrant@192.168.33.100:/~/checkbox.git```
 
-3.5. Create an initial push into this bare repo from the local repo
+3.5. Inside post-receive of itrust.git/hooks add content
+```
+#!/bin/sh
+GIT_WORK_TREE=/home/vagrant/ git checkout -f                                              
+```
+Also, give permission using ```chmod +x post-receive```
+
+3.6. Create an initial push into this bare repo from the local repo
 <br>```$ git push prod master```
 
 NOTE: You may edit this [file](variables.yml) if you have the remote repo at a different location.
@@ -94,20 +101,30 @@ NOTE: You may edit this [file](variables.yml) if you have the remote repo at a d
 
 ### Setting up Jenkins, Fuzz the code to create 100 commits, Run build jobs for iTrust
 
-1. Execute the the command ```ansible-playbook -i inventory playbook.yml```. This will install all dependencies such as maven, ansible, mysql
+1. Execute the the command ```ansible-playbook -i inventory playbook.yml```. This will install all dependencies such as maven, ansible, mysql, and jenkins. It will then create the iTrust fuzzer job which in turn invokes the build of the iTrust job.
    NOTE:
    The variables need to be set in variables.yml. Do NOT set to 8080 as this port is used by  iTrust. We have used port 9999. With our dummy values, a new user with the credentials as follows is created. username: ```jenkins``` password: ```jenkins```. You may change these credentials in variables.yml for this role.
 
-2. Check the installation by logging into ```http://<ip_address_of_jenkins_srv>:<jenkins_port>/```, in our case 192.168.33.100:9999. You must be able to see the log in page of Jenkins.
+2. Check the installation and build by logging into ```http://<ip_address_of_jenkins_srv>:<jenkins_port>/```, in our case 192.168.33.100:9999. You must be able to see the log in page of Jenkins.
+3. After the build is complete, you can see the Jacoco reports from the UI itself regardless if the build fails or passes.
+
 
 
 
 ## Results
 
+The coverage trend for 100 builds is as below:
 
 ![coveragetrends](results/coveragetrends.png)
+
+The thresholds we have set for the job to pass or fail based on code coverage
+
 ![thresholds](results/thresholds.png)
+
+Example of a job build that passes based on code coverage threshold.
 ![pass_coverage](results/pass_coverage.png)
+
+Example of a job build that fails based on code coverage threshold.
 ![failure_coverage](results/failure_coverage.png)
 
 
