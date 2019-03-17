@@ -157,9 +157,9 @@ Example of checkbox custom analysis build log
 ## Contribution
 1. **Karthik Medidisiva** : Custom Analysis of Checkbox and Contribution to Test Case Prioritization.
 
-2. **Kshittiz Kumar**: 
+2. **Kshittiz Kumar**: Created jFuzzer tool using JavaParser and JGit APIs. Contributed to jenkins build management. Managed Git branches.
 
-3. **Shivam Chamoli**: 
+3. **Shivam Chamoli**: Tests Prioritization Analysis, Created the required jobs using jenkins-jobs-builder, Did the research for succesfully getting the coverage reports using JaCoCo and the the static analysis reports using checkstyle, contribution s to architectural design and contributions to building the final builds and report
 
 4. **Vidhisha Jaswani**: 
  
