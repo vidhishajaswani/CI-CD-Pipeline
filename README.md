@@ -71,7 +71,6 @@ Follow the below instructions.
 
 3. Set up the interactions between local repo and this source repo. The following instructions achieve the same. 
 
-   ### Instructions for creating the interactions between Git repositories
    - On the jenkins-srv VM, create the production git repositories ```checkbox.git``` and ```itrust.git```.
 
    - Inside the ```*.git``` directories, run the following command to initialize as a bare repository.
