@@ -95,11 +95,15 @@
   copy: 
     src: roles/test-prioritization
     dest: "{{vagrant_home}}"
+    owner: jenkins
+    group: jenkins
 
 - name: Copy final test Prioritization
   copy: 
     src: roles/final-test-prioritization
     dest: /var/lib/jenkins/jobs/iTrust
+    owner: jenkins
+    group: jenkins
     
 
 # - name: Add Fuzzer.js file
