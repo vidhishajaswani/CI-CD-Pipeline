@@ -44,7 +44,7 @@ In this milestone the following objectives were tackled.
 
 ## About the Fuzzer
 For this milestone, we designed a tool called jFuzzer (maven project) using [JavaParser](http://javaparser.org/) API and [JGit](https://git-scm.com/book/uz/v2/Appendix-B%3A-Embedding-Git-in-your-Applications-JGit). JavaParser APIs allows us to parse java source code and build Abstract Syntax Tree (AST) which further can be used to do fuzzing.
-**Fuzzing operations perforemd using jFuzzer**
+**Fuzzing operations performed using jFuzzer**
 - change string constant (50% probability)
   - introduce a new string constant called 'FUZZY' with probablity of 20%
   - introduce a new string constant called 'MORE_FUZZY' with probablity of 30%
@@ -77,6 +77,7 @@ For this milestone, we designed a tool called jFuzzer (maven project) using [Jav
  3. According to our results the test cases should be run in the same order as in the image ![test-prioritization-results](results/test-prioritization-snap.png)
  4. From the above results we see that the test cases that failed most number of times failed because of change in string contanst (due to fuzzed code) such as testPasswordChangeForm, testCode etc. Furthermore, we also came to the conclusion that the test cases that never failed used the setter and getter methods on the same parameters i.e. the test case wrote over the fuzzed code and checked the value set by itself (testDrugForm, testHospitalForm).
  5. Our jFuzzer (fuzzing tool) did not alter any coding conventions/styles and hence we did not notice any change in the checkstyle.html for all builds.
+ 6. The build log files for our 100 builds are kept at [buildlogs](https://drive.google.com/file/d/1-5pwvNnrQk8XfeqplocAdBLwf0CNYFNr/view?usp=sharing)
 
 The testcase prioritization results over the 100 builds are available [here](results/test-prioritization-result.txt).
 ## Custom Analysis for Checkbox
@@ -163,9 +164,9 @@ Example of checkbox custom analysis build log
 
 2. **Kshittiz Kumar**: Created jFuzzer tool using JavaParser and JGit APIs. Contributed to jenkins build management. Managed Git branches.
 
-3. **Shivam Chamoli**: Tests Prioritization Analysis, Created the required jobs using jenkins-jobs-builder, Did the research for succesfully getting the coverage reports using JaCoCo and the the static analysis reports using checkstyle, contribution s to architectural design and contributions to building the final builds and report
+3. **Shivam Chamoli**: Tests Prioritization Analysis, Created the required jobs using jenkins-jobs-builder, Did the research for succesfully getting the coverage reports using JaCoCo and the the static analysis reports using checkstyle, contributions to architectural design and contributions to building the final builds and report
 
-4. **Vidhisha Jaswani**: 
+4. **Vidhisha Jaswani**: Worked on setting up the constraints/variables. Worked on the fuzzer code. Managed ansible playbooks, integrations, and testing. Ran 100 builds for the iTrust job. Made the screencast and also contributed in readme.
  
 ## Screencast
 [Screencast Link]()
