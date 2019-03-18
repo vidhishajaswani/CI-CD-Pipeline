@@ -8,6 +8,7 @@
     src: files/itrust_job.yml
     dest: jobs/itrust_job.yml
 
+
 - name: Security setup for configuration
   jenkins_script:
     script: |

@@ -25,7 +25,7 @@ In this milestone the following objectives were tackled.
 6. Jenkins: Automatically installs Jenkins on ```http://<ip_address_of_jenkins_srv>:<jenkins_port>/``` along with bypassing the user account setup and installing plugins.
 7. Jobs: Creates and triggers build for checkbox.io and iTrust applications.
 8. jFuzzer: Java code to read all java files and fuzz the code with some probability. It resets the head after each commit so that each time we fuzz, we fuzz the base code.
-9. Test-Prioritization: NodeJS code to prioritize tests.
+9. Final-Test-Prioritization: NodeJS code to prioritize tests.
 10. Analysis: Custom Analysis for Checkbox
 
 ## Workflow
@@ -81,6 +81,7 @@ For this milestone, we designed a tool called jFuzzer (maven project) using [Jav
  6. The build log files for our 100 builds are kept at [buildlogs](https://drive.google.com/file/d/1-5pwvNnrQk8XfeqplocAdBLwf0CNYFNr/view?usp=sharing)
 
 The testcase prioritization results over the 100 builds are available [here](results/test-prioritization-result.txt).
+
 ## Custom Analysis for Checkbox
 To achieve this objective, the code ```analysis.js``` is used. We use the open-source tool [esprima](http://esprima.org/index.html), to parse the source code of Checkbox into an AST. We then process the derived AST to check if the code meets the desired thresholds. These thresholds are specified in the ```variables.yml``` file under the Analysis section. When these thresholds aren't met, the build has been failed. The techniques that have been used to perform the analysis are as follows:
 1. Max Lines in a function
@@ -114,7 +115,7 @@ Follow the below instructions.
    - For example,
      <br>```$ git remote add prod vagrant@192.168.33.100:/~/checkbox.git```
 
-   - Inside post-receive of itrust.git/hooks add content
+   - Inside post-receive of itrust.git/hooks and checkbox.git add content
      ```
      #!/bin/sh
      GIT_WORK_TREE=/home/vagrant/ git checkout -f                                              
