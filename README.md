@@ -168,6 +168,6 @@ Example of checkbox custom analysis build log
 4. **Vidhisha Jaswani**: Worked on setting up the constraints/variables. Worked on the fuzzer code. Managed ansible playbooks, integrations, and testing. Ran 100 builds for the iTrust job. Made the screencast and also contributed in readme.
  
 ## Screencast
-[Screencast Link]()
+[Screencast Link](https://www.youtube.com/watch?v=xwh4ocSP8po&feature=youtu.be)
 
 **Thank you!**
