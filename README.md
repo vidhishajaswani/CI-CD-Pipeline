@@ -44,6 +44,7 @@ In this milestone the following objectives were tackled.
 
 ## About the Fuzzer
 For this milestone, we designed a tool called jFuzzer (maven project) using [JavaParser](http://javaparser.org/) API and [JGit](https://git-scm.com/book/uz/v2/Appendix-B%3A-Embedding-Git-in-your-Applications-JGit). JavaParser APIs allows us to parse java source code and build Abstract Syntax Tree (AST) which further can be used to do fuzzing.
+
 **Fuzzing operations performed using jFuzzer**
 - change string constant (50% probability)
   - introduce a new string constant called 'FUZZY' with probablity of 20%
