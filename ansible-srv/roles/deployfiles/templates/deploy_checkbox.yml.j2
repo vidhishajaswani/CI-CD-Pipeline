@@ -1,6 +1,8 @@
 ---
 - hosts: localhost
   become: yes
+  vars_files:
+    - variables.yml
   tasks:
     - name: Update and upgrade apt packages
       apt:
@@ -36,7 +38,7 @@
     
     - name: Clone repo
       git: 
-        repo: "{{checkbox_repo}}"
+        repo: "{{ checkbox_repo }}"
         dest: checkbox
 
     - name: Add an apt key by id from a keyserver
@@ -57,8 +59,8 @@
 
     - name: create super user
       mongodb_user:
-        name: admin
-        password: hello
+        name: "{{ mongo_checkbox_user }}"
+        password: "{{ mongo_admin_password }}"
         database: admin
         roles: root
         state: present
@@ -104,10 +106,10 @@
         APP_PORT: 3001
         MONGO_PORT: 27017
         MONGO_IP: http://192.168.33.100
-        MONGO_USER: admin
-        MONGO_PASSWORD: hello
-        MAIL_USER: {{email_username}}
-        MAIL_PASSWORD: {{email_password}}
+        MONGO_USER: "{{ mongo_checkbox_user }}"
+        MONGO_PASSWORD: "{{ mongo_admin_password }}"
+        MAIL_USER: "{{email_username }}"
+        MAIL_PASSWORD: "{{email_password }}"
         MAIL_SMTP: 'smtp.gmail.com'
 
 

@@ -1,0 +1,11 @@
+- job:
+    name: iTrust_fuzzer
+    description: 'configure iTrustjob'
+    project-type: freestyle
+    builders:
+      #- shell: 'cd /home/vagrant/itrust.git && git symbolic-ref HEAD refs/heads/fuzzer'
+      #- shell: 'cd /home/vagrant/itrust.git/iTrust2 && npm install'
+      #- shell: 'cd /home/vagrant/itrust.git/iTrust2 &&  node fuzzer.js'
+      #- shell: 'sleep 30s && ansible-playbook /var/lib/jenkins/deploy_itrust_fuzzer.yml'
+      - shell: 'cd /home/vagrant/jFuzzer && sudo mvn assembly:assembly -DdescriptorId=jar-with-dependencies && sudo java -cp target/jFuzzer-0.0.1-SNAPSHOT-jar-with-dependencies.jar edu.ncsu.fuzzer.Application'
+      - shell: 'cd /var/lib/jenkins/jobs/iTrust/final-test-prioritization && node main.js'  

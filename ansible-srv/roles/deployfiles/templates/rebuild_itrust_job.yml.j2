@@ -1,6 +1,8 @@
 ---
 - hosts: localhost
   become: yes
+  vars_files:
+    - /var/lib/jenkins/variables.yml
   vars:
     - jenkins_port: {{jenkins_port}}
   tasks:

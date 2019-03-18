@@ -1,0 +1,93 @@
+---
+- hosts: localhost
+  become: yes
+  vars_files:
+    - /var/lib/jenkins/variables.yml
+  tasks:
+    #- name: Install nodejs
+    #  apt:
+    #    name: nodejs
+    #    state: present
+
+    - name: npm and node
+      shell: |
+        curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && sudo apt-get install -y nodejs
+    #- name: db.properties
+    #  copy:
+    #    src: /var/lib/jenkins/db.properties
+    #    dest: "{{ vagrant_home }}/iTrust2-v4/iTrust2/src/main/java/db.properties"
+    #    remote_src: yes
+
+    #- name: email.properties
+    #  copy:                                     
+    #    src: /var/lib/jenkins/email.properties
+    #    dest: "{{ vagrant_home }}/iTrust2-v4/iTrust2/src/main/java/email.properties"
+    #    remote_src: yes
+        
+
+    - name: Edit mysql.conf file
+      lineinfile:
+        path: /etc/mysql/mysql.conf.d/mysqld.cnf
+        line: skip-grant-tables
+        insertafter: skip-external-locking
+
+    - name: Restarting mysql service
+      service:
+        name: mysql
+        state: restarted
+        
+    - name: enabling access to mvn
+      lineinfile:
+        path: /etc/sudoers
+        line: "jenkins ALL=(ALL) NOPASSWD: ALL"
+    
+    #- name: mvn test classes
+    #  command: mvn process-test-classes
+    #  args:
+    #    chdir: "{{ vagrant_home }}/iTrust2-v4/iTrust2"
+
+    - name: Update apt
+      apt: update_cache=yes
+
+    #- name: mvn compile
+    #  command: mvn compile
+    #  args:
+    #    chdir: "{{ vagrant_home }}/iTrust2-v4/iTrust2"
+
+
+    - name: Run Test Prioritisation
+      command: sudo npm install 
+      args:
+        chdir:  "{{ vagrant_home }}/test-prioritization"
+
+    - name: Run Test Prioritisation
+      command: sudo node main.js 
+      register: tests
+      args:
+        chdir:  "{{ vagrant_home }}/test-prioritization"
+
+    - name: Results of Prioritisation
+      debug:
+        msg: {% raw %}"{{ tests.stdout.split('\n') }}"{% endraw %}
+
+    #- name: checkstyle
+    #  command: mvn clean test verify checkstyle:checkstyle
+    #  args:
+    #    chdir: "{{ vagrant_home }}/iTrust2-v4/iTrust2"
+
+    #- name: mvn clean install
+    #  command:  sudo mvn clean install
+    #  args:
+    #    chdir: /var/lib/jenkins/jobs/iTrust/workspace/iTrust2-v4/iTrust2
+
+    #- name: copy to workspace
+    #  synchronize: 
+    #    src: /home/vagrant/iTrust2-v4 
+    #    dest: /var/lib/jenkins/jobs/iTrust/workspace/
+    #    recursive: yes
+    
+
+    
+
+
+    

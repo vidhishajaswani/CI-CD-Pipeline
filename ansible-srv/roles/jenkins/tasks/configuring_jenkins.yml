@@ -41,8 +41,8 @@
       instance.setCrumbIssuer(new DefaultCrumbIssuer(false))
       instance.save()
      args:
-      user_name: "{{ jenkins_username }}"
-      user_pwd: "{{ jenkins_pwd }}"
+      user_name: "{{ jenkins_user }}"
+      user_pwd: "{{ jenkins_password }}"
      user: admin
      url: "http://localhost:{{jenkins_port}}/"
      password: "{{ adminpwd.stdout }}"
@@ -96,6 +96,7 @@
       - token-macro
       - run-condition
       - github
+      - jacoco
 
   - name: restart service jenkins
     systemd:

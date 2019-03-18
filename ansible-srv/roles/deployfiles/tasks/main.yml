@@ -1,6 +1,16 @@
 ---
+- name: Git Clone
+  git:
+    repo: "{{ itrust_repo }}"
+    dest: "{{vagrant_home}}/iTrust2-v4/"
+
+- name: Copy vars
+  copy: 
+    src: variables.yml
+    dest: /var/lib/jenkins/variables.yml
+
 - name: Copy checkbox files for deployment
-  template: 
+  copy: 
     src: templates/deploy_checkbox.yml.j2
     dest: /var/lib/jenkins/deploy_checkbox.yml
 
@@ -9,10 +19,31 @@
     src: templates/deploy_itrust.yml.j2
     dest: /var/lib/jenkins/deploy_itrust.yml
 
+- name: Copy iTrust files for fuzzing
+  template: 
+    src: templates/deploy_itrust_fuzzer.yml.j2
+    dest: /var/lib/jenkins/deploy_itrust_fuzzer.yml
+
 - name: email.properties
-  copy:                                     
+  template:                                     
     src: templates/email.properties.j2
     dest: /var/lib/jenkins/email.properties
+- name: db.properties
+  template:                                     
+    src: templates/db.properties.j2
+    dest: /var/lib/jenkins/db.properties
+
+- name: db.properties
+  copy:
+    src: /var/lib/jenkins/db.properties
+    dest: "{{ vagrant_home }}/iTrust2-v4/iTrust2/src/main/java/db.properties"
+    remote_src: yes
+
+- name: email.properties
+  copy:                                     
+    src: /var/lib/jenkins/email.properties
+    dest: "{{ vagrant_home }}/iTrust2-v4/iTrust2/src/main/java/email.properties"
+    remote_src: yes
         
 - name: Create rebuild directory
   file:
@@ -24,6 +55,11 @@
     src: templates/rebuild_checkbox_job.yml.j2
     dest: "{{ vagrant_home }}/job_rebuilds/rebuild_checkbox_job.yml"
 
+- name: Create checkstyle folder
+  file:
+    path: /jenkins-srv/checkstyle_results
+    state: directory
+    
 - name: Copy Rebuild file for itrust_job
   template:
     src: templates/rebuild_itrust_job.yml.j2
@@ -31,11 +67,48 @@
 
 - name: Copy Build file for checkbox_job
   template:
-    src: templates/build_checkbox_job.yml
+    src: templates/build_checkbox_job.yml.j2
     dest: "{{ vagrant_home }}/job_rebuilds/build_checkbox_job.yml"
 
 - name: Copy Build file for itrust_job
   template:
-    src: templates/build_itrust.yml
+    src: templates/build_itrust.yml.j2
     dest: "{{ vagrant_home }}/job_rebuilds/build_itrust.yml"
 
+- name: Copy Rebuild file for itrust_fuzzer_job
+  template:
+    src: templates/rebuild_itrust_fuzzer_job.yml.j2
+    dest: "{{ vagrant_home }}/job_rebuilds/rebuild_itrust_fuzzer_job.yml"
+
+- name: Copy jFuzzer
+  copy:
+    src: roles/jFuzzer
+    dest: "{{ vagrant_home }}/" 
+
+- name: Add Post commit hook
+  copy:
+    src: templates/post_commit_hook.j2
+    dest: "{{vagrant_home}}/iTrust2-v4/.git/hooks/post-commit"
+    mode: 0767
+
+- name: Copy test Prioritization
+  copy: 
+    src: roles/test-prioritization
+    dest: "{{vagrant_home}}"
+
+- name: Copy final test Prioritization
+  copy: 
+    src: roles/final-test-prioritization
+    dest: /var/lib/jenkins/jobs/iTrust
+    
+
+# - name: Add Fuzzer.js file
+#   copy:
+#     src: files/fuzzer.js"
+#     dest: "{{itrust_repo}}/iTrust2/fuzzer.js"
+#     mode: 0666
+
+# - name: adding package.json file for fuzzer.js
+#   copy: 
+#     src: files/package.json"
+#     dest: "{{itrust_repo}}/iTrust2/package.json"

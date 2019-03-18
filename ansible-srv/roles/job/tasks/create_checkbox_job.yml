@@ -2,14 +2,12 @@
 - name: updating apt pm's repository caches
   apt:
     update_cache: yes
+ 
 
-- name: Upgrade installed packages
-  apt:
-    upgrade: dist
 
 - name: Install latest package 
   apt:
-    name: ['python3-pip','python-pip', 'git', python3-requests]
+    name: ['python3-pip','python-pip', 'git', 'python3-requests']
     state: latest
     update_cache: yes
     force: yes

@@ -1,7 +1,0 @@
-# Please update your passwords.
-mysql_root_password: admin123
-mysql_database: itrust
-mysql_user: myuser
-mysql_user_password: myuser123
-
-

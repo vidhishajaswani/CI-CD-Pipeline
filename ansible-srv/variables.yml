@@ -1,0 +1,30 @@
+jenkins_home: /var/lib/jenkins/
+jenkins_user: jenkins
+jenkins_password: jenkins
+jenkins_port: 9999
+jenkins_IP: 192.168.33.100
+mysql_root_password: root
+mysql_database: itrust
+mysql_user: myuser  
+mysql_password: myuser
+checkbox_repo: /home/vagrant/checkbox.git
+checkbox_install_dir: /var/lib/jenkins/checkbox
+itrust_repo: /home/vagrant/itrust.git
+vagrant_home: /home/vagrant
+mongo_admin_password: admin
+mongo_checkbox_user: admin
+email_password: qwerty@123
+email_username: csc519team5
+
+# Custom Analysis for Checkbox 
+cust_anlys_maxlines: 500
+cust_anlys_maxconds: 20
+
+# valid values are 'jsinspect' and 'internal'. Default: 'jsinspect'
+cust_anlys_dup_method: jsinspect
+
+# Thereshold value for jsinspect 
+cust_anlys_jdup_lines: 100
+
+# Threshold value for internal tool
+cust_anlys_dup_lines: 20
