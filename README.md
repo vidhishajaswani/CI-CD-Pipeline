@@ -11,6 +11,7 @@ Shivam Chamoli      -   schamoli
 Vidhisha Jaswani    -   vjaswan
 
 ## Introduction
+Use milestone_2 branch for this submission
 In this milestone the following objectives were tackled.
 
  Techniques related to fuzzing, test case priorization, and static analysis to improve the quality of checkbox.io and iTrust.
