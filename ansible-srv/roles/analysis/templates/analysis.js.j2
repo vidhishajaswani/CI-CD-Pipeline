@@ -66,7 +66,7 @@ function main()
 	// 4. Check for security tokens in the code 
 	console.log("------------------------------------------------------------");
 	console.log("Custom Analysis - Detection of Security Tokens")
-	findInFiles.find("token|secret", searchPath, "^((?!node_modules).)*$ | .js$")
+	findInFiles.find("token|secret_access_key|access_key_id|id_rsa|key|security", searchPath, "^((?!node_modules).)*$ | .js$")
 	    .then(function(results) {
 		var count = 0;
         for (var result in results) {
