@@ -3,18 +3,18 @@ jenkins_user: jenkins
 jenkins_password: jenkins
 jenkins_port: 9999
 jenkins_IP: 192.168.33.100
-mysql_root_password: root
+mysql_root_password: 
 mysql_database: itrust
 mysql_user: myuser  
-mysql_password: myuser
+mysql_password: 
 checkbox_repo: /home/vagrant/checkbox.git
 checkbox_install_dir: /var/lib/jenkins/checkbox
 itrust_repo: /home/vagrant/itrust.git
 vagrant_home: /home/vagrant
-mongo_admin_password: admin
+mongo_admin_password: 
 mongo_checkbox_user: admin
-email_password: qwerty@123
-email_username: csc519team5
+email_password: 
+email_username: 
 
 # Custom Analysis for Checkbox 
 cust_anlys_maxlines: 500
