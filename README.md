@@ -78,7 +78,7 @@ For this milestone, we designed a tool called jFuzzer (maven project) using [Jav
  4. From the above results we see that the test cases that failed most number of times failed because of change in string contanst (due to fuzzed code) such as testPasswordChangeForm, testCode etc. Furthermore, we also came to the conclusion that the test cases that never failed used the setter and getter methods on the same parameters i.e. the test case wrote over the fuzzed code and checked the value set by itself (testDrugForm, testHospitalForm).
  5. Our jFuzzer (fuzzing tool) did not alter any coding conventions/styles and hence we did not notice any change in the checkstyle.html for all builds.
 
-The testcase prioritization results over the 100 builds are available [here](results/test-prioritization-results.txt).
+The testcase prioritization results over the 100 builds are available [here](results/test-prioritization-result.txt).
 ## Custom Analysis for Checkbox
 To achieve this objective, the code ```analysis.js``` is used. We use the open-source tool [esprima](http://esprima.org/index.html), to parse the source code of Checkbox into an AST. We then process the derived AST to check if the code meets the desired thresholds. These thresholds are specified in the ```variables.yml``` file under the Analysis section. When these thresholds aren't met, the build has been failed. The techniques that have been used to perform the analysis are as follows:
 1. Max Lines in a function
