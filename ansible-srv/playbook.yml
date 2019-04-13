@@ -1,14 +1,17 @@
 ---
-- hosts: all
+- hosts: localhost
   become: yes
   vars_files: 
     variables.yml
   roles:
-    - ansible
-    - maven
-    - mysql
-    - java
-    - jenkins
-    - deployfiles
-    - job
-    - analysis
+    #- python
+    - aws
+    #- ansible
+    #- maven
+    #- mysql
+    #- java
+    #- jenkins
+    #- deployfiles
+    #- job
+    #- analysis
+  
