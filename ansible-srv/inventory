@@ -1,2 +1,2 @@
 [jenkins]
-jenkins-srv ansible_host=3.85.140.19 ansible_python_interpreter=/usr/bin/python3 ansible_ssh_private_key_file=/ansible-srv/roles/aws/templates/aws-key.pem
+jenkins-srv ansible_host=ec2-34-234-203-146.compute-1.amazonaws.com ansible_ssh_user=ubuntu ansible_python_interpreter=/usr/bin/python3 ansible_ssh_private_key_file=/ansible-srv/roles/aws/templates/aws-key.pem
