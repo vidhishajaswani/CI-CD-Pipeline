@@ -1,10 +1,6 @@
 ---
 
-- name: apt-get update
-  apt: update_cache=yes
 
-- name: apt-get dist-upgrade
-  apt: upgrade=dist dpkg_options='force-confold,force-confdef'
 - name: Add ansible repo
   apt_repository:
     repo: 'ppa:ansible/ansible'
