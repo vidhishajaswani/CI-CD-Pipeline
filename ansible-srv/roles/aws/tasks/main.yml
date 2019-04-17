@@ -71,12 +71,13 @@
 - name: Rights for pem file
   file:
     path: /ansible-srv/roles/aws/templates/aws-key.pem
-    mode: 400
+    mode: '400'
 
 - name: Copy files
   copy:
     src: "/ansible-srv/roles/aws/templates/aws-key.pem"
     dest: "/ansible-srv/aws-key.pem"
+    mode: '400'
   
 
 - name: Sleep for some time

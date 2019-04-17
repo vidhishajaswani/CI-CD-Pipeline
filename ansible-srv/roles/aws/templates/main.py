@@ -38,6 +38,10 @@ sec_group=sec.authorize_ingress(
             {'IpProtocol': 'tcp',
              'FromPort': 22,
              'ToPort': 22,
+             'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+             {'IpProtocol': 'tcp',
+             'FromPort': 9999,
+             'ToPort': 9999,
              'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
         ]
 )
@@ -50,13 +54,21 @@ instances = ec2.create_instances(
 #print(instances)
 print("Instance created")
 
+
+
 instances[0].wait_until_running()
+
 instances[0].load()
-print(instances[0].public_dns_name)
+print(instances[0].public_ip_address)
+
+
+
+
+
 
 f = open("/ansible-srv/inventory", "w")
 f.write("[jenkins]\n")
-f.write("jenkins-srv ansible_host="+instances[0].public_dns_name+" ansible_ssh_user=ubuntu ansible_python_interpreter=/usr/bin/python3 ansible_ssh_private_key_file="+path+awskey+".pem")
+f.write("jenkins-srv ansible_host="+instances[0].public_ip_address+" ansible_ssh_user=ubuntu ansible_python_interpreter=/usr/bin/python3 ansible_ssh_private_key_file="+path+awskey+".pem")
 
 
 
