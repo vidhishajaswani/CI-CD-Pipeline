@@ -16,7 +16,10 @@
 #     state: latest
 #     update_cache: yes
 #     force: yes
-
+- name: Update apt
+  apt:
+    update_cache: yes
+    
 - name: Install Java
   apt: 
     name: openjdk-8-jdk
