@@ -2,7 +2,7 @@
   # Install SQL and required packages
   - name: Install MySQL and required packages
     apt: 
-      name: ['mysql-server', 'python3-dev', 'libmysqlclient-dev', 'python3-pip'] 
+      name: ['mysql-server', 'python3-dev', 'libmysqlclient-dev', 'python3-pip','python-pip'] 
       state: present
       
   - name: Install Python package manager required for MySQL

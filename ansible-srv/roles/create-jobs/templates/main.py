@@ -45,7 +45,7 @@ sec_group=sec.authorize_ingress(
              'FromPort': 9999,
              'ToPort': 9999,
              'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
-             {'IpProtocol': 'tcp',
+             {'IpProtocol': 'http',
              'FromPort': 80,
              'ToPort': 80,
              'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
@@ -82,9 +82,9 @@ print(instances[0].public_ip_address)
 
 
 
-f = open("/ansible-srv/inventory", "w")
-f.write("[jenkins]\n")
-f.write("jenkins-srv ansible_host="+instances[0].public_ip_address+" ansible_ssh_user=ubuntu ansible_python_interpreter=/usr/bin/python3 ansible_ssh_private_key_file="+path+filename)
+#f = open("/ansible-srv/inventory", "w")
+#f.write("[jenkins]\n")
+#f.write("jenkins-srv ansible_host="+instances[0].public_ip_address+" ansible_ssh_user=ubuntu ansible_python_interpreter=/usr/bin/python3 ansible_ssh_private_key_file="+path+awskey+".pem")
 
 
 

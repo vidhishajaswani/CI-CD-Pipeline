@@ -1,0 +1,40 @@
+---
+
+- name: Copy Checkbox job
+  copy:
+    src: templates/checkbox_job.yml
+    dest: jobs/checkbox_job.yml
+
+- name: AWS Setup
+  include: aws.yml
+- name: See if Checkbox EC2 instance exists or not
+  ec2_instance_facts:
+    aws_access_key: "{{aws_access_key_id}}"
+    aws_secret_key: "{{aws_secret_access_key}}"
+    region: "us-east-1"
+    filters:
+      "tag:Name": "{{checkbox}}"
+  register: ec2_checkboxio
+
+
+
+- name: Create EC2 instance for checkbox.io
+  shell: python main.py "{{checkbox}}"
+  args:
+    chdir: "/ansible-srv/roles/create-jobs/templates/"
+  environment: 
+    AWS_ACCESS_KEY_ID: "{{aws_access_key_id}}"
+    AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
+  when: ec2_checkboxio.instances | length==0
+
+- name: Rights for pem file
+  file:
+    path: "/ansible-srv/roles/create-jobs/templates/{{checkbox}}.pem"
+    mode: '400'
+
+- name: Copy files
+  copy:
+    src: "/ansible-srv/roles/aws/templates/{{checkbox}}.pem"
+    dest: "/ansible-srv/{{checkbox}}.pem"
+    mode: '400'
+  

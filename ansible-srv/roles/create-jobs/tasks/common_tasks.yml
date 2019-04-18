@@ -1,0 +1,48 @@
+---
+- name: updating apt pm's repository caches
+  apt:
+    update_cache: yes
+ 
+
+
+- name: Install latest package 
+  apt:
+    name: ['python3-pip','python-pip', 'git', 'python3-requests']
+    state: latest
+    update_cache: yes
+    force: yes
+
+- name: Install Jenkins Job Builder
+  pip: name=jenkins-job-builder 
+
+
+- name: enabling access to mvn without password 
+  lineinfile:
+    path: /etc/sudoers
+    line: "jenkins ALL=(ALL) NOPASSWD: ALL"
+
+- name: Create directory for jenkins.ini
+  file:
+    path: /etc/jenkins_jobs
+    state: directory
+
+- name: read admin pwd
+  command: cat "{{ jenkins_home }}/secrets/initialAdminPassword"
+  register: adminpwd
+
+- name: Copy jenkins_jobs.ini file
+  template:
+    src: templates/jenkins_jobs.ini.j2
+    dest: jenkins_jobs.ini
+
+- name: ansible jobs directory 
+  file:
+    path: jobs
+    state: directory
+
+- name: Getting Jenkins CLI Jar
+  get_url:
+    url: "http://localhost:{{jenkins_port}}/jnlpJars/jenkins-cli.jar"
+    dest: "."
+    mode: 0755
+

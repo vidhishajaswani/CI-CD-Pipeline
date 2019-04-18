@@ -1,0 +1,17 @@
+---
+
+
+- name: Copy vars
+  copy: 
+    src: variables.yml
+    dest: "{{ jenkins_home }}/variables.yml"
+
+
+- name: Copy Checkbox dependencies
+  include: common_tasks.yml  
+
+
+
+- name: Checkbox Tasks & Spin Instance 
+  include: checkbox_tasks.yml
+
