@@ -4,7 +4,7 @@
 - name: Copy vars
   copy: 
     src: variables.yml
-    dest: "{{ jenkins_home }}/variables.yml"
+    dest: variables.yml
 
 
 - name: Copy Checkbox dependencies
@@ -14,4 +14,36 @@
 
 - name: Checkbox Tasks & Spin Instance 
   include: checkbox_tasks.yml
+
+- name: Security setup for configuration
+  jenkins_script:
+    script: |
+        import jenkins.model.*
+        import hudson.security.*
+        import hudson.security.csrf.DefaultCrumbIssuer
+        def instance = Jenkins.getInstance()
+        instance.disableSecurity()
+        instance.save()
+    user: admin
+    url: "http://localhost:{{jenkins_port}}"
+    password: "{{ adminpwd.stdout }}"
+
+- name: create jobs
+  shell: 'sudo jenkins-jobs --conf {{ubuntu_home}}/jenkins_jobs.ini update {{ubuntu_home}}/jobs'
+
+- name: Increase security
+  jenkins_script:
+   script: |
+    import jenkins.model.*
+    import hudson.security.*
+    def instance = Jenkins.getInstance()
+    def hudsonRealm = new HudsonPrivateSecurityRealm(false)
+    instance.setSecurityRealm(hudsonRealm)
+    def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
+    strategy.setAllowAnonymousRead(false)
+    instance.setAuthorizationStrategy(strategy)
+    instance.save()
+   user: admin
+   url: "http://localhost:{{jenkins_port}}"
+   password: "{{adminpwd.stdout}}"
 

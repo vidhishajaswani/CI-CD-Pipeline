@@ -46,3 +46,9 @@
     dest: "."
     mode: 0755
 
+- name: Copy python files
+  template:
+    src: templates/main.py
+    dest: main.py
+
+
