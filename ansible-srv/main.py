@@ -2,18 +2,16 @@
 
 import boto3
 import os
-import sys
 access_key=os.environ.get('AWS_ACCESS_KEY_ID')
 secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY')
 
 
 ec2 = boto3.resource('ec2', region_name='us-east-1',aws_access_key_id=access_key, aws_secret_access_key=secret_access_key)
-path='/ansible-srv/roles/aws/templates/'
-awskey=sys.argv[1]
-filename=awskey+'.pem'
+path='/ansible-srv/'
+awskey='aws-key'
 # Create a Key Pair that will be linked to our Instance
 #outfile = open(jenkins-key,'w')
-outfile = open(filename,'w')
+outfile = open('aws-key.pem','w')
 key_pair = ec2.create_key_pair(KeyName=awskey)
 KeyPairOut = str(key_pair.key_material)
 outfile.write(KeyPairOut)
@@ -40,17 +38,6 @@ sec_group=sec.authorize_ingress(
             {'IpProtocol': 'tcp',
              'FromPort': 22,
              'ToPort': 22,
-             'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
-             {'IpProtocol': 'tcp',
-             'FromPort': 9999,
-             'ToPort': 9999,
-<<<<<<< HEAD
-             'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
-             {'IpProtocol': 'tcp',
-             'FromPort': 80,
-             'ToPort': 80,
-=======
->>>>>>> 34255361d3afd9619058f21aa7d1dc410c67a96e
              'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
         ]
 )
@@ -63,34 +50,13 @@ instances = ec2.create_instances(
 #print(instances)
 print("Instance created")
 
-
-
-
 instances[0].wait_until_running()
-
-instances[0].load()
-mytags = [{
-       "Key" : awskey, 
-       "Value": awskey
-    } 
-    ]
-ec2.create_tags(
-            Resources = [instances[0].id ],
-            Tags= mytags
-           )
-instances[0].wait_until_running()
-
 instances[0].load()
 print(instances[0].public_ip_address)
 
-
-
-
-
-
 f = open("/ansible-srv/inventory", "w")
 f.write("[jenkins]\n")
-f.write("jenkins-srv ansible_host="+instances[0].public_ip_address+" ansible_ssh_user=ubuntu ansible_python_interpreter=/usr/bin/python3 ansible_ssh_private_key_file="+path+filename)
+f.write("jenkins-srv ansible_host="+instances[0].public_ip_address+" ansible_ssh_user=ec2-user ansible_ssh_private_key_file="+path+awskey+".pem")
 
 
 
