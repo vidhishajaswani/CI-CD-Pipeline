@@ -3,18 +3,19 @@ jenkins_user: jenkins
 jenkins_password: jenkins
 jenkins_port: 9999
 jenkins_IP: 192.168.33.100
-mysql_root_password: 
+mysql_root_password: abcd
 mysql_database: itrust
 mysql_user: myuser  
-mysql_password: 
-checkbox_repo: /home/vagrant/checkbox.git
+mysql_password: abcd
+checkbox_repo: https://github.com/chrisparnin/checkbox.io.git
 checkbox_install_dir: /var/lib/jenkins/checkbox
-itrust_repo: /home/vagrant/itrust.git
+itrust_repo: git@github.ncsu.edu:schamol/iTrust2-v4.git
 vagrant_home: /home/vagrant
-mongo_admin_password: 
+ubuntu_home: /home/ubuntu
+mongo_admin_password: abcd
 mongo_checkbox_user: admin
-email_password: 
-email_username: 
+email_password: csc519team5
+email_username: qwerty@123
 
 # Custom Analysis for Checkbox 
 cust_anlys_maxlines: 500
@@ -32,6 +33,8 @@ cust_anlys_dup_lines: 20
 
 aws_access_key_id: 
 aws_secret_access_key: 
-group: vagrant
-owner: vagrant
+group: ubuntu
+owner: ubuntu
+param: jenkins
+checkbox: checkbox.io
 
