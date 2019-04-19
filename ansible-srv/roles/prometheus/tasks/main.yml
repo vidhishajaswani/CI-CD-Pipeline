@@ -1,0 +1,6 @@
+---
+- name: install prometheus on the system
+  apt:
+    name: prometheus
+    state: present
+    update_cache: yes
