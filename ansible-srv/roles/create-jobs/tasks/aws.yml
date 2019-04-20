@@ -50,35 +50,9 @@
     src: /usr/share/zoneinfo/America/New_York 
     dest: /etc/localtime
     state: link
-
+    
 - name: Install requirements
-  shell: pip3 install boto3
-  args:
-    chdir: "/ansible-srv/roles/aws/templates"
-
-
-
-- name: Create Instance
-  shell: python3 main.py {{param}}
-  args:
-    chdir: "/ansible-srv/roles/aws/templates/"
-  environment: 
-    AWS_ACCESS_KEY_ID: "{{aws_access_key_id}}"
-    AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
-
-
-
-- name: Rights for pem file
-  file:
-    path: /ansible-srv/roles/aws/templates/{{param}}.pem
-    mode: '400'
-
-- name: Copy files
-  copy:
-    src: "/ansible-srv/roles/aws/templates/{{param}}.pem"
-    dest: "/ansible-srv/{{param}}.pem"
-    mode: '400'
+  shell: pip install boto3
   
 
-- name: Sleep for some time
-  shell: sleep 40s
+

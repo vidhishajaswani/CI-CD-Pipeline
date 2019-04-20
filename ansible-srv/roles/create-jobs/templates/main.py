@@ -75,9 +75,6 @@ ec2.create_tags(
             Resources = [instances[0].id ],
             Tags= mytags
            )
-instances[0].wait_until_running()
-
-instances[0].load()
 print(instances[0].public_ip_address)
 
 
@@ -85,9 +82,9 @@ print(instances[0].public_ip_address)
 
 
 
-f = open("/ansible-srv/inventory", "w")
-f.write("[jenkins]\n")
-f.write("jenkins-srv ansible_host="+instances[0].public_ip_address+" ansible_ssh_user=ubuntu ansible_python_interpreter=/usr/bin/python3 ansible_ssh_private_key_file="+path+filename)
+#f = open("/ansible-srv/inventory", "w")
+#f.write("[jenkins]\n")
+#f.write("jenkins-srv ansible_host="+instances[0].public_ip_address+" ansible_ssh_user=ubuntu ansible_python_interpreter=/usr/bin/python3 ansible_ssh_private_key_file="+path+awskey+".pem")
 
 
 
