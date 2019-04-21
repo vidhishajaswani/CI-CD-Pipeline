@@ -2,42 +2,68 @@
 
 - name: Copy Checkbox job
   copy:
-    src: templates/checkbox_job.yml
+    src: templates/checkbox_job.yml.j2
     dest: jobs/checkbox_job.yml
+    owner: "{{jenkins_user}}"
+    group: "{{jenkins_user}}"
 
 - name: AWS Setup
   include: aws.yml
 - pip:
     name: boto3
 
-- name: See if Checkbox EC2 instance exists or not
+- name: See if EC2 instance exists or not
   ec2_instance_facts:
     region: "us-east-1"
     filters:
-     "tag:checkbox.io" : "{{checkbox}}"
+     "tag:ec2instance" : "{{ec2instance}}"
+     instance-state-name: running
   environment: 
     AWS_ACCESS_KEY_ID: "{{aws_access_key_id}}"
     AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
-  register: ec2_checkboxio
-
-  # - debug:
-  #     var: ec2_checkboxio
+  register: ec2_instance
 
 
-- name: Create EC2 instance for checkbox.io
-  shell: python main.py "{{checkbox}}"
+
+- name: Create EC2 instance if does not exist
+  shell: python main.py "{{ec2instance}}"
   environment: 
     AWS_ACCESS_KEY_ID: "{{aws_access_key_id}}"
     AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
-  when: ec2_checkboxio.instances | length==0
+  when: ec2_instance.instances | length==0
 
 - name: Rights for pem file
   file:
-    path: "{{checkbox}}.pem"
+    path: "{{ec2instance}}.pem"
     mode: '400'
 
-- name: Copy checkbox Job
-  file:
-    src: /ansible-srv/roles/create-jobs/templates/checkbox_job.yml
-    dest: "{{ubuntu_home}}/jobs/checkbox_job.yml"
+
+- name: Waiting for EC2 instance to spinup
+  shell: "sleep 30s"
+  when: ec2_instance.instances | length==0
+
+- name: EC2 Instance IP
+  debug:
+    var: ec2_instance.instances[0].public_ip_address
+
+
+- name: Copy checkbox installation file
+  copy:
+    src: files/checkbox_install.yml
+    dest: checkbox_install.yml
+    owner: "{{jenkins_user}}"
+    group: "{{jenkins_user}}"
+
+- name: Copy checkbox deploy file
+  copy:
+    src: files/checkbox_deploy.yml
+    dest: checkbox_deploy.yml
+    owner: "{{jenkins_user}}"
+    group: "{{jenkins_user}}"
+
+
+- name: Install checkbox dependencies
+  shell: ansible-playbook -i inventory checkbox_install.yml 
+
+
 

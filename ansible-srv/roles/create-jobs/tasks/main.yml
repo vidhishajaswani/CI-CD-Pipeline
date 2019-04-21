@@ -5,6 +5,8 @@
   copy: 
     src: variables.yml
     dest: variables.yml
+    owner: "{{jenkins_user}}"
+    group: "{{jenkins_user}}"
 
 
 - name: Copy Checkbox dependencies
@@ -14,6 +16,9 @@
 
 - name: Checkbox Tasks & Spin Instance 
   include: checkbox_tasks.yml
+
+- name: Resolve hosts
+  shell: echo "127.0.0.1 $(hostname)" >> /etc/hosts
 
 - name: Security setup for configuration
   jenkins_script:
@@ -29,7 +34,7 @@
     password: "{{ adminpwd.stdout }}"
 
 - name: create jobs
-  shell: 'sudo jenkins-jobs --conf {{ubuntu_home}}/jenkins_jobs.ini update {{ubuntu_home}}/jobs'
+  shell: 'jenkins-jobs --conf {{ubuntu_home}}/jenkins_jobs.ini update {{ubuntu_home}}/jobs'
 
 - name: Increase security
   jenkins_script:

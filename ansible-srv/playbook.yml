@@ -4,8 +4,8 @@
   vars_files: 
     variables.yml
   roles:
-    #- python
-    #- aws
+    # - python
+    # - aws
 
 - hosts: jenkins
   become: yes
@@ -20,4 +20,5 @@
     #- deployfiles
     #- job
     #- analysis
+    - create-jobs
   

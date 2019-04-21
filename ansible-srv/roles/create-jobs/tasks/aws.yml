@@ -27,8 +27,8 @@
     path="{{ vagrant_home }}/.aws"
     state=directory
     mode=0755
-    group={{ group }}
-    owner={{ owner }}
+    owner="{{jenkins_user}}"
+    group="{{jenkins_user}}"
 
 - name: 'Copy AWS CLI credentials'
   tags: 'aws-cli'
@@ -37,8 +37,8 @@
     src=credentials.j2
     dest="{{ vagrant_home }}/.aws/credentials"
     mode=0600
-    group={{ group }}
-    owner={{ owner }}
+    owner="{{jenkins_user}}"
+    group="{{jenkins_user}}"
   
 - name: Sync the machine
   file:

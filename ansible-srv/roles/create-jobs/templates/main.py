@@ -82,9 +82,9 @@ print(instances[0].public_ip_address)
 
 
 
-#f = open("/ansible-srv/inventory", "w")
-#f.write("[jenkins]\n")
-#f.write("jenkins-srv ansible_host="+instances[0].public_ip_address+" ansible_ssh_user=ubuntu ansible_python_interpreter=/usr/bin/python3 ansible_ssh_private_key_file="+path+awskey+".pem")
+f = open("inventory", "w")
+f.write("["+awskey+"]\n")
+f.write("ec2 ansible_host="+instances[0].public_ip_address+" ansible_ssh_user=ubuntu ansible_python_interpreter=/usr/bin/python3 ansible_ssh_private_key_file="+awskey+".pem")
 
 
 
