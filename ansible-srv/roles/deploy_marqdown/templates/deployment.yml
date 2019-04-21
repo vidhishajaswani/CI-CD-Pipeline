@@ -1,24 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: marqdown-deployment
+  name: marqdown-app
   labels:
-    app: marqdown
+    app: marqdown-app
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: marqdown
+      app: marqdown-app
   template:
     metadata:
       labels:
-        app: marqdown
+        app: marqdown-app
     spec:
       containers:
       - name: marqdown-service
         image: kmedidi/marqdown-service:1.0.1
-        args:
-        - "-http=0.0.0.0:80"
-        - "-service=0.0.0.0:9001"
         ports:
         - containerPort: 9001
