@@ -5,7 +5,7 @@
 
   tasks:
 
-
+    
     - name: db.properties
       copy:
         src: "{{ubuntu_home}}/db.properties.j2"

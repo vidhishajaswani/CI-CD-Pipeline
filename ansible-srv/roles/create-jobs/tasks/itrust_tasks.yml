@@ -1,9 +1,9 @@
 ---
 
-- name: Copy itrust_job.yml file
-  copy:
-    src: templates/itrust_job.yml.j2
-    dest: jobs/itrust_job.yml
+# - name: Copy itrust_job.yml file
+#   copy:
+#     src: templates/itrust_job.yml.j2
+#     dest: jobs/itrust_job.yml
 
 - name: Copy setup.yml file
   copy:
@@ -12,86 +12,108 @@
 
 
 
-- pip:
-    name: boto3
+# - pip:
+#     name: boto3
 
-- name: See if EC2 instance exists or not
-  ec2_instance_facts:
-    region: "us-east-1"
-    filters:
-     "tag:ec2instance" : "{{ec2instance}}"
-     instance-state-name: running
-  environment: 
-    AWS_ACCESS_KEY_ID: "{{aws_access_key_id}}"
-    AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
-  register: ec2_instance
-
-
-
-- name: Create EC2 instance if does not exist
-  shell: python main.py "{{ec2instance}}"
-  environment: 
-    AWS_ACCESS_KEY_ID: "{{aws_access_key_id}}"
-    AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
-  when: ec2_instance.instances | length==0
-
-- name: Rights for pem file
-  file:
-    path: "{{ec2instance}}.pem"
-    mode: '400'
+# - name: See if EC2 instance exists or not
+#   ec2_instance_facts:
+#     region: "us-east-1"
+#     filters:
+#      "tag:ec2instance" : "{{ec2instance}}"
+#      instance-state-name: running
+#   environment: 
+#     AWS_ACCESS_KEY_ID: "{{aws_access_key_id}}"
+#     AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
+#   register: ec2_instance
 
 
-- name: Waiting for EC2 instance to spinup
-  shell: "sleep 30s"
-  when: ec2_instance.instances | length==0
 
-- name: EC2 Instance IP
-  debug:
-    var: ec2_instance.instances[0].public_ip_address
+# - name: Create EC2 instance if does not exist
+#   shell: python main.py "{{ec2instance}}"
+#   environment: 
+#     AWS_ACCESS_KEY_ID: "{{aws_access_key_id}}"
+#     AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
+#   when: ec2_instance.instances | length==0
+
+# - name: Rights for pem file
+#   file:
+#     path: "{{ec2instance}}.pem"
+#     mode: '400'
 
 
-- name: Copy itrust installation file
+# - name: Waiting for EC2 instance to spinup
+#   shell: "sleep 30s"
+#   when: ec2_instance.instances | length==0
+
+# - name: EC2 Instance IP
+#   debug:
+#     var: ec2_instance.instances[0].public_ip_address
+
+
+# - name: Copy itrust installation file
+#   copy:
+#     src: files/itrust_install.yml
+#     dest: itrust_install.yml
+#     owner: "{{jenkins_user}}"
+#     group: "{{jenkins_user}}"
+
+- name: Copy itrust deploy file
   copy:
-    src: files/itrust_install.yml
-    dest: itrust_install.yml
+    src: files/itrust_deploy.yml
+    dest: itrust_deploy.yml
     owner: "{{jenkins_user}}"
     group: "{{jenkins_user}}"
 
 
 
-- name: Create folder
-  file:
-    name: roles
-    state: directory
+# - name: Create folder
+#   file:
+#     name: roles
+#     state: directory
+
+# - name: Copy files
+#   copy:
+#     src: roles/jetty
+#     dest: "roles"
+
+# - name: Copy files
+#   copy:
+#     src: roles/prometheus
+#     dest: "roles"
+# - name: Copy files
+#   copy:
+#     src: roles/stress
+#     dest: "roles"
+
+# - name: Copy files
+#   copy:
+#     src: roles/redis
+#     dest: "roles"
+
+# - name: Copy files
+#   copy:
+#     src: roles/java
+#     dest: "roles"
 
 - name: Copy files
   copy:
-    src: roles/jetty
+    src: roles/mysql
     dest: "roles"
 
 - name: Copy files
   copy:
-    src: roles/prometheus
-    dest: "roles"
-- name: Copy files
-  copy:
-    src: roles/stress
+    src: roles/maven
     dest: "roles"
 
-- name: Copy files
-  copy:
-    src: roles/redis
-    dest: "roles"
+# - name: db.properties
+#   copy:
+#     src: templates/db.properties.j2
+#     dest: "{{ubuntu_home}}"
 
-- name: db.properties
-  copy:
-    src: templates/db.properties.j2
-    dest: "{{ubuntu_home}}"
-
-- name: email.properties
-  copy:                                     
-    src: templates/email.properties.j2
-    dest: "{{ubuntu_home}}"
+# - name: email.properties
+#   copy:                                     
+#     src: templates/email.properties.j2
+#     dest: "{{ubuntu_home}}"
 
 - name: Do setup
   command: ansible-playbook -i inventory setup.yml

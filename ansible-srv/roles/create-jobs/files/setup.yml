@@ -6,4 +6,7 @@
     - redis
     - prometheus
     - stress
+    - java
     - jetty
+    - mysql
+    - maven

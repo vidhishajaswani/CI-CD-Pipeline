@@ -3,20 +3,34 @@
   vars_files:
     - variables.yml
   tasks:
+    - name: Edit mysql.conf file
+      lineinfile:
+        path: /etc/mysql/mysql.conf.d/mysqld.cnf
+        line: skip-grant-tables
+        insertafter: skip-external-locking
+
+    - name: Restarting mysql service
+      service:
+        name: mysql
+        state: restarted
     - name: Check if war folder exists
       stat: 
-        path: /opt/jetty9/webapps
+        path: /opt/jetty9/webapps/iTrust2.war
       register: war_exists
 
     - name: Delete war if exists
       file:
-        path: /opt/jetty9/webapps
+        path: /opt/jetty9/webapps/iTrust2.war
         state: absent 
       when: war_exists.stat.exists
 
 
     - name: Copy war
       copy:
-        src: /opt/jetty9/webapps
-        dest: "{{ubuntu_home}}/iTrust2-v4/iTrust2/target" 
-        remote_src: yes
+        src: "{{ubuntu_home}}/iTrust2-v4/iTrust2/target/iTrust2.war" 
+        dest: /opt/jetty9/webapps/iTrust2.war
+
+    - name: Start jetty
+      shell: 'java -jar start.jar &'
+      args:
+        chdir: /opt/jetty9
