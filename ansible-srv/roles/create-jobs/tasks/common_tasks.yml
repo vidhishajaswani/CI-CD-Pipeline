@@ -28,9 +28,7 @@
     owner: "{{jenkins_user}}"
     group: "{{jenkins_user}}"
 
-- name: read admin pwd
-  command: cat "{{ jenkins_home }}/secrets/initialAdminPassword"
-  register: adminpwd
+
 
 - name: Copy jenkins_jobs.ini file
   template:
@@ -59,4 +57,7 @@
     owner: "{{jenkins_user}}"
     group: "{{jenkins_user}}"
 
+
+- name: AWS Setup
+  include: aws.yml
 
