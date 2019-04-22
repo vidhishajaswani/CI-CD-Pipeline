@@ -42,12 +42,3 @@
         chdir: "{{ubuntu_home}}/iTrust2-v4/iTrust2"
 
     
-
-    # - name: Update apt
-    #   apt: update_cache=yes
-
-
-    # - name: mvn jetty:run
-    #   command: sh -c "mvn jetty:run &"
-    #   args:
-    #     chdir: "{{ubuntu_home}/iTrust2-v4/iTrust2"
