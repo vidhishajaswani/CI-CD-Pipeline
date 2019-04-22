@@ -37,7 +37,7 @@ sec = ec2.create_security_group(
     GroupName='aws-ssh', Description='vidhisha sec group', VpcId=vpc.id)
 sec_group=sec.authorize_ingress(
         IpPermissions=[
-            {'IpProtocol': 'tcp',
+           {'IpProtocol': 'tcp',
              'FromPort': 22,
              'ToPort': 22,
              'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
@@ -48,6 +48,18 @@ sec_group=sec.authorize_ingress(
              {'IpProtocol': 'tcp',
              'FromPort': 80,
              'ToPort': 80,
+             'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+             {'IpProtocol': 'tcp',
+             'FromPort': 9090,
+             'ToPort': 9090,
+             'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+             {'IpProtocol': 'tcp',
+             'FromPort': 2112,
+             'ToPort': 2112,
+             'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+             {'IpProtocol': 'tcp',
+             'FromPort': 8080,
+             'ToPort': 8080,
              'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
         ]
 )
