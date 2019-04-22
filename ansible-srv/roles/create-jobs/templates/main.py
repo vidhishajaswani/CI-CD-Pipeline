@@ -48,6 +48,14 @@ sec_group=sec.authorize_ingress(
              {'IpProtocol': 'tcp',
              'FromPort': 80,
              'ToPort': 80,
+             'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+             {'IpProtocol': 'tcp',
+             'FromPort': 9090,
+             'ToPort': 9090,
+             'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+             {'IpProtocol': 'tcp',
+             'FromPort': 2112,
+             'ToPort': 2112,
              'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
         ]
 )
