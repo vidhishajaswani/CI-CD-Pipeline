@@ -136,11 +136,11 @@
 #   become: true
 #   shell: 'update-rc.d jetty9 defaults'
 
-- name: Start jetty
-  become: true
-  shell: 'java -jar start.jar'
-  args:
-    chdir: /opt/jetty9
+# - name: Start jetty
+#   become: true
+#   shell: 'java -jar start.jar'
+#   args:
+#     chdir: /opt/jetty9
 
 
 
