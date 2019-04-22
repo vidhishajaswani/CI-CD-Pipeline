@@ -5,26 +5,12 @@
     src: templates/itrust_job.yml.j2
     dest: jobs/itrust_job.yml
 
-- name: db.properties
-  copy:            
-    src: templates/db.properties.j2
-    dest: "{{ubuntu_home}}/iTrust2-v4/iTrust2/src/main/java/db.properties"
+- name: Copy setup.yml file
+  copy:
+    src: files/setup.yml
+    dest: setup.yml
 
-- name: email.properties
-  copy:                                     
-    src: templates/email.properties.j2
-    dest: "{{ubuntu_home}}/iTrust2-v4/iTrust2/src/main/java/email.properties"
 
-- name: Edit mysql.conf file
-  lineinfile:
-    path: /etc/mysql/mysql.conf.d/mysqld.cnf
-    line: skip-grant-tables
-    insertafter: skip-external-locking
-
-- name: Restarting mysql service
-  service:
-    name: mysql
-    state: restarted
 
 # - pip:
 #     name: boto3
@@ -62,5 +48,59 @@
 # - name: EC2 Instance IP
 #   debug:
 #     var: ec2_instance.instances[0].public_ip_address
+
+
+- name: Copy itrust installation file
+  copy:
+    src: files/itrust_install.yml
+    dest: itrust_install.yml
+    owner: "{{jenkins_user}}"
+    group: "{{jenkins_user}}"
+
+# - name: Copy checkbox deploy file
+#   copy:
+#     src: files/checkbox_deploy.yml
+#     dest: checkbox_deploy.yml
+#     owner: "{{jenkins_user}}"
+#     group: "{{jenkins_user}}"
+
+- name: Create folder
+  file:
+    name: roles
+    state: directory
+
+- name: Copy files
+  copy:
+    src: roles/jetty
+    dest: "roles"
+
+- name: Copy files
+  copy:
+    src: roles/prometheus
+    dest: "roles"
+- name: Copy files
+  copy:
+    src: roles/stress
+    dest: "roles"
+
+- name: Copy files
+  copy:
+    src: roles/redis
+    dest: "roles"
+
+- name: db.properties
+  copy:
+    src: templates/db.properties.j2
+    dest: "{{ubuntu_home}}"
+
+- name: email.properties
+  copy:                                     
+    src: templates/email.properties.j2
+    dest: "{{ubuntu_home}}"
+
+- name: Do setup
+  command: ansible-playbook -i inventory setup.yml
+
+
 
 

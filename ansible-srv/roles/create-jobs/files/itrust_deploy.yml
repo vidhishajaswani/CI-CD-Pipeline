@@ -1,0 +1,22 @@
+- hosts: ec2instance
+  become: yes
+  vars_files:
+    - variables.yml
+  tasks:
+    - name: Check if war folder exists
+      stat: 
+        path: /opt/jetty9/webapps
+      register: war_exists
+
+    - name: Delete war if exists
+      file:
+        path: /opt/jetty9/webapps
+        state: absent 
+      when: war_exists.stat.exists
+
+
+    - name: Copy war
+      copy:
+        src: /opt/jetty9/webapps
+        dest: "{{ubuntu_home}}/iTrust2-v4/iTrust2/target" 
+        remote_src: yes

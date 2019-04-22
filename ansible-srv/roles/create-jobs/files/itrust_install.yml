@@ -1,18 +1,20 @@
-- hosts: ec2instance
+- hosts: localhost
   become: yes
   vars_files:
     - variables.yml
 
   tasks:
+
+
     - name: db.properties
       copy:
-        src: "{{jenkins_home}}/db.properties"
+        src: "{{ubuntu_home}}/db.properties.j2"
         dest: "{{ubuntu_home}}/iTrust2-v4/iTrust2/src/main/java/db.properties"
         remote_src: yes
 
     - name: email.properties
       copy:                                     
-        src: "{{jenkins_home}}/email.properties"
+        src: "{{ubuntu_home}}/email.properties.j2"
         dest: "{{ubuntu_home}}/iTrust2-v4/iTrust2/src/main/java/email.properties"
         remote_src: yes
         
@@ -28,21 +30,24 @@
         name: mysql
         state: restarted
 
-    - name: mvn clean
-      command: mvn clean 
-      args:
-        chdir: "{{ubuntu_home}/iTrust2-v4/iTrust2"
 
     - name: mvn test classes
       command: mvn process-test-classes
       args:
-        chdir: "{{ubuntu_home}/iTrust2-v4/iTrust2"
+        chdir: "{{ubuntu_home}}/iTrust2-v4/iTrust2"
 
-    - name: Update apt
-      apt: update_cache=yes
-
-
-    - name: mvn jetty:run
-      command: sh -c "mvn jetty:run &"
+    - name: mvn clean
+      command: mvn clean install
       args:
-        chdir: "{{ubuntu_home}/iTrust2-v4/iTrust2"
+        chdir: "{{ubuntu_home}}/iTrust2-v4/iTrust2"
+
+    
+
+    # - name: Update apt
+    #   apt: update_cache=yes
+
+
+    # - name: mvn jetty:run
+    #   command: sh -c "mvn jetty:run &"
+    #   args:
+    #     chdir: "{{ubuntu_home}/iTrust2-v4/iTrust2"

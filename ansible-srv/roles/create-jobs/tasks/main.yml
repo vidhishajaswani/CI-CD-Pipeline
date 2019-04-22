@@ -21,43 +21,45 @@
 - name: Checkbox Tasks & Spin Instance 
   include: itrust_tasks.yml
 
+
+
 # - name: Resolve hosts
 #   shell: echo "127.0.0.1 $(hostname)" >> /etc/hosts
 
 
-# - name: read admin pwd
-#   command: cat "{{ jenkins_home }}/secrets/initialAdminPassword"
-#   register: adminpwd
+- name: read admin pwd
+  command: cat "{{ jenkins_home }}/secrets/initialAdminPassword"
+  register: adminpwd
 
-# - name: Security setup for configuration
-#   jenkins_script:
-#     script: |
-#         import jenkins.model.*
-#         import hudson.security.*
-#         import hudson.security.csrf.DefaultCrumbIssuer
-#         def instance = Jenkins.getInstance()
-#         instance.disableSecurity()
-#         instance.save()
-#     user: admin
-#     url: "http://localhost:{{jenkins_port}}"
-#     password: "{{ adminpwd.stdout }}"
+- name: Security setup for configuration
+  jenkins_script:
+    script: |
+        import jenkins.model.*
+        import hudson.security.*
+        import hudson.security.csrf.DefaultCrumbIssuer
+        def instance = Jenkins.getInstance()
+        instance.disableSecurity()
+        instance.save()
+    user: admin
+    url: "http://localhost:{{jenkins_port}}"
+    password: "{{ adminpwd.stdout }}"
 
-# - name: create jobs
-#   shell: 'jenkins-jobs --conf {{ubuntu_home}}/jenkins_jobs.ini update {{ubuntu_home}}/jobs'
+- name: create jobs
+  shell: 'jenkins-jobs --conf {{ubuntu_home}}/jenkins_jobs.ini update {{ubuntu_home}}/jobs'
 
-# - name: Increase security
-#   jenkins_script:
-#    script: |
-#     import jenkins.model.*
-#     import hudson.security.*
-#     def instance = Jenkins.getInstance()
-#     def hudsonRealm = new HudsonPrivateSecurityRealm(false)
-#     instance.setSecurityRealm(hudsonRealm)
-#     def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
-#     strategy.setAllowAnonymousRead(false)
-#     instance.setAuthorizationStrategy(strategy)
-#     instance.save()
-#    user: admin
-#    url: "http://localhost:{{jenkins_port}}"
-#    password: "{{adminpwd.stdout}}"
+- name: Increase security
+  jenkins_script:
+   script: |
+    import jenkins.model.*
+    import hudson.security.*
+    def instance = Jenkins.getInstance()
+    def hudsonRealm = new HudsonPrivateSecurityRealm(false)
+    instance.setSecurityRealm(hudsonRealm)
+    def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
+    strategy.setAllowAnonymousRead(false)
+    instance.setAuthorizationStrategy(strategy)
+    instance.save()
+   user: admin
+   url: "http://localhost:{{jenkins_port}}"
+   password: "{{adminpwd.stdout}}"
 

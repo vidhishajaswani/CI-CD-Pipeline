@@ -3,20 +3,12 @@
     description: 'configure iTrustjob'
     project-type: freestyle
     builders:
-      #- shell: 'sudo git clone https://github.ncsu.edu/engr-csc326-staff/iTrust2-v4.git'
-      - shell: 'sudo ansible-playbook /var/lib/jenkins/deploy_itrust_fuzzer.yml'
-      - shell: 'sudo cp -R /home/vagrant/iTrust2-v4 /var/lib/jenkins/jobs/iTrust/workspace/'
-      #- shell: 'cd /var/lib/jenkins/jobs/iTrust/workspace/iTrust2-v4/iTrust2 && sudo mvn -f pom-data.xml process-test-classes'
-      #- shell: 'cd /var/lib/jenkins/jobs/iTrust/workspace/iTrust2-v4/iTrust2 && sudo mvn clean compile'
-      - shell: 'cd /var/lib/jenkins/jobs/iTrust/workspace/iTrust2-v4/iTrust2 && sudo mvn checkstyle:checkstyle'
-      - shell: 'sudo cp /var/lib/jenkins/jobs/iTrust/workspace/iTrust2-v4/iTrust2/target/site/checkstyle.html /jenkins-srv/checkstyle_results/cs_$(date +"%s").html'
-      #- shell: 'cd /var/lib/jenkins/jobs/iTrust/workspace/iTrust2-v4/iTrust2 && sudo mvn test'
-      #- shell: 'cd /var/lib/jenkins/jobs/iTrust/workspace/iTrust2-v4/iTrust2 && sudo mvn process-test-classes'
-      #- shell: 'cd /var/lib/jenkins/jobs/iTrust/workspace/iTrust2-v4/iTrust2 && sudo mvn checkstyle:checkstyle'      
-      #- shell: 'cd /var/lib/jenkins/jobs/iTrust/workspace/iTrust2-v4/iTrust2 && sudo mvn test site'
-      #- shell: 'cd /var/lib/jenkins/jobs/iTrust/workspace/iTrust2-v4/iTrust2 && sudo mvn site'
-      #- shell: 'sudo cp -R /home/vagrant/iTrust2-v4 /var/lib/jenkins/jobs/iTrust/workspace/'   
+      - shell: 'cd /home/ubuntu && sudo ansible-playbook itrust_install.yml'  
     publishers:
+      - postbuildscript:
+          builders:
+            - build-steps:
+              - shell: cd /home/ubuntu && sudo ansible-playbook -i inventory itrust_deploy.yml 
       - jacoco:
           exec-pattern: '**/target/coverage-reports/**.exec'
           update-build-status: true

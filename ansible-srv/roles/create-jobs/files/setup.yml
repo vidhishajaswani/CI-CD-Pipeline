@@ -1,0 +1,9 @@
+- hosts: ec2instance
+  become: yes
+  vars_files:
+    - variables.yml
+  roles:
+    - redis
+    - prometheus
+    - stress
+    - jetty
