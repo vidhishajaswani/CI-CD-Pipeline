@@ -1,8 +1,13 @@
 - hosts: ec2instance
-  become: yes
   vars_files:
     - variables.yml
   tasks:
+
+    # - name: Stop server
+    #   command: java -DSTOP.PORT=8080 -DSTOP.KEY=stop_jetty -jar start.jar --stop
+    #   args:
+    #     chdir: /opt/jetty9
+
     - name: Edit mysql.conf file
       lineinfile:
         path: /etc/mysql/mysql.conf.d/mysqld.cnf
@@ -10,15 +15,18 @@
         insertafter: skip-external-locking
 
     - name: Restarting mysql service
+      become: yes
       service:
         name: mysql
         state: restarted
-    - name: Check if war folder exists
+
+    - name: Check if war exists
       stat: 
         path: /opt/jetty9/webapps/iTrust2.war
       register: war_exists
 
     - name: Delete war if exists
+      become: yes
       file:
         path: /opt/jetty9/webapps/iTrust2.war
         state: absent 
@@ -26,11 +34,14 @@
 
 
     - name: Copy war
+      become: yes
       copy:
         src: "{{ubuntu_home}}/iTrust2-v4/iTrust2/target/iTrust2.war" 
         dest: /opt/jetty9/webapps/iTrust2.war
+        
 
     - name: Start jetty
-      shell: 'java -jar start.jar &'
+      shell: 'nohup java -jar start.jar &'
       args:
         chdir: /opt/jetty9
+      
