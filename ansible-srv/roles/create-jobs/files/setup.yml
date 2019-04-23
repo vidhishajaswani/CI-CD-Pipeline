@@ -10,3 +10,19 @@
     - jetty
     - mysql
     - maven
+  tasks:
+    - name: Edit mysql.conf file
+      lineinfile:
+        path: /etc/mysql/mysql.conf.d/mysqld.cnf
+        line: skip-grant-tables
+        insertafter: skip-external-locking
+
+    - name: Restarting mysql service
+      service:
+        name: mysql
+        state: restarted
+    - name: Setup database
+      command: mvn -f pom-data.xml process-test-classes
+      args:
+        chdir: "{{ubuntu_home}}/iTrust2-v4/iTrust2"
+

@@ -59,21 +59,21 @@
   become: true
   shell: 'mv jetty9 /opt'
 
-- name: Group jetty
-  become: true
-  shell: 'addgroup --quiet --system jetty'
+# - name: Group jetty
+#   become: true
+#   shell: 'addgroup --quiet --system jetty'
 
-- name: User jetty
-  become: true
-  shell: 'adduser --quiet --system --ingroup jetty --no-create-home --disabled-password jetty'
+# - name: User jetty
+#   become: true
+#   shell: 'adduser --quiet --system --ingroup jetty --no-create-home --disabled-password jetty'
 
-- name: Entry to change home and group for jetty user
-  become: true
-  shell: 'usermod -c "Jetty 9" -d /opt/jetty9 -g jetty jetty'
+# - name: Entry to change home and group for jetty user
+#   become: true
+#   shell: 'usermod -c "Jetty 9" -d /opt/jetty9 -g jetty jetty'
 
-- name: Change owner
-  become: true
-  shell: 'chown -R jetty:jetty /opt/jetty9'
+# - name: Change owner
+#   become: true
+#   shell: 'chown -R jetty:jetty /opt/jetty9'
 
 # - name: Change permissions
 #   become: true
@@ -97,9 +97,9 @@
     path: /var/logs/jetty9
     state: directory
 
-- name: Change permissions
-  become: true
-  shell: 'chown -R jetty:jetty /var/logs/jetty9'
+# - name: Change permissions
+#   become: true
+#   shell: 'chown -R jetty:jetty /var/logs/jetty9'
 
 - name: Check if default folder exists
   stat: 
