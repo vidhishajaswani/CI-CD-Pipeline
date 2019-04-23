@@ -13,12 +13,15 @@
   include: common_tasks.yml  
 
 
+- name: Marqdown Tasks & Spin Instance
+  include: marqdown_tasks.yml
+
 
 - name: Checkbox Tasks & Spin Instance 
   include: checkbox_tasks.yml
 
 
-- name: Checkbox Tasks & Spin Instance 
+- name: iTrust Tasks & Spin Instance 
   include: itrust_tasks.yml
 
 
