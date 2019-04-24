@@ -26,6 +26,7 @@ public class Application {
 		} finally {
 			git.lapse(45000);
 			git.reset(); // reset back to original commit
+			System.out.println("Finally: Resetting to master");
 			git.checkoutBranch("master");
 		}
 	}
