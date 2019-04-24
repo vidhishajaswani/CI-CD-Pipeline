@@ -9,5 +9,5 @@
       - postbuildscript:
           builders:
             - build-steps:
-              - shell: cd /home/ubuntu && sudo ansible-playbook -i install marqdown_deploy.yml
+              #- shell: cd /home/ubuntu && sudo ansible-playbook -i install marqdown_deploy.yml
               - shell: cd /home/ubuntu && sudo ansible-playbook -i inventory checkbox_deploy.yml 

@@ -1,0 +1,44 @@
+- hosts: localhost
+  become: yes
+  vars_files:
+    - variables.yml
+  tasks:
+    - name: read admin pwd
+      command: cat /var/lib/jenkins/secrets/initialAdminPassword
+      register: adminpwd
+
+    - name: Security setup for configuration
+      jenkins_script:
+        script: |
+            import jenkins.model.*
+            import hudson.security.*
+            def instance = Jenkins.getInstance()
+            def strategy = new AuthorizationStrategy.Unsecured()
+            instance.setAuthorizationStrategy(strategy)
+            instance.save()
+        user: admin
+        url: "http://localhost:{{jenkins_port}}"
+        password: "{{ adminpwd.stdout }}"
+
+    
+
+    - name: build checkbox job
+      shell: 'java -jar jenkins-cli.jar -s http://localhost:{{jenkins_port}}/ build iTrust'
+
+    - name: Increase security
+      jenkins_script:
+        script: |
+            import jenkins.model.*
+            import hudson.security.*
+            def instance = Jenkins.getInstance()
+            def hudsonRealm = new HudsonPrivateSecurityRealm(false)
+            instance.setSecurityRealm(hudsonRealm)
+            def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
+            strategy.setAllowAnonymousRead(false)
+            instance.setAuthorizationStrategy(strategy)
+            instance.save()
+        user: admin
+        url: "http://localhost:{{jenkins_port}}"
+        password: "{{adminpwd.stdout}}"
+
+

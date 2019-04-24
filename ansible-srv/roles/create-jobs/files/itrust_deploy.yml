@@ -3,12 +3,6 @@
     - variables.yml
   tasks:
 
-    # - name: Stop server
-    #   command: java -DSTOP.PORT=8080 -DSTOP.KEY=stop_jetty -jar start.jar --stop
-    #   args:
-    #     chdir: /opt/jetty9
-
-    
 
     - name: Check if war exists
       stat: 

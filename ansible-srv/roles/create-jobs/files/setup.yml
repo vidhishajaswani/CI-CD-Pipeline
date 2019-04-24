@@ -11,6 +11,26 @@
     - mysql
     - maven
   tasks:
+    - name: Check if itrust folder exists
+      stat: 
+        path: "{{ubuntu_home}}/iTrust2-v4"
+      register: itrust_exists
+
+    - name: Delete folder if exists
+      file:
+        path: "{{ubuntu_home}}/iTrust2-v4"
+        state: absent 
+      when: itrust_exists.stat.exists
+
+
+    - name: get repo
+      copy: 
+        src: "{{ubuntu_home}}/iTrust2-v4"
+        dest: "{{ubuntu_home}}"
+        owner: "{{owner}}"
+        group: "{{group}}"
+      become_user: ubuntu
+
     - name: Edit mysql.conf file
       lineinfile:
         path: /etc/mysql/mysql.conf.d/mysqld.cnf
@@ -21,6 +41,7 @@
       service:
         name: mysql
         state: restarted
+        
     - name: Setup database
       command: mvn -f pom-data.xml process-test-classes
       args:

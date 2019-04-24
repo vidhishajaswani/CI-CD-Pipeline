@@ -61,3 +61,24 @@
 - name: AWS Setup
   include: aws.yml
 
+- name: Create folder
+  file:
+    name: roles
+    state: directory
+
+- name: Copy files
+  copy:
+    src: roles/build-jobs
+    dest: "roles"
+
+- name: Copy files
+  copy:
+    src: files/build_checkbox.yml
+    dest: "{{ubuntu_home}}"
+
+- name: Copy files
+  copy:
+    src: files/build_itrust.yml
+    dest: "{{ubuntu_home}}"
+
+

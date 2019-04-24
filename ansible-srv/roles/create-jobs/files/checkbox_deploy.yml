@@ -9,27 +9,24 @@
 
     - name: Check if checkbox folder exists
       stat: 
-        path: checkbox.io
+        path: "{{ubuntu_home}}/checkbox.io"
       register: checkbox_exists
 
     - name: Delete folder if exists
       file:
-        path: checkbox.io
+        path: "{{ubuntu_home}}/checkbox.io"
         state: absent 
       when: checkbox_exists.stat.exists
 
-    - name: create directory 
-      file:
-        path: ./checkbox.io
-        state: directory
-        mode: '777'
-       
     
-    - name: Clone repo
-      git: 
-        repo: "{{ checkbox_repo }}"
-        dest: checkbox.io
     
+    - name: get repo
+      copy: 
+        src: "{{ubuntu_home}}/checkbox.io"
+        dest: "{{ubuntu_home}}"
+        owner: "{{owner}}"
+        group: "{{group}}"
+      become_user: ubuntu
 
     
 

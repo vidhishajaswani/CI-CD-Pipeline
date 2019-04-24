@@ -64,5 +64,22 @@
 - name: Install checkbox dependencies
   shell: ansible-playbook -i inventory checkbox_install.yml 
 
+- name: Check if checkbox folder exists
+  stat: 
+    path: "{{ubuntu_home}}/checkbox.io"
+  register: checkbox_exists
+
+- name: Delete folder if exists
+  file:
+    path: "{{ubuntu_home}}/checkbox.io"
+    state: absent 
+  when: checkbox_exists.stat.exists
+
+
+- name: Clone repo
+  command: 'git clone {{checkbox_repo}}'
+  become_user: ubuntu
+    
+
 
 
