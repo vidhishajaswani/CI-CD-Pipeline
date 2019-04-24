@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: marqdown-service
-        image: kmedidi/marqdown-service:1.0.1
+        image: kmedidi/marqdown-service:1.0.3
         ports:
         - containerPort: 9001

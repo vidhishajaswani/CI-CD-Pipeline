@@ -21,8 +21,8 @@
   include: checkbox_tasks.yml
 
 
-- name: iTrust Tasks & Spin Instance 
-  include: itrust_tasks.yml
+# - name: iTrust Tasks & Spin Instance 
+#   include: itrust_tasks.yml
 
 
 

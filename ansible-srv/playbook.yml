@@ -7,18 +7,24 @@
     # - python
     # - aws
 
+
+- host: localhost
+  tasks: 
+    - name: sleep
+      command: sleep 40s
+      
 - hosts: jenkins
   become: yes
   vars_files: 
     variables.yml
   roles:
-    - ansible
-    - maven
-    - mysql
-    - java
-    - jenkins
-    #- deployfiles
-    #- job
+    # - ansible
+    # - maven
+    # - mysql
+    # - java
+    # - jenkins
     #- analysis
+    # - setup_prod
     - create-jobs
+    #- build-jobs
   

@@ -6,6 +6,7 @@
   tasks:
     - name: Install microk8s
       command: snap install microk8s --classic
+      become: true
 
     - name: Check deployment status
       command: microk8s.kubectl get deployments 

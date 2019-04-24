@@ -69,14 +69,7 @@
     AWS_ACCESS_KEY_ID: "{{aws_access_key_id}}" 
     ANSIBLE_DISPLAY_ARGS_TO_STDOUT: 1
   register: ec2_instance
-# - name: See if AWS EC2 instance exists or not
-#   ec2_instance_facts:
-#     aws_access_key: "{{aws_access_key_id}}"
-#     aws_secret_key: "{{aws_secret_access_key}}"
-#     region: "us-east-1"
-#     filters:
-#      "tag:jenkins" : "{{param}}"
-#   register: ec2_instance
+
 
 - name: Create Instance
   shell: python3 main.py {{param}}
