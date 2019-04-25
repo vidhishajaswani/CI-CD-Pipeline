@@ -34,6 +34,13 @@
         src: "{{ubuntu_home}}/email.properties.j2"
         dest: "{{ubuntu_home}}/iTrust2-v4/iTrust2/src/main/java/email.properties"
         remote_src: yes
+
+    - name: copy hooks
+      copy:                                     
+        src: "{{ubuntu_home}}/post-commit"
+        dest: "{{ubuntu_home}}/iTrust2-v4/.git/hooks/post-commit"
+        mode: '+x'
+        remote_src: yes
         
 
     - name: Edit mysql.conf file

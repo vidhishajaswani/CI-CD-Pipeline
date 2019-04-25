@@ -4,6 +4,7 @@
     project-type: freestyle
     builders:
       - shell: 'cd /home/ubuntu && sudo ansible-playbook itrust_install.yml'  
+      - shell: 'cd /home/ubuntu && sudo ansible-playbook test-prioritization.yml'  
     publishers:
       - postbuildscript:
           builders:

@@ -1,17 +1,5 @@
 ---
-- name: create folder
-  file:
-    name: "{{ubuntu_home}}/checkbox.io"
-    state: directory
-    owner: "{{owner}}"
-    group: "{{group}}"
 
-- name: create folder
-  file:
-    name: "{{ubuntu_home}}/iTrust2-v4"
-    state: directory
-    owner: "{{owner}}"
-    group: "{{group}}"
 
 - name: checkbox.io.git
   file:
@@ -54,3 +42,18 @@
     dest: iTrust2-v4.git/hooks/post-receive
     mode: '+x'
   become_user: ubuntu
+
+
+- name: create folder
+  command: git clone "{{checkbox_repo}}"
+
+- name: create folder
+  command: git clone "{{itrust_repo}}"
+    
+
+- name: create folder
+  file:
+    name: "{{ubuntu_home}}/iTrust2-v4"
+    state: directory
+    owner: "{{owner}}"
+    group: "{{group}}"
