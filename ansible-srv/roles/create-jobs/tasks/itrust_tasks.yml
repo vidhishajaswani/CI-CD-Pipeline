@@ -1,14 +1,14 @@
 ---
 
-# - name: Copy itrust_job.yml file
-#   copy:
-#     src: templates/itrust_job.yml.j2
-#     dest: jobs/itrust_job.yml
+- name: Copy itrust_job.yml file
+  copy:
+    src: templates/itrust_job.yml.j2
+    dest: jobs/itrust_job.yml
 
-# - name: Copy setup.yml file
-#   copy:
-#     src: files/setup.yml
-#     dest: setup.yml
+- name: Copy setup.yml file
+  copy:
+    src: files/setup.yml
+    dest: setup.yml
 
 
 

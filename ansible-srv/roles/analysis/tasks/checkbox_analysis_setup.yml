@@ -1,21 +1,21 @@
 ---
-- name: Remove existing npm and nodejs packages
-  apt:
-    name: ['npm', 'nodejs']
-    state: absent
-    update_cache: yes
-    force: yes
+# - name: Remove existing npm and nodejs packages
+#   apt:
+#     name: ['npm', 'nodejs']
+#     state: absent
+#     update_cache: yes
+#     force: yes
 
-- name: Add apt-repository for latest nodejs and npm
-  shell: apt-add-repository "deb https://deb.nodesource.com/node_10.x $(lsb_release -sc) main"
-  become: true
+# - name: Add apt-repository for latest nodejs and npm
+#   shell: apt-add-repository "deb https://deb.nodesource.com/node_10.x $(lsb_release -sc) main"
+#   become: true
 
-- name: Re-install nodejs
-  apt:
-    name: nodejs
-    state: latest
-    update_cache: yes
-    force: yes
+# - name: Re-install nodejs
+#   apt:
+#     name: nodejs
+#     state: latest
+#     update_cache: yes
+#     force: yes
 
 - name: Create analysis directory
   file:
