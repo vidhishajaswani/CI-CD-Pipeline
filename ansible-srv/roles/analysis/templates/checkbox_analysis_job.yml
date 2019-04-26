@@ -3,4 +3,4 @@
     description: 'configure checkbox analysis job'
     project-type: freestyle
     builders:
-      - shell: 'cd /home/vagrant/analysis && node analysis.js'
+      - shell: 'cd /home/ubuntu/analysis && node analysis.js'
