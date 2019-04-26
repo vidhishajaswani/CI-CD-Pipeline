@@ -12,14 +12,20 @@
 - name: Copy Checkbox dependencies
   include: common_tasks.yml  
 
-
 - name: Marqdown Tasks & Spin Instance
   include: marqdown_tasks.yml
-
 
 - name: Checkbox Tasks & Spin Instance 
   include: checkbox_tasks.yml
 
+- name: Checkbox Analysis Setup
+  include: checkbox_analysis_setup.yml
+
+- name: Checkbox Analysis Job creation
+  include: create_checkbox_analysis_job.yml
+
+- name: Build checkbox analysis Job
+  include: build_checkbox_analysis_job.yml
 
 - name: iTrust Tasks & Spin Instance 
   include: itrust_tasks.yml

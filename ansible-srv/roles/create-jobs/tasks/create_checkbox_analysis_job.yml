@@ -1,0 +1,41 @@
+---
+- name: read admin pwd
+  command: cat /var/lib/jenkins/secrets/initialAdminPassword
+  register: adminpwd
+
+- name: Copy checkbox analysis job yaml file
+  template:
+    src: templates/checkbox_analysis_job.yml
+    dest: jobs/checkbox_analysis_job.yml
+
+- name: Security setup for configuration
+  jenkins_script:
+    script: |
+        import jenkins.model.*
+        import hudson.security.*
+        import hudson.security.csrf.DefaultCrumbIssuer
+        def instance = Jenkins.getInstance()
+        instance.disableSecurity()
+        instance.save()
+    user: admin
+    url: "http://localhost:{{jenkins_port}}"
+    password: "{{ adminpwd.stdout }}"
+
+- name: Run shell to update jobs
+  command: 'jenkins-jobs --conf jenkins_jobs.ini update jobs'
+
+- name: Increase security
+  jenkins_script:
+   script: |
+    import jenkins.model.*
+    import hudson.security.*
+    def instance = Jenkins.getInstance()
+    def hudsonRealm = new HudsonPrivateSecurityRealm(false)
+    instance.setSecurityRealm(hudsonRealm)
+    def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
+    strategy.setAllowAnonymousRead(false)
+    instance.setAuthorizationStrategy(strategy)
+    instance.save()
+   user: admin
+   url: "http://localhost:{{jenkins_port}}"
+   password: "{{adminpwd.stdout}}"
