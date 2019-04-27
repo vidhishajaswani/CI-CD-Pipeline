@@ -1,70 +1,70 @@
 ---
 
 
-- name: Copy vars
-  copy: 
-    src: variables.yml
-    dest: variables.yml
-    owner: "{{jenkins_user}}"
-    group: "{{jenkins_user}}"
+# - name: Copy vars
+#   copy: 
+#     src: variables.yml
+#     dest: variables.yml
+#     owner: "{{jenkins_user}}"
+#     group: "{{jenkins_user}}"
 
 
-- name: Copy Checkbox dependencies
-  include: common_tasks.yml  
+# - name: Copy Checkbox dependencies
+#   include: common_tasks.yml  
 
-- name: Marqdown Tasks & Spin Instance
-  include: marqdown_tasks.yml
+# - name: Marqdown Tasks & Spin Instance
+#   include: marqdown_tasks.yml
 
 - name: Checkbox Tasks & Spin Instance 
   include: checkbox_tasks.yml
 
 
 
-- name: iTrust Tasks & Spin Instance 
-  include: itrust_tasks.yml
+# - name: iTrust Tasks & Spin Instance 
+#   include: itrust_tasks.yml
 
-- name: iTrust Fuzzer Tasks & Spin Instance 
-  include: itrust_fuzzer_tasks.yml
-
-
-
-- name: Resolve hosts
-  shell: echo "127.0.0.1 $(hostname)" >> /etc/hosts
+# - name: iTrust Fuzzer Tasks & Spin Instance 
+#   include: itrust_fuzzer_tasks.yml
 
 
-- name: read admin pwd
-  command: cat "{{ jenkins_home }}/secrets/initialAdminPassword"
-  register: adminpwd
 
-- name: Security setup for configuration
-  jenkins_script:
-    script: |
-        import jenkins.model.*
-        import hudson.security.*
-        import hudson.security.csrf.DefaultCrumbIssuer
-        def instance = Jenkins.getInstance()
-        instance.disableSecurity()
-        instance.save()
-    user: admin
-    url: "http://localhost:{{jenkins_port}}"
-    password: "{{ adminpwd.stdout }}"
+# - name: Resolve hosts
+#   shell: echo "127.0.0.1 $(hostname)" >> /etc/hosts
 
-- name: create jobs
-  shell: 'jenkins-jobs --conf {{ubuntu_home}}/jenkins_jobs.ini update {{ubuntu_home}}/jobs'
 
-- name: Increase security
-  jenkins_script:
-   script: |
-    import jenkins.model.*
-    import hudson.security.*
-    def instance = Jenkins.getInstance()
-    def hudsonRealm = new HudsonPrivateSecurityRealm(false)
-    instance.setSecurityRealm(hudsonRealm)
-    def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
-    strategy.setAllowAnonymousRead(false)
-    instance.setAuthorizationStrategy(strategy)
-    instance.save()
-   user: admin
-   url: "http://localhost:{{jenkins_port}}"
-   password: "{{adminpwd.stdout}}"
+# - name: read admin pwd
+#   command: cat "{{ jenkins_home }}/secrets/initialAdminPassword"
+#   register: adminpwd
+
+# - name: Security setup for configuration
+#   jenkins_script:
+#     script: |
+#         import jenkins.model.*
+#         import hudson.security.*
+#         import hudson.security.csrf.DefaultCrumbIssuer
+#         def instance = Jenkins.getInstance()
+#         instance.disableSecurity()
+#         instance.save()
+#     user: admin
+#     url: "http://localhost:{{jenkins_port}}"
+#     password: "{{ adminpwd.stdout }}"
+
+# - name: create jobs
+#   shell: 'jenkins-jobs --conf {{ubuntu_home}}/jenkins_jobs.ini update {{ubuntu_home}}/jobs'
+
+# - name: Increase security
+#   jenkins_script:
+#    script: |
+#     import jenkins.model.*
+#     import hudson.security.*
+#     def instance = Jenkins.getInstance()
+#     def hudsonRealm = new HudsonPrivateSecurityRealm(false)
+#     instance.setSecurityRealm(hudsonRealm)
+#     def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
+#     strategy.setAllowAnonymousRead(false)
+#     instance.setAuthorizationStrategy(strategy)
+#     instance.save()
+#    user: admin
+#    url: "http://localhost:{{jenkins_port}}"
+#    password: "{{adminpwd.stdout}}"
 
