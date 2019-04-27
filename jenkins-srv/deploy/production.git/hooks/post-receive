@@ -1,5 +1,0 @@
-#!/bin/sh
-echo "Current location: $GIT_DIR"
-GIT_WORK_TREE=../production-www/ git checkout -f
-echo "Pushed to production!"
-cd ../production-www

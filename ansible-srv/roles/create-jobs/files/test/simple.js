@@ -8,6 +8,7 @@ const awsEc2Ip = execSync('npm config get awsEc2Ip',
     { stdio: ['ignore', 'pipe', 'pipe'] }).toString().replace(/\n$/, '');
 var checkbox_server_url = 'http://' + awsEc2Ip + '/'
 var end_point = checkbox_server_url + 'studies.html'
+
 describe('Array', function() {
   describe('#indexOf()', function() {
     it('should return -1 when the value is not present', function(){
