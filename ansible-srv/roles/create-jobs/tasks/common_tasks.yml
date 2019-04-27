@@ -81,4 +81,17 @@
     src: files/build_itrust.yml
     dest: "{{ubuntu_home}}"
 
+- name: Copy Role alertmanager
+  copy:
+    src: roles/alertmanager
+    dest: "roles"
+
+- name: Copy files alertmanager.yml
+  copy:
+    src: files/alertmanager.yml
+    dest: "{{ubuntu_home}}"
+
+- name: Run alertmanager role
+  command: ansible-playbook -i inventory alertmanager.yml
+
 
