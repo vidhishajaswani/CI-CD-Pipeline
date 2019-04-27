@@ -7,9 +7,9 @@ mysql_root_password: abcd
 mysql_database: itrust
 mysql_user: myuser  
 mysql_password: abcd
-checkbox_repo: https://github.com/chrisparnin/checkbox.io.git
+checkbox_repo:  checkbox.io.git
 checkbox_install_dir: /var/lib/jenkins/checkbox
-itrust_repo: git@github.ncsu.edu:schamol/iTrust2-v4.git
+itrust_repo: iTrust2-v4.git
 vagrant_home: /home/vagrant
 ubuntu_home: /home/ubuntu
 mongo_admin_password: abcd
@@ -36,5 +36,7 @@ aws_secret_access_key:
 group: ubuntu
 owner: ubuntu
 param: jenkins
-checkbox: checkbox.io
+ec2instance: ec2instance
+
+
 

@@ -46,25 +46,40 @@
     state: absent
     
 - name: Sync the machine
-  file: 
+  copy: 
     src: /usr/share/zoneinfo/America/New_York 
     dest: /etc/localtime
-    state: link
 
-- name: Install requirements
-  shell: pip3 install boto3
-  args:
-    chdir: "/ansible-srv/roles/aws/templates"
 
+
+- pip:
+    name: boto3
+
+
+- name: See if EC2 instance exists or not
+  ec2_instance_facts:
+    region: "us-east-1"
+    filters:
+     "tag:jenkins" : "{{param}}"
+     instance-state-name: running
+  environment: 
+    AWS_ACCESS_KEY_ID: "{{aws_access_key_id}}" 
+    AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
+  register: ec2_instance
 
 
 - name: Create Instance
-  shell: python3 main.py {{param}}
+  shell: python main.py {{param}}
   args:
     chdir: "/ansible-srv/roles/aws/templates/"
   environment: 
     AWS_ACCESS_KEY_ID: "{{aws_access_key_id}}"
     AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
+  when: ec2_instance.instances | length==0
+
+
+- name: Sleep for some time
+  shell: sleep 40s
 
 
 
@@ -78,7 +93,10 @@
     src: "/ansible-srv/roles/aws/templates/{{param}}.pem"
     dest: "/ansible-srv/{{param}}.pem"
     mode: '400'
+
+- name: AWS IP
+  debug:
+    var: ec2_instance.instances[0].public_ip_address
+
   
 
-- name: Sleep for some time
-  shell: sleep 40s

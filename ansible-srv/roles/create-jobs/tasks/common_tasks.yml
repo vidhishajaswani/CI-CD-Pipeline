@@ -18,27 +18,31 @@
 
 - name: enabling access to mvn without password 
   lineinfile:
-    path: /etc/sudoers
+    dest: /etc/sudoers
     line: "jenkins ALL=(ALL) NOPASSWD: ALL"
 
 - name: Create directory for jenkins.ini
   file:
     path: /etc/jenkins_jobs
     state: directory
+    owner: "{{jenkins_user}}"
+    group: "{{jenkins_user}}"
 
-- name: read admin pwd
-  command: cat "{{ jenkins_home }}/secrets/initialAdminPassword"
-  register: adminpwd
+
 
 - name: Copy jenkins_jobs.ini file
   template:
     src: templates/jenkins_jobs.ini.j2
     dest: jenkins_jobs.ini
+    owner: "{{jenkins_user}}"
+    group: "{{jenkins_user}}"
 
 - name: ansible jobs directory 
   file:
     path: jobs
     state: directory
+    owner: "{{jenkins_user}}"
+    group: "{{jenkins_user}}"
 
 - name: Getting Jenkins CLI Jar
   get_url:
@@ -50,5 +54,31 @@
   template:
     src: templates/main.py
     dest: main.py
+    owner: "{{jenkins_user}}"
+    group: "{{jenkins_user}}"
+
+
+- name: AWS Setup
+  include: aws.yml
+
+- name: Create folder
+  file:
+    name: roles
+    state: directory
+
+- name: Copy files
+  copy:
+    src: roles/build-jobs
+    dest: "roles"
+
+- name: Copy files
+  copy:
+    src: files/build_checkbox.yml
+    dest: "{{ubuntu_home}}"
+
+- name: Copy files
+  copy:
+    src: files/build_itrust.yml
+    dest: "{{ubuntu_home}}"
 
 

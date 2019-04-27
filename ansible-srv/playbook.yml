@@ -1,23 +1,32 @@
 ---
-- hosts: localhost
-  become: yes
-  vars_files: 
-    variables.yml
-  roles:
-    #- python
-    #- aws
+# - hosts: localhost
+#   become: yes
+#   vars_files: 
+#     variables.yml
+#   roles:
+#     - aws
 
+
+      
+# - hosts: jenkins
+#   become: yes
+#   vars_files: 
+#     variables.yml
+#   roles:
+#     - ansible
+#     - maven
+#     - mysql
+#     - java
+#     - jenkins
+#     - setup_prod
+  
+  
 - hosts: jenkins
   become: yes
   vars_files: 
     variables.yml
   roles:
-    - ansible
-    - maven
-    - mysql
-    - java
-    - jenkins
-    #- deployfiles
-    #- job
     #- analysis
+    - create-jobs
+    #- build-jobs
   

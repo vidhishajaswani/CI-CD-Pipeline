@@ -1,0 +1,55 @@
+---
+- hosts: ec2instance
+  become: yes
+  vars_files:
+    - variables.yml
+  tasks:
+    - name: Install microk8s
+      command: snap install microk8s --classic
+      become: true
+
+    - name: Check deployment status
+      command: microk8s.kubectl get deployments 
+      register: dep_status
+
+    - name: Delete marqdown-app if it exists
+      command: microk8s.kubectl delete deployments marqdown-app
+      when:
+        "'marqdown' in dep_status['stdout']"
+
+    - name: Check service status
+      command: microk8s.kubectl get svc 
+      register: svc_status
+
+    - name: Delete marqdown-service if it exists
+      command: microk8s.kubectl delete service marqdown-service
+      when:
+        "'marqdown' in svc_status['stdout']"
+
+    - name: Check deployment status
+      command: microk8s.kubectl get deployments 
+      register: dep_status
+      retries: 6
+      delay: 5
+      until: >
+        'marqdown' not in dep_status['stdout']
+    
+    - name: Copy the deployment file
+      copy: 
+        src: "{{ubuntu_home}}/deployment.yml"
+        dest: "{{ubuntu_home}}/deployment.yml"
+
+    - name: Copy the service.yml for marqdown-service
+      copy: 
+        src: "{{ubuntu_home}}/service.yml"
+        dest: "{{ubuntu_home}}/service.yml"
+
+    - name: Create a deployment for marqdown-app
+      command: microk8s.kubectl create -f deployment.yml
+      args:
+        chdir: "{{ubuntu_home}}"
+
+    - name: Start marqdown-app as a service
+      command: microk8s.kubectl create -f service.yml
+      args:
+        chdir: "{{ubuntu_home}}"

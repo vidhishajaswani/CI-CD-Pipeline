@@ -1,8 +1,0 @@
-- job:
-    name: checkbox.io
-    description: 'build checkbox.io job'
-    project-type: freestyle
-    builders:
-      - shell: 'sudo git clone {{checkbox_repo}}'
-      - shell: 'cd /var/lib/jenkins/workspace/checkbox.io/checkbox.io/server-side/site && sudo npm install'
-      #- shell: 'ansible-playbook /var/lib/jenkins/deploy_checkbox.yml'    

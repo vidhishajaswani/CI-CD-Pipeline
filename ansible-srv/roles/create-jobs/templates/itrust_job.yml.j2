@@ -1,0 +1,35 @@
+- job:
+    name: iTrust
+    description: 'configure iTrustjob'
+    project-type: freestyle
+    builders:
+      - shell: 'cd /home/ubuntu && sudo ansible-playbook itrust_install.yml'  
+      - shell: 'cd /home/ubuntu && sudo ansible-playbook test-prioritization.yml'  
+    publishers:
+      - postbuildscript:
+          builders:
+            - build-steps:
+              - shell: cd /home/ubuntu && sudo ansible-playbook -i inventory itrust_deploy.yml 
+      - jacoco:
+          exec-pattern: '**/target/coverage-reports/**.exec'
+          update-build-status: true
+          targets:
+            - instruction:
+                healthy: 20
+                unhealthy: 20
+            - branch:
+                healthy: 20
+                unhealthy: 20
+            - complexity:
+                healthy: 20
+                unhealthy: 20
+            - line:
+                healthy: 20
+                unhealthy: 20
+            - method:
+                healthy: 20
+                unhealthy: 20
+            - class:
+                healthy: 20
+                unhealthy: 20
+    

@@ -1,0 +1,86 @@
+- hosts: ec2instance
+  become: yes
+  vars_files:
+    - variables.yml
+
+  tasks:
+    
+    - name: Sync the machine
+      file:
+        path: /etc/localtime 
+        state: absent
+        
+    - name: Sync the machine
+      file: 
+        src: /usr/share/zoneinfo/America/New_York 
+        dest: /etc/localtime
+        state: link
+
+    - name: Update and upgrade apt packages
+      apt:
+        update_cache: yes
+        cache_valid_time: 86400
+
+    - name: Add repository for node 
+      shell: apt-add-repository "deb https://deb.nodesource.com/node_10.x $(lsb_release -sc) main"
+
+    - name: Install latest package 
+      apt:
+        name: ['nodejs','nginx','git','mongodb','python-pip','build-essential','python','python3-setuptools','python-dev']
+        state: latest
+        update_cache: yes
+        force: yes
+
+    - name: Install pip3
+      shell: 'easy_install3 pip'
+
+  
+
+
+    - name: Add an apt key by id from a keyserver
+      apt_key:
+        keyserver: keyserver.ubuntu.com
+        id: 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
+        state: present
+
+    - name: Add MongoDB repository
+      apt_repository: repo='deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' state=present
+
+
+    - name: Install pymongo
+      pip:
+        name: pymongo
+        state: latest
+      
+    - name: Resolve hosts
+      shell: echo "127.0.0.1 $(hostname)" >> /etc/hosts
+
+
+    
+        
+    - name: create super user
+      mongodb_user:
+        name: "{{ mongo_checkbox_user }}"
+        password: "{{ mongo_admin_password }}"
+        database: admin
+        roles: readWrite,dbAdmin,userAdmin
+        state: present
+
+    
+   
+
+    - name: Install forever package using npm
+      npm: name=forever global=yes state=present
+        
+
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted   
+
+      
+
+
+
+
+  

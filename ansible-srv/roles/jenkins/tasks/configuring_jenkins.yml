@@ -97,6 +97,8 @@
       - run-condition
       - github
       - jacoco
+      - postbuild-task
+      - postbuildscript
 
   - name: restart service jenkins
     systemd:

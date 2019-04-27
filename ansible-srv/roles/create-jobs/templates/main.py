@@ -48,13 +48,25 @@ sec_group=sec.authorize_ingress(
              {'IpProtocol': 'tcp',
              'FromPort': 80,
              'ToPort': 80,
+             'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+             {'IpProtocol': 'tcp',
+             'FromPort': 9090,
+             'ToPort': 9090,
+             'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+             {'IpProtocol': 'tcp',
+             'FromPort': 2112,
+             'ToPort': 2112,
+             'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+             {'IpProtocol': 'tcp',
+             'FromPort': 8080,
+             'ToPort': 8080,
              'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
         ]
 )
 
 # Finally create instance by giving the Image ID and Instance Type
 instances = ec2.create_instances(
-    ImageId='ami-0565af6e282977273', InstanceType='t2.micro', MaxCount=1, MinCount=1,KeyName=awskey,
+    ImageId='ami-0565af6e282977273', InstanceType='t2.medium', MaxCount=1, MinCount=1,KeyName=awskey,
     NetworkInterfaces=[{'SubnetId': subnet.id, 'DeviceIndex': 0, 'AssociatePublicIpAddress': True, 'Groups': [sec.group_id]}])
 
 #print(instances)
@@ -82,9 +94,9 @@ print(instances[0].public_ip_address)
 
 
 
-#f = open("/ansible-srv/inventory", "w")
-#f.write("[jenkins]\n")
-#f.write("jenkins-srv ansible_host="+instances[0].public_ip_address+" ansible_ssh_user=ubuntu ansible_python_interpreter=/usr/bin/python3 ansible_ssh_private_key_file="+path+awskey+".pem")
+f = open("inventory", "w")
+f.write("["+awskey+"]\n")
+f.write("ec2 ansible_host="+instances[0].public_ip_address+" ansible_ssh_user=ubuntu ansible_python_interpreter=/usr/bin/python3 ansible_ssh_private_key_file="+awskey+".pem")
 
 
 

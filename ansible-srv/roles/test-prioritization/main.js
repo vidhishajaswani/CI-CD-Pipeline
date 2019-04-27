@@ -5,44 +5,44 @@ var parser = new xml2js.Parser();
 var Bluebird = require('bluebird')
 
 var testReport =  '/simplecalc/target/surefire-reports/TEST-com.github.stokito.unitTestExample.calculator.CalculatorTest.xml';
-var testReports = ['/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIAppointmentRequestTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIDiagnosisTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIDrugTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIEmergencyRecordFormTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIEnumTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIFoodDiaryTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIGeneralCheckupTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIGeneralOphthalmologyTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIHospitalTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIICDCodeTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APILabProcedureTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APILogEntryTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APILOINCTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIOphthalmologySurgeryTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIPasswordTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIPatientTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIPersonnelTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIPrescriptionTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIUserTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.AppointmentRequestTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.DomainObjectTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.DrugTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.EmailUtilTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.FoodDiaryEntryTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.GeneralCheckupTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.GeneralOphthalmologyTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.HospitalFormTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.ICDCodeTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.LabProcedureTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.LockoutTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.LogEntryTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.LogTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.LOINCTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.OphthalmologySurgeryTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.PasswordChangeTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.PatientTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.PersonnelFormTest.xml',
-'/home/vagrant/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.UserTest.xml']
+var testReports = ['/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIAppointmentRequestTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIDiagnosisTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIDrugTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIEmergencyRecordFormTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIEnumTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIFoodDiaryTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIGeneralCheckupTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIGeneralOphthalmologyTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIHospitalTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIICDCodeTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APILabProcedureTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APILogEntryTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APILOINCTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIOphthalmologySurgeryTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIPasswordTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIPatientTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIPersonnelTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIPrescriptionTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.apitest.APIUserTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.AppointmentRequestTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.DomainObjectTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.DrugTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.EmailUtilTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.FoodDiaryEntryTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.GeneralCheckupTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.GeneralOphthalmologyTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.HospitalFormTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.ICDCodeTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.LabProcedureTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.LockoutTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.LogEntryTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.LogTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.LOINCTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.OphthalmologySurgeryTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.PasswordChangeTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.PatientTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.PersonnelFormTest.xml',
+'/home/ubuntu/iTrust2-v4/iTrust2/target/surefire-reports/TEST-edu.ncsu.csc.itrust2.unit.UserTest.xml']
 
 if( process.env.NODE_ENV != "test")
 {
@@ -163,7 +163,7 @@ async function calculatePriority()
 {
     var finalResults = [];
     try{
-        child.execSync('cd /home/vagrant/iTrust2-v4/iTrust2 && mvn clean install && mvn test');
+        child.execSync('cd /home/ubuntu/iTrust2-v4/iTrust2 && mvn clean install && mvn test');
     }catch(e){}
     for(var i=0; i<testReports.length; i++) {
         var contents = fs.readFileSync(testReports[i])

@@ -1,0 +1,49 @@
+---
+- name: Copy fuzzer files
+  copy:
+    src: roles/jFuzzer
+    dest: "{{ubuntu_home}}"
+
+- name: Copy test files
+  copy:
+    src: roles/final-test-prioritization
+    dest: "{{ubuntu_home}}"
+
+
+- name: Copy test files
+  copy:
+    src: roles/test-prioritization
+    dest: "{{ubuntu_home}}"
+
+- name: Copy iTrust Fuzzer job
+  copy:
+    src: templates/itrust_fuzzer_job.yml.j2
+    dest: jobs/itrust_fuzzer_job.yml
+    owner: "{{jenkins_user}}"
+    group: "{{jenkins_user}}"
+
+- name: Copy Test Prioritization files
+  template:
+    src: templates/test-prioritization.yml.j2
+    dest: "{{ubuntu_home}}/test-prioritization.yml"
+    owner: "{{jenkins_user}}"
+    group: "{{jenkins_user}}"
+
+
+- name: Copy iTrust Fuzzer job
+  copy:
+    src: files/build_itrust_fuzzer.yml
+    dest: "{{ubuntu_home}}"
+    owner: "{{jenkins_user}}"
+    group: "{{jenkins_user}}"
+
+- name: Install latest package 
+  apt:
+    name: ['nodejs']
+    state: latest
+    update_cache: yes
+    force: yes
+
+- name: install node 
+  shell: |
+    curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && sudo apt-get install -y nodejs

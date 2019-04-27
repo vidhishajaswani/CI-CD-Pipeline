@@ -5,15 +5,43 @@
   copy: 
     src: variables.yml
     dest: variables.yml
+    owner: "{{jenkins_user}}"
+    group: "{{jenkins_user}}"
 
 
 - name: Copy Checkbox dependencies
   include: common_tasks.yml  
 
-
+- name: Marqdown Tasks & Spin Instance
+  include: marqdown_tasks.yml
 
 - name: Checkbox Tasks & Spin Instance 
   include: checkbox_tasks.yml
+
+# - name: Checkbox Analysis Setup
+#   include: checkbox_analysis_setup.yml
+
+# - name: Checkbox Analysis Job creation
+#   include: create_checkbox_analysis_job.yml
+
+# - name: Build checkbox analysis Job
+#   include: build_checkbox_analysis_job.yml
+
+- name: iTrust Tasks & Spin Instance 
+  include: itrust_tasks.yml
+
+- name: iTrust Fuzzer Tasks & Spin Instance 
+  include: itrust_fuzzer_tasks.yml
+
+
+
+- name: Resolve hosts
+  shell: echo "127.0.0.1 $(hostname)" >> /etc/hosts
+
+
+- name: read admin pwd
+  command: cat "{{ jenkins_home }}/secrets/initialAdminPassword"
+  register: adminpwd
 
 - name: Security setup for configuration
   jenkins_script:
@@ -29,7 +57,7 @@
     password: "{{ adminpwd.stdout }}"
 
 - name: create jobs
-  shell: 'sudo jenkins-jobs --conf {{ubuntu_home}}/jenkins_jobs.ini update {{ubuntu_home}}/jobs'
+  shell: 'jenkins-jobs --conf {{ubuntu_home}}/jenkins_jobs.ini update {{ubuntu_home}}/jobs'
 
 - name: Increase security
   jenkins_script:
