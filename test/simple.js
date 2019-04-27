@@ -4,7 +4,7 @@ const main = require('../main')
 const got   = require('got');
 var http = require('http');
 var checkbox_server_url = 'http://192.168.33.100'
- 
+var end_point = 'http://192.168.33.100'
 describe('Array', function() {
   describe('#indexOf()', function() {
     it('should return -1 when the value is not present', function(){
@@ -27,7 +27,14 @@ describe('main', function() {
                   done();
                   });
                 });
+			  it('Hitting end point of checkbox to verify', function (done) {
+				http.get(end_point, function (res) {
+				  assert.equal(200, res.statusCode);
+				  done();
+				  });
+				});
             });
+			
           // Stop server
           await main.stop();
           expect(response.body).to.include('ok');
