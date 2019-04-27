@@ -4,10 +4,11 @@
     project-type: freestyle
     builders:
       # - shell: cd /home/ubuntu && sudo ansible-playbook -i inventory marqdown_deploy.yml
-      - shell: 'sudo rm -rf checkbox.io/ && sudo git clone https://github.com/ShivamChamoli/checkbox.io'
+      - shell: 'cd /home/ubuntu && sudo rm -rf checkbox.io/ && sudo git clone checkbox.io.git'
       - shell: 'cd /var/lib/jenkins/workspace/checkbox.io/checkbox.io/server-side/site/ && sudo npm install'
     publishers: 
       - postbuildscript:
           builders:
             - build-steps:
               - shell: cd /home/ubuntu && sudo ansible-playbook -i inventory checkbox_deploy.yml 
+              - shell: cd /home/ubuntu/checkbox.io && npm test

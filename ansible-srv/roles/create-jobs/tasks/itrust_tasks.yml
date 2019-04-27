@@ -12,33 +12,33 @@
 
 
 
-# - pip:
-#     name: boto3
+- pip:
+    name: boto3
 
-# - name: See if EC2 instance exists or not
-#   ec2_instance_facts:
-#     region: "us-east-1"
-#     filters:
-#      "tag:ec2instance" : "{{ec2instance}}"
-#      instance-state-name: running
-#   environment: 
-#     AWS_ACCESS_KEY_ID: "{{aws_access_key_id}}"
-#     AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
-#   register: ec2_instance
+- name: See if EC2 instance exists or not
+  ec2_instance_facts:
+    region: "us-east-1"
+    filters:
+     "tag:ec2instance" : "{{ec2instance}}"
+     instance-state-name: running
+  environment: 
+    AWS_ACCESS_KEY_ID: "{{aws_access_key_id}}"
+    AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
+  register: ec2_instance
 
 
 
-# - name: Create EC2 instance if does not exist
-#   shell: python main.py "{{ec2instance}}"
-#   environment: 
-#     AWS_ACCESS_KEY_ID: "{{aws_access_key_id}}"
-#     AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
-#   when: ec2_instance.instances | length==0
+- name: Create EC2 instance if does not exist
+  shell: python main.py "{{ec2instance}}"
+  environment: 
+    AWS_ACCESS_KEY_ID: "{{aws_access_key_id}}"
+    AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
+  when: ec2_instance.instances | length==0
 
-# - name: Rights for pem file
-#   file:
-#     path: "{{ec2instance}}.pem"
-#     mode: '400'
+- name: Rights for pem file
+  file:
+    path: "{{ec2instance}}.pem"
+    mode: '400'
 
 
 - name: Waiting for EC2 instance to spinup
