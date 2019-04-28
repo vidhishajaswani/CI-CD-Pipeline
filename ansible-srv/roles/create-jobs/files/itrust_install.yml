@@ -34,6 +34,8 @@
         src: "{{ubuntu_home}}/email.properties.j2"
         dest: "{{ubuntu_home}}/iTrust2-v4/iTrust2/src/main/java/email.properties"
         remote_src: yes
+        owner: "{{owner}}"
+        group: "{{group}}"
 
     - name: copy hooks
       copy:                                     

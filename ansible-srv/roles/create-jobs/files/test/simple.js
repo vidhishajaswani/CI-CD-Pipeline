@@ -4,9 +4,11 @@ const main = require('../main')
 const got   = require('got');
 var http = require('http');
 //var pkg = require('../package.json')
+var config = require('config');
+console.log('awsEc2Ip: ' + config.util.getEnv('npm_config_awsEc2Ip'));
 
 var ip = process.env.awsEc2Ip;
-console.log(process.env.NODE_ENV);
+console.log(process.env);
 var checkbox_server_url = 'http://'+ip+'/'
 var end_point = checkbox_server_url+'studies.html'
 console.log(checkbox_server_url);

@@ -7,4 +7,4 @@
 
 # - name: Stress memory
 #   become: true
-#   shell: 'stress --cpu 8 --io 4 --vm 1 --vm-bytes 1024M --timeout 10s'
+#   shell: 'stress --cpu 10 --io 5 --vm 2 --vm-bytes 1024M --timeout 25s'

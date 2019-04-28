@@ -3,8 +3,9 @@ const expect = require('chai').expect;
 const main = require('../main')
 const got   = require('got');
 var http = require('http');
-var checkbox_server_url = 'http://192.168.33.100'
-var end_point = 'http://192.168.33.100/studies.html'
+var pkg = require('./package.json')
+var checkbox_server_url = 'http://'+pkg.aws-ec2-ip+'/'
+var end_point = checkbox_server_url+'studies.html'
 describe('Array', function() {
   describe('#indexOf()', function() {
     it('should return -1 when the value is not present', function(){

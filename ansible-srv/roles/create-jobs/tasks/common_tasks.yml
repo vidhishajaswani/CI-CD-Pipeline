@@ -96,5 +96,3 @@
     dest: iTrust2-v4.git/hooks/post-receive
     mode: '+x'
   become_user: ubuntu
-
-
