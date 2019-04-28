@@ -85,6 +85,8 @@ ansible-playbook -i inventory jobs.yml
 
 ## Feature Flags
 
+Feature Toggles (often also refered to as Feature Flags) are a powerful technique, allowing teams to modify system behavior without changing code. In our implementation of feature toggles, we have used redis/redis-server (an in-memory data structure project implementing a distributed, in-memory key-value database with optional durability) as our configuration server which initially has the featureOffFlag set to nil. To toggle the value of featureOffFlag which in turn toggles the functionality of an admin being able to create a hospital (when featureOffFlag is TRUE, the admin cannot create a hospital, instead gets redirected to the admin homepage when he tries to visit the endpoint /admin/mangeHospitals) we use the redis-cli. We also made changes to our fork of [iTrust](https://github.ncsu.edu/schamol/iTrust2-v4) in order to incorporate the changes for toggling features. Jedis (Redis java client) was used to communicate with the redis-server in order to get/set the values of the featureOffFlag.
+
 ## Infrastructure and Microservice
 
 ## Something Special
