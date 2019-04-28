@@ -95,8 +95,19 @@ For our special milestone we are doing Monitoring of our production environment 
 ```
 stress --cpu 8 --io 4 --vm 1 --vm-bytes 1024M --timeout 15s
 ```
-And saw a spike and a trough after 15s (which is exactly what the command does). We also tried to include Alerting to a Slack channel and were able to post to the channel through postman (as shown in the figure below) successfully but faced some configuration issues and have moved it to future scope.
-
+And saw a spike and a trough after 15s (which is exactly what the command does). We also tried to include Alerting to a Slack channel when noad load (cpu load) is > 0.5 (alert rule shown below) and were able to post to the channel through postman (as shown in the figure below) successfully but faced some configuration issues and have moved it to future scope.
+```
+- name: alert.rules
+  rules:
+  - alert: high_cpu_load
+    expr: node_load1 > 0.5
+    for: 1s
+    labels:
+      severity: warning
+    annotations:
+      summary: "Server under high load"
+      description: EC2 instance is under high load, the avg load 1m is at {{ $value}}. Reported by instance {{ $labels.instance }} of job {{ $labels.job }}."
+```
 
 
 ## Results
