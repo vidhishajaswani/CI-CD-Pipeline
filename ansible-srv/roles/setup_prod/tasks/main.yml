@@ -73,11 +73,5 @@
   become_user: ubuntu
     
 
-- name: create folder
-  file:
-    name: "{{ubuntu_home}}/iTrust2-v4"
-    state: directory
-    owner: "{{owner}}"
-    group: "{{group}}"
 
   
