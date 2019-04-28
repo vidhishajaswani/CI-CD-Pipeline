@@ -1,4 +1,6 @@
 ---
+
+
 - name: updating apt pm's repository caches
   apt:
     update_cache: yes
@@ -7,7 +9,7 @@
 
 - name: Install latest package 
   apt:
-    name: ['python3-pip','python-pip', 'git', 'python3-requests']
+    name: ['python3-pip','python-pip', 'git', 'python3-requests','nodejs']
     state: latest
     update_cache: yes
     force: yes
@@ -89,4 +91,16 @@
     src: files/build_itrust.yml
     dest: "{{ubuntu_home}}"
 
+- name: copy checkbox hook
+  copy: 
+    src: templates/checkbox_post_receive.j2
+    dest: checkbox.io.git/hooks/post-receive
+    mode: '+x'
+  become_user: ubuntu
 
+- name: copy itrust hook
+  copy: 
+    src: templates/itrust_post_receive.j2
+    dest: iTrust2-v4.git/hooks/post-receive
+    mode: '+x'
+  become_user: ubuntu

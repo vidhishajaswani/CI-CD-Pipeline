@@ -41,9 +41,9 @@
   shell: "sleep 30s"
   when: ec2_instance.instances | length==0
 
-- name: EC2 Instance IP
-  debug:
-    var: ec2_instance.instances[0].public_ip_address
+# - name: EC2 Instance IP
+#   debug:
+#     var: ec2_instance.instances[0].public_ip_address
 
 - name: See if EC2 instance exists or not
   ec2_instance_facts:
@@ -100,6 +100,34 @@
   command: 'git clone {{checkbox_repo}}'
   become_user: ubuntu
     
+
+- name: Copy checkbox installation file
+  copy:
+    src: files/test
+    dest: "{{ubuntu_home}}"
+    owner: "{{jenkins_user}}"
+    group: "{{jenkins_user}}"
+
+- name: Copy checkbox installation file
+  copy:
+    src: files/main.js
+    dest: "{{ubuntu_home}}"
+    owner: "{{jenkins_user}}"
+    group: "{{jenkins_user}}"
+
+- name: Copy checkbox installation file
+  copy:
+    src: files/package.json
+    dest: "{{ubuntu_home}}"
+    owner: "{{jenkins_user}}"
+    group: "{{jenkins_user}}"
+
+- name: tests
+  command: 'npm install'
+  args:
+    chdir: "{{ubuntu_home}}"
+
+
 
 
 
