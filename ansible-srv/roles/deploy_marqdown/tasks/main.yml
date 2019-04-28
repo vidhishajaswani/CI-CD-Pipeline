@@ -1,12 +1,11 @@
 ---
-- hosts: marqdown
-  become: yes
-  vars_files:
-    - variables.yml
+- hosts: ec2instance
+  vars:
+    ubuntu_home: '/home/ubuntu'
+  become: true
   tasks:
     - name: Install microk8s
       command: snap install microk8s --classic
-      become: true
 
     - name: Check deployment status
       command: microk8s.kubectl get deployments 
@@ -36,12 +35,12 @@
     
     - name: Copy the deployment file
       copy: 
-        src: "{{ubuntu_home}}/deployment.yml"
+        src: templates/deployment.yml
         dest: "{{ubuntu_home}}/deployment.yml"
 
     - name: Copy the service.yml for marqdown-service
       copy: 
-        src: "{{ubuntu_home}}/service.yml"
+        src: templates/service.yml
         dest: "{{ubuntu_home}}/service.yml"
 
     - name: Create a deployment for marqdown-app

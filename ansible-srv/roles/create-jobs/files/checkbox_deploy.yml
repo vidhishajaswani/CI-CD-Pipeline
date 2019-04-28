@@ -4,8 +4,14 @@
     - variables.yml
   tasks:
 
-    
-   
+    - name: Make entry for marqdown on ec2instance
+      lineinfile:
+        path: /etc/hosts
+        regexp: "marqdown_service"
+        line: "{{marqdown_instance}} marqdown_service"
+        owner: root
+        group: root
+        mode: 0644
 
     - name: Check if checkbox folder exists
       stat: 

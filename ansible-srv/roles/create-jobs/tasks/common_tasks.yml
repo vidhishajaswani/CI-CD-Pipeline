@@ -60,6 +60,14 @@
     group: "{{jenkins_user}}"
 
 
+- name: Copy python files for marqdown
+  template:
+    src: templates/marqdown_main.py
+    dest: marqdown_main.py
+    owner: "{{jenkins_user}}"
+    group: "{{jenkins_user}}"
+
+
 - name: AWS Setup
   include: aws.yml
 
