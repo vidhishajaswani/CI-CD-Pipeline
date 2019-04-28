@@ -50,8 +50,8 @@ describe('main', function() {
 
 					  expect(response.body.preview).to.include('Multiple Choice Question');
 				});
-			 it('listing all surveys', function(done){
-					request(checkbox_server_url + '/api/design/survey/all/listing', function(error, response, body) {
+			 it('study listing', function(done){
+					request(checkbox_server_url + '/api/study/listing', function(error, response, body) {
 						expect(response.statusCode).to.equal(200);
 						done();
 					});
