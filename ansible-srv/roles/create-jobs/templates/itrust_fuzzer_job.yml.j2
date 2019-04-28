@@ -4,4 +4,4 @@
     project-type: freestyle
     builders:
       - shell: 'cd /home/ubuntu/jFuzzer && sudo mvn assembly:assembly -DdescriptorId=jar-with-dependencies && sudo java -cp target/jFuzzer-0.0.1-SNAPSHOT-jar-with-dependencies.jar edu.ncsu.fuzzer.Application'
-      - shell: 'cd /var/lib/jenkins/jobs/iTrust/final-test-prioritization && node main.js' 
+      - shell: 'cd /home/ubuntu/final-test-prioritization && node main.js' 

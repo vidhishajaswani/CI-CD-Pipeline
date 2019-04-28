@@ -3,16 +3,23 @@
   copy: 
     src: files/deployment.yml
     dest: "{{ubuntu_home}}/deployment.yml"
+    owner: "{{ jenkins_user }}"
+    group: "{{ jenkins_user }}"
+
 
 - name: Copy the service.yml for marqdown
   copy:
     src: files/service.yml
     dest: "{{ubuntu_home}}/service.yml"
+    owner: "{{ jenkins_user }}"
+    group: "{{ jenkins_user }}"
 
 - name: Copy the marqdown_deploy.yml - main file for jobs
   copy:
     src: files/marqdown_deploy.yml
     dest: "{{ubuntu_home}}/marqdown_deploy.yml"
+    owner: "{{ jenkins_user }}"
+    group: "{{ jenkins_user }}"
 
 - pip:
     name: boto3
@@ -39,11 +46,13 @@
   file:
     path: "{{marqdown}}.pem"
     mode: '400'
+    owner: "{{ jenkins_user }}"
+    group: "{{ jenkins_user }}"
 
 - name: Waiting for EC2 instance to spinup
   shell: "sleep 30s"
   when: marqdown_instance.instances | length==0
 
-- name: EC2 Instance IP
-  debug:
-    var: marqdown_instance.instances[0].public_ip_address
+# - name: EC2 Instance IP
+#   debug:
+#     var: marqdown_instance.instances[0].public_ip_address

@@ -1,6 +1,0 @@
-- job:
-    name: checkbox_analysis
-    description: 'configure checkbox analysis job'
-    project-type: freestyle
-    builders:
-      - shell: 'cd /home/ubuntu/analysis && node analysis.js'

@@ -31,6 +31,18 @@
     # - name: set configs
     #   command: npm config set awsEc2Ip "{{ec2ip}}"
 
+    - name: Delete the .npmrc file if it exists
+      file:
+        path: "{{ubuntu_home}}/.npmrc"
+        state: absent
+      
+    - name: Create the .npmrc file
+      file:
+        path: "{{ubuntu_home}}/.npmrc"
+        state: touch
+        owner: "{{jenkins_user}}"
+        group: "{{jenkins_user}}"
+
     - lineinfile:
         path: "{{ubuntu_home}}/.npmrc"
         regexp: '^awsEc2Ip='

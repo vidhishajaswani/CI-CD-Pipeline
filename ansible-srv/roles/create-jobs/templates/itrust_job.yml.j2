@@ -4,7 +4,8 @@
     project-type: freestyle
     builders:
       - shell: 'cd /home/ubuntu && sudo ansible-playbook itrust_install.yml'  
-      - shell: 'cd /home/ubuntu && sudo ansible-playbook test-prioritization.yml'  
+      - shell: 'cd /home/ubuntu && sudo ansible-playbook test-prioritization.yml' 
+      - shell: 'sudo cp -R /home/ubuntu/iTrust2-v4 /var/lib/jenkins/jobs/iTrust/workspace/' 
     publishers:
       - postbuildscript:
           builders:
