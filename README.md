@@ -1,12 +1,3 @@
-# Setting up kubernetes for testing
-
---> Install Minikube/Minishift
---> run minikube start
---> go to the directory that has deployment.yaml
---> kubectl create -f deployment.yaml
---> kubectl create -f service.yaml
---> curl http://minikube:80
-
 # DevOps-Project-Milestone 3
 
 This is the submission by Team 5 of CSC 519 - DevOps class of Spring 2019 for the Milestone 3 of DevOps Project. The contributors in alphabetic order are:
