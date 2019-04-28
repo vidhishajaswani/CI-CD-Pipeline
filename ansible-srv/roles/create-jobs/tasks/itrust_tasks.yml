@@ -45,9 +45,9 @@
   shell: "sleep 30s"
   when: ec2_instance.instances | length==0
 
-- name: EC2 Instance IP
-  debug:
-    var: ec2_instance.instances[0].public_ip_address
+# - name: EC2 Instance IP
+#   debug:
+#     var: ec2_instance.instances[0].public_ip_address
 
 
 - name: Copy itrust installation file

@@ -41,9 +41,9 @@
   shell: "sleep 30s"
   when: ec2_instance.instances | length==0
 
-- name: EC2 Instance IP
-  debug:
-    var: ec2_instance.instances[0].public_ip_address
+# - name: EC2 Instance IP
+#   debug:
+#     var: ec2_instance.instances[0].public_ip_address
 
 - name: See if EC2 instance exists or not
   ec2_instance_facts:
@@ -56,9 +56,9 @@
     AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
   register: marqdown_instance
 
-- name: EC2 Instance IP
-  debug:
-    var: marqdown_instance.instances[0].public_ip_address
+# - name: EC2 Instance IP
+#   debug:
+#     var: marqdown_instance.instances[0].public_ip_address
 
 - name: Add marqdown instance IP in variables.yml
   lineinfile:
