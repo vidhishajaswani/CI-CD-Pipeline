@@ -108,7 +108,7 @@ Note: As part of our Checkbox deployment we configure a static DNS entry in /etc
 
 The architecture of the deployment is shown in the figure below.
 
-![architecture](/results/arch2.png =100x20)
+![architecture](/results/arch2.png)
 
 We deploy three replicas of the marqdown-app (the application containerized in a public Docker image kmedidi/marqdown-service:1.0.3) and expose it as a service on port 31000 (the service).
 
