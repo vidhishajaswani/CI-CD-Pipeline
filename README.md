@@ -26,7 +26,7 @@ Fill in all credentials include AWS Secret Access Key and Access key in ansible-
 
 ```ansible-playbook -i inventory setup_jenkins.yml```
 
-5. Run the playbook to setup the Jenkins EC2 Instance
+5. Run the playbook to deploy jenkins and setup other configuration parameters
 
 ```ansible-playbook -i inventory setup_production.yml```
 
