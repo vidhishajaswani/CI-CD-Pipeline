@@ -26,7 +26,7 @@ Fill in all credentials include AWS Secret Access Key and Access key in ansible-
 
 ```ansible-playbook -i inventory setup_jenkins.yml```
 
-5. Run the playbook to setup the Jenkins EC2 Instance
+5. Run the playbook to deploy jenkins and setup other configuration parameters
 
 ```ansible-playbook -i inventory setup_production.yml```
 
@@ -85,20 +85,43 @@ ansible-playbook -i inventory jobs.yml
 
 ## Feature Flags
 
-Feature Toggles (often also refered to as Feature Flags) are a powerful technique, allowing teams to modify system behavior without changing code. In our implementation of feature toggles, we have used redis/redis-server (an in-memory data structure project implementing a distributed, in-memory key-value database with optional durability) as our configuration server which initially has the featureOffFlag set to nil. To toggle the value of featureOffFlag which in turn toggles the functionality of an admin being able to create a hospital (when featureOffFlag is TRUE, the admin cannot create a hospital, instead gets redirected to the admin homepage when he tries to visit the endpoint /admin/mangeHospitals) we use the redis-cli. We also made changes to our fork of [iTrust](https://github.ncsu.edu/schamol/iTrust2-v4) in order to incorporate the changes for toggling features. Jedis (Redis java client) was used to communicate with the redis-server in order to get/set the values of the featureOffFlag.
+Feature Toggles (often also refered to as Feature Flags) are a powerful technique, allowing teams to modify system behavior without changing code. In our implementation of feature toggles, we have used redis/redis-server (an in-memory data structure project implementing a distributed, in-memory key-value database with optional durability) as our configuration server which initially has these flags set to nil :
+ 1. **featureOffFlagManageHospitals** - flag when 'TRUE' can turn off manage hospitals functionality and redirect to admin homepage.
+ 2. **featureOffFlagManageUsers** - flag when 'TRUE' can turn off manage users functionality and redirect to admin homepage.
+ 3. **featureOffFlagManageDrugs** - flag when 'TRUE' can turn off manage drugs functionality and redirect to admin homepage.
+ 4. **featureOffFlagManageICDCodes** - flag when 'TRUE' can turn off manage ICDCodes functionality and redirect to admin homepage.
+ 
+To toggle the value of these flags we use the redis-cli. We also made changes to our fork of [iTrust](https://github.ncsu.edu/schamol/iTrust2-v4) in order to incorporate the changes for toggling features. We added a utility class in itrust fork called JedisUtil (uses Redis java client api) to communicate with the redis-server in order to get/set the values of the featureOffFlag. Following is the simple code snippet of ManageHospitals feature flag.
+```
+public String manageHospital ( final Model model ) {
+        if(!JedisUtil.getFeatureOff("ManageHospitals"))
+        {
+            return "/admin/hospitals";
+        } else return "/admin/index";
+    }
+```
 
 ## Infrastructure and Microservice
 
 ## Something Special
 
-
-
-
-
-
-
-
-
+For our special milestone we are doing Monitoring of our production environment (iTrust + Checkbox.io). We have done monitoring through Prometheus (open-source software project to record real-time metrics in a time series database built using a HTTP pull model). To verify whether Prometheus was monitoring the right instance, we stressed the instance using:
+```
+stress --cpu 8 --io 4 --vm 1 --vm-bytes 1024M --timeout 15s
+```
+And saw a spike and a trough after 15s (which is exactly what the command does). We also tried to include Alerting to a Slack channel when node load (cpu load) is > 0.5 (alert rule shown below) and were able to post to the channel through postman (as shown in the figure below) successfully but faced some configuration issues and have moved it to future scope.
+```
+- name: alert.rules
+  rules:
+  - alert: high_cpu_load
+    expr: node_load1 > 0.5
+    for: 1s
+    labels:
+      severity: warning
+    annotations:
+      summary: "Server under high load"
+      description: EC2 instance is under high load, the avg load 1m is at {{ $value}}. Reported by instance {{ $labels.instance }} of job {{ $labels.job }}."
+```
 
 
 ## Results
