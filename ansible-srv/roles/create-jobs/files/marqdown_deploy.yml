@@ -8,6 +8,9 @@
       command: snap install microk8s --classic
       become: true
 
+    - name: Wait for the microk8s service to start
+      shell: sleep 10s
+
     - name: Check deployment status
       command: microk8s.kubectl get deployments 
       register: dep_status

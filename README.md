@@ -11,7 +11,7 @@ Shivam Chamoli      -   schamoli
 Vidhisha Jaswani    -   vjaswan
 
 ## Introduction
-Use milestone_3 branch for this submission
+Use milestone_3 branch for this submission.
 In this milestone the following objectives were tackled.
 
 
@@ -102,6 +102,56 @@ public String manageHospital ( final Model model ) {
 ```
 
 ## Infrastructure and Microservice
+In this milestone we aimed to implement the Microservice architecture as part of the infrastructure upgrade of Checkbox. We separate the marqdown application into a separate service (of which three instances are deployed and managed by a clustering service, Kubernetes). In this manner, development on either service, Checkbox or marqdown can happen simultaneously. Also each service can be managed and scaled independently of the other. Checkbox sends POST requests (REST interface) to the express server that exposes the marqdown service. 
+
+Note: As part of our Checkbox deployment we configure a static DNS entry in /etc/hosts file in production server (the POST URL can be maintained by the developer).
+
+The architecture of the deployment is shown in the figure below.
+
+![architecture](/results/arch2.png)
+
+We deploy three replicas of the marqdown-app (the application containerized in a public Docker image kmedidi/marqdown-service:1.0.3) and expose it as a service on port 31000 (the service).
+
+The deployment's description is given by the following yml file.
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: marqdown-app
+  labels:
+    app: marqdown-app
+spec:
+  replicas: 3        # <--- 3 replicas
+  selector:
+    matchLabels:
+      app: marqdown-app
+  template:
+    metadata:
+      labels:
+        app: marqdown-app
+    spec:
+      containers:
+      - name: marqdown-service
+        image: kmedidi/marqdown-service:1.0.3   # <--- Image available on Docker Hub
+        ports:
+        - containerPort: 9001
+```
+
+The service description is given by the following yml file.
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: marqdown-service
+spec:
+  type: NodePort
+  ports:
+    - port: 9001
+      targetPort: 9001
+      nodePort: 31000
+  selector:
+    app: marqdown-app
+```
 
 ## Something Special
 
@@ -127,22 +177,30 @@ And saw a spike and a trough after 15s (which is exactly what the command does).
 
 1. We have also integrated the features such as fuzzing of iTrust code as a separate workflow. When a developer commits on his local machine, Jenkins takes the code from the repository, fuzzes the code, builds the ITrust fuzzer job and deploys the code on the production environment. This happens 100 times (same as milestone 2). We also did test case prioritization which ranks the order in which test cases should be run based on how many times it failed and the total time it took to run it when it failed.
 
-2. We also integrated the custom analysis of checkbox where it analysis  
+2. We also integrated the custom analysis of checkbox. We use the open-source tool esprima, to parse the source code of Checkbox into an AST. We then process the derived AST to check if the code meets the desired thresholds. These thresholds are specified in the variables.yml file under the Analysis section. When these thresholds aren't met, the build has been failed. The techniques that have been used to perform the analysis are as follows:
+
+1. Max Lines in a function
+2. Max Conditions
+3. Duplicate or structurally similar code (Warning not Build Failure): Two methods are specified. If the jsinspect method is specified, then the jsinspect tool is used to detect code similarity. On the other hand, if the internal method is specified, then a self-developed algorithm is used to detect similarity between functions.
+4. Detection of security token: Keyword search is performed on the files in the sepcified directory
+
+The default recommended values are specified in ![variables.yml](/ansible-srv/variables.yml)
+
 ## Results
 
 
 
 
 ## Contribution
-1. **Karthik Medidisiva** :
+1. **Karthik Medidisiva** : Infrastructure of Checkbox was upgraded to convert the monolithic application into a microservices-architecture. A containerized image of marqdown was created and multiple instances deployed as a microservice and managed by Kubernetes. Also the custom analysis of checkbox was integrated into the current milestone deliverable.
 
-2. **Kshittiz Kumar**: 
+2. **Kshittiz Kumar**: My contribution to this milestone was incorporation of feature flags functionality by updating source code of itrust. Further, I fixed mocha test script to hit correct API's end points along with pick-up of dynamic IP of AWS instance. Debugging and testing was also major part of my role along with GIT management.
 
-3. **Shivam Chamoli**: 
+3. **Shivam Chamoli**: Research and implementation for production environment setup of iTrust, research (Jedis client and redis-server communication) and part of implementation of feature flags in iTrust clone, Creation of kubernetes deployment and service, research and implementation of the Special Milestone and part of testing the code and writing the ansible playbooks.
 
 4. **Vidhisha Jaswani**: 
  
 ## Screencast
-[Screencast Link](https://youtu.be/xwh4ocSP8po)
+[Screencast Link](https://youtu.be/rFKBjt8rZOA)
 
 **Thank you!**
