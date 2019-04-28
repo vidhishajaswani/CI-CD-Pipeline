@@ -30,6 +30,7 @@ cust_anlys_jdup_lines: 100
 # Threshold value for internal tool
 cust_anlys_dup_lines: 20
 
+ec2ip: 0.0.0.0
 
 aws_access_key_id: 
 aws_secret_access_key: 

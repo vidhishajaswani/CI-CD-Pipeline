@@ -123,7 +123,11 @@ And saw a spike and a trough after 15s (which is exactly what the command does).
       description: EC2 instance is under high load, the avg load 1m is at {{ $value}}. Reported by instance {{ $labels.instance }} of job {{ $labels.job }}."
 ```
 
+## Other Features 
 
+1. We have also integrated the features such as fuzzing of iTrust code as a separate workflow. When a developer commits on his local machine, Jenkins takes the code from the repository, fuzzes the code, builds the ITrust fuzzer job and deploys the code on the production environment. This happens 100 times (same as milestone 2). We also did test case prioritization which ranks the order in which test cases should be run based on how many times it failed and the total time it took to run it when it failed.
+
+2. We also integrated the custom analysis of checkbox where it analysis  
 ## Results
 
 
