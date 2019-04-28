@@ -91,13 +91,11 @@ Feature Toggles (often also refered to as Feature Flags) are a powerful techniqu
 
 ## Something Special
 
-For our special milestone we are doing Monitoring of our production environment (iTrust + Checkbox.io). We have done monitoring through Prometheus (open-source software project to record real-time metrics in a time series database built using a HTTP pull model).
-
-
-
-
-
-
+For our special milestone we are doing Monitoring of our production environment (iTrust + Checkbox.io). We have done monitoring through Prometheus (open-source software project to record real-time metrics in a time series database built using a HTTP pull model). To verify whether Prometheus was monitoring the right instance, we stressed the instance using:
+```
+stress --cpu 8 --io 4 --vm 1 --vm-bytes 1024M --timeout 15s
+```
+And saw a spike and a trough after 15s (which is exactly what the command does). We also tried to include Alerting to a Slack channel and were able to post to the channel through postman (as shown in the figure below) successfully but faced some configuration issues and have moved it to future scope.
 
 
 
