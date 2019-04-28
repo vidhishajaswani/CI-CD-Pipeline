@@ -4,7 +4,7 @@
     project-type: freestyle
     builders:
       - shell: cd /home/ubuntu && sudo ansible-playbook -i marqdown_inventory marqdown_deploy.yml
-      - shell: 'cd /home/ubuntu && sudo rm -rf checkbox.io/ && git clone checkbox.io.git'
+      - shell: 'cd /home/ubuntu && sudo rm -rf checkbox.io/ && sudo git clone checkbox.io.git'
       - shell: 'cd /home/ubuntu/analysis && node analysis.js'
     publishers: 
       - postbuildscript:
