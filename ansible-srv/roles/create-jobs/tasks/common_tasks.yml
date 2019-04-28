@@ -1,0 +1,111 @@
+---
+
+
+- name: updating apt pm's repository caches
+  apt:
+    update_cache: yes
+ 
+
+
+- name: Install latest package 
+  apt:
+    name: ['python3-pip','python-pip', 'git', 'python3-requests','nodejs']
+    state: latest
+    update_cache: yes
+    force: yes
+
+- name: Install Jenkins Job Builder
+  pip: name=jenkins-job-builder 
+
+
+- name: enabling access to mvn without password 
+  lineinfile:
+    dest: /etc/sudoers
+    line: "jenkins ALL=(ALL) NOPASSWD: ALL"
+
+- name: Create directory for jenkins.ini
+  file:
+    path: /etc/jenkins_jobs
+    state: directory
+    owner: "{{jenkins_user}}"
+    group: "{{jenkins_user}}"
+
+
+
+- name: Copy jenkins_jobs.ini file
+  template:
+    src: templates/jenkins_jobs.ini.j2
+    dest: jenkins_jobs.ini
+    owner: "{{jenkins_user}}"
+    group: "{{jenkins_user}}"
+
+- name: ansible jobs directory 
+  file:
+    path: jobs
+    state: directory
+    owner: "{{jenkins_user}}"
+    group: "{{jenkins_user}}"
+
+- name: Getting Jenkins CLI Jar
+  get_url:
+    url: "http://localhost:{{jenkins_port}}/jnlpJars/jenkins-cli.jar"
+    dest: "."
+    mode: 0755
+
+- name: Copy python files
+  template:
+    src: templates/main.py
+    dest: main.py
+    owner: "{{jenkins_user}}"
+    group: "{{jenkins_user}}"
+
+
+- name: Copy python files for marqdown
+  template:
+    src: templates/marqdown_main.py
+    dest: marqdown_main.py
+    owner: "{{jenkins_user}}"
+    group: "{{jenkins_user}}"
+
+
+- name: AWS Setup
+  include: aws.yml
+
+- name: Create folder
+  file:
+    name: roles
+    state: directory
+
+- name: Copy files
+  copy:
+    src: roles/build-jobs
+    dest: "roles"
+
+- name: Copy files
+  copy:
+    src: files/build_checkbox.yml
+    dest: "{{ubuntu_home}}"
+
+# - name: Copy files - analysis 
+#   copy:
+#     src: files/build_checkbox_analysis_job.yml
+#     dest: "{{ubuntu_home}}"
+
+- name: Copy files
+  copy:
+    src: files/build_itrust.yml
+    dest: "{{ubuntu_home}}"
+
+- name: copy checkbox hook
+  copy: 
+    src: templates/checkbox_post_receive.j2
+    dest: checkbox.io.git/hooks/post-receive
+    mode: '+x'
+  become_user: ubuntu
+
+- name: copy itrust hook
+  copy: 
+    src: templates/itrust_post_receive.j2
+    dest: iTrust2-v4.git/hooks/post-receive
+    mode: '+x'
+  become_user: ubuntu

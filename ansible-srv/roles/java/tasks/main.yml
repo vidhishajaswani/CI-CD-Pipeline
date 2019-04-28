@@ -1,18 +1,28 @@
 ---
-- name: Add repository
-  apt_repository: repo='ppa:webupd8team/java'
 
+# - name: Add repository
+#   apt_repository: repo='ppa:webupd8team/java'
+
+# - name: Update apt
+#   shell: apt-get update
+    
+
+# - name: Agree to license 
+#   debconf: name='oracle-java8-installer' question=shared/accepted-oracle-license-v1-1 value=true vtype=select
+
+# - name: Install Java 8
+#   apt:
+#     name: oracle-java8-installer
+#     state: latest
+#     update_cache: yes
+#     force: yes
 - name: Update apt
   apt:
     update_cache: yes
+    
+- name: Install Java
+  apt: 
+    name: openjdk-8-jdk
 
 
-- name: Agree to license 
-  debconf: name='oracle-java8-installer' question='shared/accepted-oracle-license-v1-1' value='true' vtype='select'
 
-- name: Install Java 8
-  apt:
-    name: oracle-java8-installer
-    state: latest
-    update_cache: yes
-    force: yes

@@ -1,0 +1,10 @@
+---
+- name: install stress on the system
+  apt:
+    name: stress
+    state: present
+    update_cache: yes
+
+# - name: Stress memory
+#   become: true
+#   shell: 'stress --cpu 10 --io 5 --vm 2 --vm-bytes 1024M --timeout 25s'

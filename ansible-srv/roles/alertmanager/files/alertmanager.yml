@@ -1,0 +1,18 @@
+global:
+  slack_api_url: "https://hooks.slack.com/services/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"
+
+route:
+  group_by: ['instance', 'severity']
+  group_wait: 1s
+  group_interval: 1m
+  repeat_interval: 3h
+  routes:
+  - match:
+      alertname: high_cpu_load
+  receiver: 'alert-team'
+
+receivers:
+- name: 'alert-team'
+  slack_configs:
+  - channel: "#devopspipeline"
+    text: "summary: {{ .CommonAnnotations.summary }}\ndescription: {{ .CommonAnnotations.description }}"

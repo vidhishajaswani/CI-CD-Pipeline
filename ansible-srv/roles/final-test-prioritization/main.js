@@ -1,5 +1,5 @@
 var fs = require('fs');
-var testFolder = '../builds';
+var testFolder = '/var/lib/jenkins/jobs/iTrust/builds';
 var testsData = {};
 function getDirectories(path) {
     return fs.readdirSync(path).filter(function (file) {

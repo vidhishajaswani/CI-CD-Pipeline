@@ -3,8 +3,9 @@ const expect = require('chai').expect;
 const main = require('../main')
 const got   = require('got');
 var http = require('http');
-var checkbox_server_url = 'http://192.168.33.100'
- 
+var pkg = require('./package.json')
+var checkbox_server_url = 'http://'+pkg.aws-ec2-ip+'/'
+var end_point = checkbox_server_url+'studies.html'
 describe('Array', function() {
   describe('#indexOf()', function() {
     it('should return -1 when the value is not present', function(){
@@ -27,7 +28,14 @@ describe('main', function() {
                   done();
                   });
                 });
+			  it('Hitting end point of checkbox to verify', function (done) {
+				http.get(end_point, function (res) {
+				  assert.equal(200, res.statusCode);
+				  done();
+				  });
+				});
             });
+			
           // Stop server
           await main.stop();
           expect(response.body).to.include('ok');

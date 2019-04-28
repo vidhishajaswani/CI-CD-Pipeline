@@ -1,0 +1,9 @@
+---
+- name: install redis server
+  apt:
+    name: redis-server
+    state: present
+    update_cache: yes
+
+- name: Run redis server
+  shell: 'redis-server &'

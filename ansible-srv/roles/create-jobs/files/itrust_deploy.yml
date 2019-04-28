@@ -1,0 +1,31 @@
+- hosts: ec2instance
+  vars_files:
+    - variables.yml
+  tasks:
+
+
+    - name: Check if war exists
+      stat: 
+        path: /opt/jetty9/webapps/iTrust2.war
+      register: war_exists
+
+    - name: Delete war if exists
+      become: yes
+      file:
+        path: /opt/jetty9/webapps/iTrust2.war
+        state: absent 
+      when: war_exists.stat.exists
+
+
+    - name: Copy war
+      become: yes
+      copy:
+        src: "{{ubuntu_home}}/iTrust2-v4/iTrust2/target/iTrust2.war" 
+        dest: /opt/jetty9/webapps/iTrust2.war
+        
+
+    - name: Start jetty
+      shell: 'nohup java -jar start.jar &'
+      args:
+        chdir: /opt/jetty9
+      

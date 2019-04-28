@@ -1,0 +1,77 @@
+---
+
+
+- name: delete if exists checkbox.io.git
+  file:
+    name: checkbox.io.git
+    state: absent
+    
+ 
+- name: checkbox.io.git
+  file:
+    name: checkbox.io.git
+    state: directory
+    owner: "{{owner}}"
+    group: "{{group}}"
+
+
+- name: delete if exists checkbox.io.git
+  file:
+    name: iTrust2-v4.git
+    state: absent
+
+- name: iTrust2-v4.git
+  file:
+    name: iTrust2-v4.git
+    state: directory
+    owner: "{{owner}}"
+    group: "{{group}}"
+
+- name: checkbox bare repo
+  command: 'git init --bare'
+  args:
+    chdir: checkbox.io.git
+  become_user: ubuntu
+
+- name: itrust bare repo
+  command: 'git init --bare'
+  args:
+    chdir: iTrust2-v4.git
+  become_user: ubuntu
+
+- name: copy checkbox hook
+  copy: 
+    src: templates/checkbox_post_receive.j2
+    dest: checkbox.io.git/hooks/post-receive
+    mode: '+x'
+  become_user: ubuntu
+
+- name: copy itrust hook
+  copy: 
+    src: templates/itrust_post_receive.j2
+    dest: iTrust2-v4.git/hooks/post-receive
+    mode: '+x'
+  become_user: ubuntu
+
+- name: delete if exists checkbox.io
+  file:
+    name: checkbox.io
+    state: absent
+
+- name: delete if exists iTrust2-v4.git
+  file:
+    name: iTrust2-v4
+    state: absent
+
+
+- name: create folder
+  command: git clone "{{checkbox_repo}}"
+  become_user: ubuntu
+
+- name: create folder
+  command: git clone "{{itrust_repo}}"
+  become_user: ubuntu
+    
+
+
+  

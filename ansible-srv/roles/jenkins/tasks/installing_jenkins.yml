@@ -23,6 +23,29 @@
      name: git
      state: present
 
+  - name: Add apt-repository for latest nodejs and npm
+    shell: apt-add-repository "deb https://deb.nodesource.com/node_10.x $(lsb_release -sc) main"
+    become: true
+
+  - name: Re-install nodejs
+    apt:
+      name: nodejs
+      state: latest
+      update_cache: yes
+      force: yes
+
+  # - name: Install node
+  #   apt:
+  #     name: nodejs
+  #     state: latest
+  #     update_cache: yes
+ 
+  # - name: Install npm
+  #   apt:
+  #     name: npm
+  #     state: latest
+  #     update_cache: yes
+
   - name: Change the Jenkins port
     template:
       src: templates/jenkins.j2

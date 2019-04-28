@@ -1,0 +1,7 @@
+
+---
+- name: Build checkbox Job
+  include: build_checkbox.yml
+
+# - name: Build iTrust Job
+#   include: build_itrust.yml

@@ -1,0 +1,71 @@
+- hosts: localhost
+  become: yes
+  vars_files:
+    - variables.yml
+  tasks:
+
+
+    - name: See if EC2 instance exists or not
+      ec2_instance_facts:
+        region: "us-east-1"
+        filters:
+         "tag:ec2instance" : "{{ec2instance}}"
+         instance-state-name: running
+      environment: 
+        AWS_ACCESS_KEY_ID: "{{aws_access_key_id}}"
+        AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
+      register: ec2_instance
+
+    - lineinfile:
+        path: "{{ubuntu_home}}/variables.yml"
+        regexp: '^ec2ip:'
+        state: absent
+
+    - lineinfile:
+        path: "{{ubuntu_home}}/variables.yml"
+        regexp: '^wqec2ip:'
+        line: 'ec2ip: {{ec2_instance.instances[0].public_ip_address}}'
+
+    
+
+    # - name: set configs
+    #   command: npm config set awsEc2Ip "{{ec2ip}}"
+
+    - name: Delete the .npmrc file if it exists
+      file:
+        path: "{{ubuntu_home}}/.npmrc"
+        state: absent
+      
+    - name: Create the .npmrc file
+      file:
+        path: "{{ubuntu_home}}/.npmrc"
+        state: touch
+        owner: "{{jenkins_user}}"
+        group: "{{jenkins_user}}"
+
+    - lineinfile:
+        path: "{{ubuntu_home}}/.npmrc"
+        regexp: '^awsEc2Ip='
+        state: absent
+
+    - lineinfile:
+        path: "{{ubuntu_home}}/.npmrc"
+        regexp: '^awsEc2Ip='
+        line: 'awsEc2Ip={{ec2_instance.instances[0].public_ip_address}}'
+
+    - name: tests
+      command: npm install
+      args:
+        chdir: "{{ubuntu_home}}"
+
+    - name: tests
+      command: npm install request
+      args:
+        chdir: "{{ubuntu_home}}"
+
+    - name: tests
+      shell: 'npm config set awsEc2Ip {{ec2ip}} && npm test'
+      args:
+        chdir: "{{ubuntu_home}}"
+      environment:
+        awsEc2Ip: "{{ec2ip}}"

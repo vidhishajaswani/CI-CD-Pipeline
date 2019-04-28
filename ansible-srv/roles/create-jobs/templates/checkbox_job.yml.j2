@@ -1,0 +1,14 @@
+- job:
+    name: checkbox.io
+    description: 'build checkbox.io job'
+    project-type: freestyle
+    builders:
+      - shell: cd /home/ubuntu && sudo ansible-playbook -i marqdown_inventory marqdown_deploy.yml
+      - shell: 'cd /home/ubuntu && sudo rm -rf checkbox.io/ && sudo git clone checkbox.io.git'
+      - shell: 'cd /home/ubuntu/analysis && node analysis.js'
+    publishers: 
+      - postbuildscript:
+          builders:
+            - build-steps:
+              - shell: cd /home/ubuntu && sudo ansible-playbook -i inventory checkbox_deploy.yml 
+              - shell: cd /home/ubuntu && sudo ansible-playbook checkbox_tests.yml

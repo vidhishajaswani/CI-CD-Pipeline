@@ -1,0 +1,35 @@
+---
+- hosts: localhost
+  become: yes
+  vars_files:
+    - variables.yml
+  tasks:
+  
+    - name: Update apt
+      apt: update_cache=yes
+
+
+    - name: Run Test Prioritisation
+      command: sudo npm install 
+      args:
+        chdir:  "{{ubuntu_home}}/test-prioritization"
+
+    - name: Run Test Prioritisation
+      command: sudo node main.js 
+      register: tests
+      args:
+        chdir:  "{{ubuntu_home}}/test-prioritization"
+
+    - name: Results of Prioritisation
+      debug:
+        msg: {% raw %}"{{ tests.stdout.split('\n') }}"{% endraw %}
+        
+        
+        
+
+  
+
+    
+
+
+    

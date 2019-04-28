@@ -1,0 +1,58 @@
+---
+
+- name: Install required packages
+  apt: 
+    name: ['python3','python3-pip']
+    state: latest
+
+- name: Install Python PIP
+  tags: 'aws-cli'
+  apt: >
+    pkg=python-pip
+    state=latest
+
+- name: Install AWS CLI
+  tags: 'aws-cli'
+  pip: >
+    name=awscli
+    state=latest
+
+
+
+
+- name: 'Create the AWS config directory'
+  tags: 'aws-cli'
+  become: 'yes'
+  file: >
+    path="{{ vagrant_home }}/.aws"
+    state=directory
+    mode=0755
+    owner="{{jenkins_user}}"
+    group="{{jenkins_user}}"
+
+- name: 'Copy AWS CLI credentials'
+  tags: 'aws-cli'
+  become: 'yes'
+  template: >
+    src=credentials.j2
+    dest="{{ vagrant_home }}/.aws/credentials"
+    mode=0600
+    owner="{{jenkins_user}}"
+    group="{{jenkins_user}}"
+  
+- name: Sync the machine
+  file:
+    path: /etc/localtime 
+    state: absent
+    
+- name: Sync the machine
+  file: 
+    src: /usr/share/zoneinfo/America/New_York 
+    dest: /etc/localtime
+    state: link
+    
+- name: Install requirements
+  shell: pip install boto3
+  
+
+

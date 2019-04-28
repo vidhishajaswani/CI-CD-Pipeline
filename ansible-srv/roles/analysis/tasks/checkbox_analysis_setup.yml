@@ -1,4 +1,22 @@
 ---
+# - name: Remove existing npm and nodejs packages
+#   apt:
+#     name: ['npm', 'nodejs']
+#     state: absent
+#     update_cache: yes
+#     force: yes
+
+# - name: Add apt-repository for latest nodejs and npm
+#   shell: apt-add-repository "deb https://deb.nodesource.com/node_10.x $(lsb_release -sc) main"
+#   become: true
+
+# - name: Re-install nodejs
+#   apt:
+#     name: nodejs
+#     state: latest
+#     update_cache: yes
+#     force: yes
+
 - name: Create analysis directory
   file:
     name: analysis
@@ -8,17 +26,17 @@
 - name: Copy the package.json 
   template:
     src: templates/package.json
-    dest: "{{vagrant_home}}/analysis/package.json"
+    dest: "{{ubuntu_home}}/analysis/package.json"
   become: false
 
 - name: Copy the analysis code
   template:
     src: templates/analysis.js.j2
-    dest: "{{vagrant_home}}/analysis/analysis.js"
+    dest: "{{ubuntu_home}}/analysis/analysis.js"
   become: false
   
 - name: npm install the required packages
   command: npm install
   args:
-    chdir: "{{vagrant_home}}/analysis/"
+    chdir: "{{ubuntu_home}}/analysis/"
   become: true
