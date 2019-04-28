@@ -196,7 +196,7 @@ The default recommended values are specified in ![variables.yml](/ansible-srv/va
 
 2. **Kshittiz Kumar**: My contribution to this milestone was incorporation of feature flags functionality by updating source code of itrust. Further, I fixed mocha test script to hit correct API's end points along with pick-up of dynamic IP of AWS instance. Debugging and testing was also major part of my role along with GIT management.
 
-3. **Shivam Chamoli**: 
+3. **Shivam Chamoli**: Research and implementation for production environment setup of iTrust, research (Jedis client and redis-server communication) and part of implementation of feature flags in iTrust clone, Creation of kubernetes deployment and service, research and implementation of the Special Milestone and part of testing the code and writing the ansible playbooks.
 
 4. **Vidhisha Jaswani**: 
  
