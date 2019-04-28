@@ -85,7 +85,21 @@ ansible-playbook -i inventory jobs.yml
 
 ## Feature Flags
 
-Feature Toggles (often also refered to as Feature Flags) are a powerful technique, allowing teams to modify system behavior without changing code. In our implementation of feature toggles, we have used redis/redis-server (an in-memory data structure project implementing a distributed, in-memory key-value database with optional durability) as our configuration server which initially has the flags (featureOffFlagManageHospitals, featureOffFlagManageUsers, featureOffFlagManageDrugs and featureOffFlagManageICDCodes) set to nil. To toggle the value of featureOffFlagManageHospitals which in turn toggles the functionality of an admin being able to create a hospital (when flag is TRUE, the admin cannot create a hospital, instead gets redirected to the admin homepage when he tries to visit the endpoint /admin/hospitals) we use the redis-cli. We also made changes to our fork of [iTrust](https://github.ncsu.edu/schamol/iTrust2-v4) in order to incorporate the changes for toggling features. Jedis (Redis java client) was used to communicate with the redis-server in order to get/set the values of the featureOffFlag.
+Feature Toggles (often also refered to as Feature Flags) are a powerful technique, allowing teams to modify system behavior without changing code. In our implementation of feature toggles, we have used redis/redis-server (an in-memory data structure project implementing a distributed, in-memory key-value database with optional durability) as our configuration server which initially has these flags set to nil :
+ 1. **featureOffFlagManageHospitals** - flag when 'TRUE' can turn off manage hospitals functionality and redirect to admin homepage.
+ 2. **featureOffFlagManageUsers** - flag when 'TRUE' can turn off manage users functionality and redirect to admin homepage.
+ 3. **featureOffFlagManageDrugs** - flag when 'TRUE' can turn off manage drugs functionality and redirect to admin homepage.
+ 4. **featureOffFlagManageICDCodes** - flag when 'TRUE' can turn off manage ICDCodes functionality and redirect to admin homepage.
+ 
+To toggle the value of featureOffFlags we use the redis-cli. We also made changes to our fork of [iTrust](https://github.ncsu.edu/schamol/iTrust2-v4) in order to incorporate the changes for toggling features. We added a utility class in itrust fork called JedisUtil (uses Redis java client api) to communicate with the redis-server in order to get/set the values of the featureOffFlag. Following is the simple code snippet of ManageHospitals feature flag.
+```
+public String manageHospital ( final Model model ) {
+        if(!JedisUtil.getFeatureOff("ManageHospitals"))
+        {
+            return "/admin/hospitals";
+        } else return "/admin/index";
+    }
+```
 
 ## Infrastructure and Microservice
 
