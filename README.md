@@ -11,7 +11,7 @@ Shivam Chamoli      -   schamoli
 Vidhisha Jaswani    -   vjaswan
 
 ## Introduction
-Use milestone_3 branch for this submission
+Use milestone_3 branch for this submission.
 In this milestone the following objectives were tackled.
 
 
@@ -136,7 +136,7 @@ And saw a spike and a trough after 15s (which is exactly what the command does).
 ## Contribution
 1. **Karthik Medidisiva** :
 
-2. **Kshittiz Kumar**: 
+2. **Kshittiz Kumar**: My contribution to this milestone was incorporation of feature flags functionality by updating source code of itrust. Further, I fixed mocha test script to hit correct API's end points along with pick-up of dynamic IP of AWS instance. Debugging and testing was also major part of my role along with GIT management.
 
 3. **Shivam Chamoli**: 
 
