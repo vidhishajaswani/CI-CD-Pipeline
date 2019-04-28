@@ -86,6 +86,11 @@
     src: files/build_checkbox.yml
     dest: "{{ubuntu_home}}"
 
+- name: Copy files - analysis 
+  copy:
+    src: files/build_checkbox_analysis_job.yml
+    dest: "{{ubuntu_home}}"
+
 - name: Copy files
   copy:
     src: files/build_itrust.yml

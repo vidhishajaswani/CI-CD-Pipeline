@@ -1,4 +1,4 @@
 ---
 - include: checkbox_analysis_setup.yml
 - include: create_checkbox_analysis_job.yml
-- include: build_checkbox_analysis_job.yml
+# - include: build_checkbox_analysis_job.yml

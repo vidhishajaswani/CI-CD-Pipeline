@@ -8,7 +8,7 @@ mysql_database: itrust
 mysql_user: myuser  
 mysql_password: abcd
 checkbox_repo:  checkbox.io.git
-checkbox_install_dir: /home/ubuntu/checkbox
+checkbox_install_dir: /home/ubuntu/checkbox.io
 itrust_repo: iTrust2-v4.git
 vagrant_home: /home/vagrant
 ubuntu_home: /home/ubuntu
