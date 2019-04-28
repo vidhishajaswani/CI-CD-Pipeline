@@ -3,7 +3,6 @@
   "version": "0.9.1",
   "description": "test app",
   "main": "main.js",
-  "awsEc2Ip": "54.83.123.66",
   "scripts": {
     "test": "mocha",
     "start": "node main.js start 5001",
@@ -19,7 +18,7 @@
   "dependencies": {
     "express": "^4.16.4",
     "fs": "0.0.1-security",
-    "got": "^9.5.0"
+    "got": "^9.5.0",
+    "request": "^2.88.0"
   }
-  
 }
