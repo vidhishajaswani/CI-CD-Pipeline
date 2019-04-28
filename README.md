@@ -91,7 +91,7 @@ Feature Toggles (often also refered to as Feature Flags) are a powerful techniqu
  3. **featureOffFlagManageDrugs** - flag when 'TRUE' can turn off manage drugs functionality and redirect to admin homepage.
  4. **featureOffFlagManageICDCodes** - flag when 'TRUE' can turn off manage ICDCodes functionality and redirect to admin homepage.
  
-To toggle the value of featureOffFlags we use the redis-cli. We also made changes to our fork of [iTrust](https://github.ncsu.edu/schamol/iTrust2-v4) in order to incorporate the changes for toggling features. We added a utility class in itrust fork called JedisUtil (uses Redis java client api) to communicate with the redis-server in order to get/set the values of the featureOffFlag. Following is the simple code snippet of ManageHospitals feature flag.
+To toggle the value of these flags we use the redis-cli. We also made changes to our fork of [iTrust](https://github.ncsu.edu/schamol/iTrust2-v4) in order to incorporate the changes for toggling features. We added a utility class in itrust fork called JedisUtil (uses Redis java client api) to communicate with the redis-server in order to get/set the values of the featureOffFlag. Following is the simple code snippet of ManageHospitals feature flag.
 ```
 public String manageHospital ( final Model model ) {
         if(!JedisUtil.getFeatureOff("ManageHospitals"))
