@@ -109,7 +109,7 @@ For our special milestone we are doing Monitoring of our production environment 
 ```
 stress --cpu 8 --io 4 --vm 1 --vm-bytes 1024M --timeout 15s
 ```
-And saw a spike and a trough after 15s (which is exactly what the command does). We also tried to include Alerting to a Slack channel when noad load (cpu load) is > 0.5 (alert rule shown below) and were able to post to the channel through postman (as shown in the figure below) successfully but faced some configuration issues and have moved it to future scope.
+And saw a spike and a trough after 15s (which is exactly what the command does). We also tried to include Alerting to a Slack channel when node load (cpu load) is > 0.5 (alert rule shown below) and were able to post to the channel through postman (as shown in the figure below) successfully but faced some configuration issues and have moved it to future scope.
 ```
 - name: alert.rules
   rules:
