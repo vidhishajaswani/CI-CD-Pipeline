@@ -3,15 +3,13 @@ const expect = require('chai').expect;
 const main = require('../main')
 const got   = require('got');
 var http = require('http');
-//var pkg = require('../package.json')
-var config = require('config');
-console.log('awsEc2Ip: ' + config.util.getEnv('npm_config_awsEc2Ip'));
+var request = require('request');
+const execSync = require('child_process').execSync;
+const awsEc2Ip = execSync('npm config get awsEc2Ip',
+    { stdio: ['ignore', 'pipe', 'pipe'] }).toString().replace(/\n$/, '');
+var checkbox_server_url = 'http://' + awsEc2Ip;
+var end_point = checkbox_server_url + '/studies.html'
 
-var ip = process.env.awsEc2Ip;
-console.log(process.env);
-var checkbox_server_url = 'http://'+ip+'/'
-var end_point = checkbox_server_url+'studies.html'
-console.log(checkbox_server_url);
 describe('Array', function() {
   describe('#indexOf()', function() {
     it('should return -1 when the value is not present', function(){
@@ -40,6 +38,25 @@ describe('main', function() {
 				  done();
 				  });
 				});
+				
+			  it('should properly create survey question', async () => {
+					  const response = await got.post(checkbox_server_url + '/api/design/survey', {
+						body: {
+					"markdown": "{NumberQuestions:true}\n-----------\n### Multiple Choice Question (Check all that apply)\nA *description* for question.\nQuestions are created with headers (level 3).\n* Choice A\n* Choice B\n* Choice C"
+				},
+						json: true,
+						timeout: 500
+					  });
+
+					  expect(response.body.preview).to.include('Multiple Choice Question');
+				});
+			 it('listing all surveys', function(done){
+					request(checkbox_server_url + '/api/design/survey/all/listing', function(error, response, body) {
+						expect(response.statusCode).to.equal(200);
+						done();
+					});
+				});
+
             });
 			
           // Stop server
