@@ -108,7 +108,7 @@ Note: As part of our Checkbox deployment we configure a static DNS entry in /etc
 
 The architecture of the deployment is shown in the figure below.
 
-![Architecture]()
+![Architecture](results/arch2.png)
 
 We deploy three replicas of the marqdown-app (the application containerized in a public Docker image kmedidi/marqdown-service:1.0.3) and expose it as a service on port 31000 (the service).
 
@@ -184,7 +184,7 @@ And saw a spike and a trough after 15s (which is exactly what the command does).
 3. Duplicate or structurally similar code (Warning not Build Failure): Two methods are specified. If the jsinspect method is specified, then the jsinspect tool is used to detect code similarity. On the other hand, if the internal method is specified, then a self-developed algorithm is used to detect similarity between functions.
 4. Detection of security token: Keyword search is performed on the files in the sepcified directory
 
-The default recommended values are specified in ![variables.yml]()
+The default recommended values are specified in ![variables.yml](ansible-srv/variables.yml)
 
 ## Results
 
