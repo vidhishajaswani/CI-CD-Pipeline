@@ -4,8 +4,7 @@
     project-type: freestyle
     builders:
       - shell: cd /home/ubuntu && sudo ansible-playbook -i marqdown_inventory marqdown_deploy.yml
-      - shell: 'sudo rm -rf checkbox.io/ && sudo git clone https://github.com/ShivamChamoli/checkbox.io'
-      - shell: 'cd /var/lib/jenkins/workspace/checkbox.io/checkbox.io/server-side/site/ && sudo npm install'
+      - shell: 'cd /home/ubuntu sudo rm -rf checkbox.io/ && sudo git clone checkbox.io.git'
     publishers: 
       - postbuildscript:
           builders:

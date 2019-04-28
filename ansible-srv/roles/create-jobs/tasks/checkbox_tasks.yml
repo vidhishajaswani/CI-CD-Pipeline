@@ -1,49 +1,49 @@
 ---
 
-# - name: Copy Checkbox job
-#   copy:
-#     src: templates/checkbox_job.yml.j2
-#     dest: jobs/checkbox_job.yml
-#     owner: "{{jenkins_user}}"
-#     group: "{{jenkins_user}}"
+- name: Copy Checkbox job
+  copy:
+    src: templates/checkbox_job.yml.j2
+    dest: jobs/checkbox_job.yml
+    owner: "{{jenkins_user}}"
+    group: "{{jenkins_user}}"
 
 
-# - pip:
-#     name: boto3
+- pip:
+    name: boto3
 
-# - name: See if EC2 instance exists or not
-#   ec2_instance_facts:
-#     region: "us-east-1"
-#     filters:
-#      "tag:ec2instance" : "{{ec2instance}}"
-#      instance-state-name: running
-#   environment: 
-#     AWS_ACCESS_KEY_ID: "{{aws_access_key_id}}"
-#     AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
-#   register: ec2_instance
-
-
-
-# - name: Create EC2 instance if does not exist
-#   shell: python main.py "{{ec2instance}}"
-#   environment: 
-#     AWS_ACCESS_KEY_ID: "{{aws_access_key_id}}"
-#     AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
-#   when: ec2_instance.instances | length==0
-
-# - name: Rights for pem file
-#   file:
-#     path: "{{ec2instance}}.pem"
-#     mode: '400'
+- name: See if EC2 instance exists or not
+  ec2_instance_facts:
+    region: "us-east-1"
+    filters:
+     "tag:ec2instance" : "{{ec2instance}}"
+     instance-state-name: running
+  environment: 
+    AWS_ACCESS_KEY_ID: "{{aws_access_key_id}}"
+    AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
+  register: ec2_instance
 
 
-# - name: Waiting for EC2 instance to spinup
-#   shell: "sleep 30s"
-#   when: ec2_instance.instances | length==0
 
-# # - name: EC2 Instance IP
-# #   debug:
-# #     var: ec2_instance.instances[0].public_ip_address
+- name: Create EC2 instance if does not exist
+  shell: python main.py "{{ec2instance}}"
+  environment: 
+    AWS_ACCESS_KEY_ID: "{{aws_access_key_id}}"
+    AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
+  when: ec2_instance.instances | length==0
+
+- name: Rights for pem file
+  file:
+    path: "{{ec2instance}}.pem"
+    mode: '400'
+
+
+- name: Waiting for EC2 instance to spinup
+  shell: "sleep 30s"
+  when: ec2_instance.instances | length==0
+
+- name: EC2 Instance IP
+  debug:
+    var: ec2_instance.instances[0].public_ip_address
 
 - name: See if EC2 instance exists or not
   ec2_instance_facts:
@@ -66,39 +66,39 @@
     regexp: "marqdown_instance"
     line: "marqdown_instance: {{marqdown_instance.instances[0].public_ip_address}}"
 
-# - name: Copy checkbox installation file
-#   copy:
-#     src: files/checkbox_install.yml
-#     dest: checkbox_install.yml
-#     owner: "{{jenkins_user}}"
-#     group: "{{jenkins_user}}"
+- name: Copy checkbox installation file
+  copy:
+    src: files/checkbox_install.yml
+    dest: checkbox_install.yml
+    owner: "{{jenkins_user}}"
+    group: "{{jenkins_user}}"
 
-# - name: Copy checkbox deploy file
-#   copy:
-#     src: files/checkbox_deploy.yml
-#     dest: checkbox_deploy.yml
-#     owner: "{{jenkins_user}}"
-#     group: "{{jenkins_user}}"
-
-
-# - name: Install checkbox dependencies
-#   shell: ansible-playbook -i inventory checkbox_install.yml 
-
-# - name: Check if checkbox folder exists
-#   stat: 
-#     path: "{{ubuntu_home}}/checkbox.io"
-#   register: checkbox_exists
-
-# - name: Delete folder if exists
-#   file:
-#     path: "{{ubuntu_home}}/checkbox.io"
-#     state: absent 
-#   when: checkbox_exists.stat.exists
+- name: Copy checkbox deploy file
+  copy:
+    src: files/checkbox_deploy.yml
+    dest: checkbox_deploy.yml
+    owner: "{{jenkins_user}}"
+    group: "{{jenkins_user}}"
 
 
-# - name: Clone repo
-#   command: 'git clone {{checkbox_repo}}'
-#   become_user: ubuntu
+- name: Install checkbox dependencies
+  shell: ansible-playbook -i inventory checkbox_install.yml 
+
+- name: Check if checkbox folder exists
+  stat: 
+    path: "{{ubuntu_home}}/checkbox.io"
+  register: checkbox_exists
+
+- name: Delete folder if exists
+  file:
+    path: "{{ubuntu_home}}/checkbox.io"
+    state: absent 
+  when: checkbox_exists.stat.exists
+
+
+- name: Clone repo
+  command: 'git clone {{checkbox_repo}}'
+  become_user: ubuntu
     
 
 - name: Copy checkbox installation file
