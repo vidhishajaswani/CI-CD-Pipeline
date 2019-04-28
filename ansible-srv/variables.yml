@@ -2,13 +2,13 @@ jenkins_home: /var/lib/jenkins/
 jenkins_user: jenkins
 jenkins_password: jenkins
 jenkins_port: 9999
-jenkins_IP: 192.168.33.100
+# jenkins_IP: 192.168.33.100
 mysql_root_password: abcd
 mysql_database: itrust
 mysql_user: myuser  
 mysql_password: abcd
 checkbox_repo:  checkbox.io.git
-checkbox_install_dir: /var/lib/jenkins/checkbox
+checkbox_install_dir: /home/ubuntu/checkbox
 itrust_repo: iTrust2-v4.git
 vagrant_home: /home/vagrant
 ubuntu_home: /home/ubuntu
@@ -37,6 +37,7 @@ group: ubuntu
 owner: ubuntu
 param: jenkins
 ec2instance: ec2instance
+marqdown: marqdown
 
 
 

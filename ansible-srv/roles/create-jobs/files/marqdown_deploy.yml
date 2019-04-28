@@ -1,5 +1,5 @@
 ---
-- hosts: ec2instance
+- hosts: marqdown
   become: yes
   vars_files:
     - variables.yml

@@ -45,6 +45,26 @@
   debug:
     var: ec2_instance.instances[0].public_ip_address
 
+- name: See if EC2 instance exists or not
+  ec2_instance_facts:
+    region: "us-east-1"
+    filters:
+     "tag:marqdown" : "{{marqdown}}"
+     instance-state-name: running
+  environment: 
+    AWS_ACCESS_KEY_ID: "{{aws_access_key_id}}"
+    AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
+  register: marqdown_instance
+
+- name: EC2 Instance IP
+  debug:
+    var: marqdown_instance.instances[0].public_ip_address
+
+- name: Add marqdown instance IP in variables.yml
+  lineinfile:
+    path: variables.yml
+    regexp: "marqdown_instance"
+    line: "marqdown_instance: {{marqdown_instance.instances[0].public_ip_address}}"
 
 - name: Copy checkbox installation file
   copy:
