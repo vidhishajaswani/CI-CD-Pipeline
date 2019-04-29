@@ -6,7 +6,7 @@ jenkins_port: 9999
 mysql_root_password: abcd
 mysql_database: itrust
 mysql_user: myuser  
-mysql_password: abcd
+mysql_password: 
 checkbox_repo:  checkbox.io.git
 checkbox_install_dir: /home/ubuntu/checkbox.io
 itrust_repo: iTrust2-v4.git
@@ -14,8 +14,8 @@ vagrant_home: /home/vagrant
 ubuntu_home: /home/ubuntu
 mongo_admin_password: abcd
 mongo_checkbox_user: admin
-email_password: csc519team5
-email_username: qwerty@123
+email_password: 
+email_username: 
 
 # Custom Analysis for Checkbox 
 cust_anlys_maxlines: 500
