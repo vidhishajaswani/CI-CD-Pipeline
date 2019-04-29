@@ -12,6 +12,9 @@ Vidhisha Jaswani    -   vjaswan
 
 ## Introduction
 Use milestone_3 branch for this submission.
+
+![main-architecture](/results/main-architecture.png)
+
 In this milestone the following objectives were tackled.
 
 
