@@ -16,7 +16,11 @@ Use milestone_3 branch for this submission.
 ![main-architecture](/results/main-architecture.PNG)
 -> CI/CD Pipeline Architecture <-
 
-In this milestone the following objectives were tackled.
+In this milestone the following objectives were tackled. 
+Deployment of Architecture on EC2 Instances.
+Feature Flags using Redis
+Infrastructure of Microservice
+Monitoring using Prometheus
 
 
 ## Replication Instructions
@@ -191,7 +195,6 @@ And saw a spike and a trough after 15s (which is exactly what the command does).
 
 The default recommended values are specified in [variables.yml](/ansible-srv/variables.yml)
 
-## Results
 
 
 
@@ -203,9 +206,10 @@ The default recommended values are specified in [variables.yml](/ansible-srv/var
 
 3. **Shivam Chamoli**: Research and implementation for production environment setup of iTrust, research (Jedis client and redis-server communication) and part of implementation of feature flags in iTrust clone, Creation of kubernetes deployment and service, research and implementation of the Special Milestone and part of testing the code and writing the ansible playbooks.
 
-4. **Vidhisha Jaswani**: 
+4. **Vidhisha Jaswani**: Deployment of Jenkins on AWS EC2 Instance. Deployment of applications along with all dependencies of checkbox.io and iTrust on seperate AWS EC2 instances. Setting up hooks and invoking build jobs followed by deployment. Integrated and tested the application and made the screencast.
  
 ## Screencast
-[Screencast Link](https://youtu.be/rFKBjt8rZOA)
+Milestone 3 [Screencast Link](https://youtu.be/rFKBjt8rZOA)
+Final Video [Final](https://youtu.be/1loWLTvkyzM)
 
 **Thank you!**
