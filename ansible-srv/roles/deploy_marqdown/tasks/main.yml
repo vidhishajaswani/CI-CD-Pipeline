@@ -6,6 +6,9 @@
   tasks:
     - name: Install microk8s
       command: snap install microk8s --classic
+      
+    - name: Wait for service to start
+      shell: sleep 10s 
 
     - name: Check deployment status
       command: microk8s.kubectl get deployments 
