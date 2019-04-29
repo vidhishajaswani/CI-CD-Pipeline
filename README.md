@@ -108,7 +108,7 @@ Note: As part of our Checkbox deployment we configure a static DNS entry in /etc
 
 The architecture of the deployment is shown in the figure below.
 
-![architecture](/results/arch2.png)
+![architecture](/results/arch2.png "Marqdown microservice architecture")
 
 We deploy three replicas of the marqdown-app (the application containerized in a public Docker image kmedidi/marqdown-service:1.0.3) and expose it as a service on port 31000 (the service).
 
@@ -160,7 +160,7 @@ For our special milestone we are doing Monitoring of our production environment 
 stress --cpu 8 --io 4 --vm 1 --vm-bytes 1024M --timeout 15s
 ```
 And saw a spike and a trough after 15s (which is exactly what the command does). We also tried to include Alerting to a Slack channel when node load (cpu load) is > 0.5 (alert rule shown below) and were able to post to the channel through postman (as shown in the figure below) successfully but faced some configuration issues and have moved it to future scope.
-![postman](/results/DevOps-postman.png) ![ping](/results/DevOps-slack-final.PNG)
+![postman](/results/DevOps-postman.png "Post request to the slack channel") ![ping](/results/DevOps-slack-final.PNG "Slack channel is correctly configured")
 ```
 - name: alert.rules
   rules:
