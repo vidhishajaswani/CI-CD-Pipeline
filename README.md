@@ -16,7 +16,6 @@ Use milestone_3 branch for this submission.
 The aim of this project was to implement the CI/CD Pipeline that translates the code from developers local repository into production seamlessly along with sanity checks, tests, analysis, installing dependenices, and final deployment. The idea of this is to remove the norm that 'It runs on my computer, but not on another'. A simple push to the repository triggers this pipeline. Jenkins runs one one AWS EC2 Instance and checkbox.io and iTrust on another. A push triggers build jobs of these jobs on Jenkins. There is also a seperate AWS EC2 for marqdown that has the Kubernetes cluster with 3 pods exposed by a Kubernetes service. Feature flags are used to change the functionality without meddeling with the source code. For our special milestone, we did monitoring of our Production EC2 instance using Prometheus.
 
 ![main-architecture](/results/main-architecture.PNG)
-<center> CI/CD Pipeline Architecture </center>
 
 In this milestone the following objectives were tackled. 
 Deployment of Architecture on EC2 Instances.
