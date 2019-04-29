@@ -14,6 +14,7 @@ Vidhisha Jaswani    -   vjaswan
 Use milestone_3 branch for this submission.
 
 ![main-architecture](/results/main-architecture.PNG)
+-> CI/CD Pipeline Architecture <-
 
 In this milestone the following objectives were tackled.
 
